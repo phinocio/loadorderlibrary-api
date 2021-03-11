@@ -6,6 +6,8 @@ use App\Models\LoadOrder;
 use Database\Seeders\GamesTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Storage;
 use Tests\TestCase;
 
 class LoadOrdersTest extends TestCase
@@ -42,11 +44,15 @@ class LoadOrdersTest extends TestCase
 	/** @test */
     public function a_guest_can_create_a_list()
     {
-		$this->withoutExceptionHandling();
-		$attributes = LoadOrder::factory()->raw();
+		$files = [
+			UploadedFile::fake()->create('modlist.txt', 1),
+			UploadedFile::fake()->create('plugins.txt', 3)
+		];
+
+		$attributes = LoadOrder::factory()->raw(['files' => $files]);
 
 		$this->assertGuest();
-        $this->postJson('/api/lists', $attributes)->assertStatus(200)->assertJsonStructure([
+        $response = $this->postJson('/api/lists', $attributes)->assertStatus(200)->assertJsonStructure([
 			'id',
 			'user_id',
 			'game_id',
@@ -59,7 +65,7 @@ class LoadOrdersTest extends TestCase
 			'updated_at'
 		]);
 		
-		$this->assertDatabaseHas('load_orders', $attributes);
+		$this->assertDatabaseHas('load_orders', $response->json());
     }
 
 	/** @test */
@@ -78,4 +84,18 @@ class LoadOrdersTest extends TestCase
 		$this->postJson('/api/lists', $attributes)->assertStatus(422)->assertJsonValidationErrors('game_id');
 	}
 
+	/** @test */
+	public function a_list_requires_files()
+	{
+		$attributes = LoadOrder::factory()->raw(['files' => '']);
+		$this->postJson('/api/lists', $attributes)->assertStatus(422)->assertJsonValidationErrors('files');
+	}
+
+	/** @test */
+	public function a_guest_cannot_delete_a_list()
+	{
+		$list = LoadOrder::factory()->create();
+
+		$this->deleteJson('/api/lists/' . $list->id)->assertStatus(401);
+	}
 }

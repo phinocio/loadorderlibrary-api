@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /test-files
+/reports
 .env
 .env.backup
 .env.testing

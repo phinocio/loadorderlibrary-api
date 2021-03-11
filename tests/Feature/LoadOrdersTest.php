@@ -92,6 +92,18 @@ class LoadOrdersTest extends TestCase
 	}
 
 	/** @test */
+	public function uploaded_files_must_have_a_valid_name()
+	{
+		$files = [
+			UploadedFile::fake()->create('badname.txt', 1)
+		];
+
+		$attributes = LoadOrder::factory()->raw(['files' => $files]);
+
+		$response = $this->postJson('/api/lists', $attributes)->assertStatus(422)->assertJsonValidationErrors('files.0');
+	}
+
+	/** @test */
 	public function a_guest_cannot_delete_a_list()
 	{
 		$list = LoadOrder::factory()->create();

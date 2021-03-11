@@ -9,6 +9,28 @@
 
 <!-- /TOC -->
 
+# v0.1.1
+> 2021-03-10
+
+## Added
+- Added `LoadOrdersTest.php` for feature testing load orders
+- Added `LoadOrderController.php` for responding to routes defined in `api.php`
+- Added `get`, `post`, and `destroy` routes to `api.php` for handling requests
+- Added `GamesTableSeeder` to seeder, in addition to a factory generating 5 load orders
+- Added factories for `Game` and `LoadOrder` for testing
+- Added `UploadServiceTest` to test file uploading
+- Created `UploadService` to handle file uploading and file name generation
+- Added `CreateSlug` and `ValidFiles` helpers
+- Created custom `ValidFilename` rule
+- Added `uploads` driver to `filesystems.php`
+
+## Fixed
+
+## Changed
+
+## Removed
+- Removed example tests
+
 # v0.1.0 
 > 2021-03-10
 

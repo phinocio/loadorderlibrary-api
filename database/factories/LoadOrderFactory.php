@@ -24,9 +24,9 @@ class LoadOrderFactory extends Factory
     {
         return [
 			'name' => $this->faker->name(),
-			'slug' => $this->faker->slug(3),
+			'slug' => $this->faker->slug(),
 			'description' => $this->faker->paragraph(),
-			'files' => $this->faker->word(),
+			'files' => $this->faker->sentence(),
 			'is_private' => $this->faker->boolean(),
 			'game_id' => Game::factory()->create()->id,
 			'user_id' => null

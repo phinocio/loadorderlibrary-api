@@ -100,7 +100,7 @@ class LoadOrdersTest extends TestCase
 
 		$attributes = LoadOrder::factory()->raw(['files' => $files]);
 
-		$response = $this->postJson('/api/lists', $attributes)->assertStatus(422)->assertJsonValidationErrors('files.0');
+		$this->postJson('/api/lists', $attributes)->assertStatus(422)->assertJsonValidationErrors('files.0');
 	}
 
 	/** @test */

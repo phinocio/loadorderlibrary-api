@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CreateSlug;
 use Illuminate\Http\Request;
 use App\Models\LoadOrder;
+use App\Rules\ValidFilename;
+use App\Services\UploadService;
 
 class LoadOrderController extends Controller
 {
@@ -17,15 +20,28 @@ class LoadOrderController extends Controller
 	public function store(Request $request)
 	{
 		// validate
-		request()->validate([
+		$validated = request()->validate([
 			'name' => 'required',
-			'game_id' => 'required'
+			'game_id' => 'required|int',
+			'files' => 'required',
+			'files.*' => ['mimetypes:text/plain,application/x-wine-extension-ini', 'max:128', new ValidFilename],
+			'is_private' => 'required|boolean',
+			'user_id' => 'int|nullable',
+			'description' => 'string|nullable',
 		]);
-
+		
+		$validated['slug'] = CreateSlug::new($validated['name']);
+		$validated['files'] = UploadService::uploadFiles($validated['files']);
+		
 		// persist
-		$list = LoadOrder::create(request(['user_id', 'game_id', 'slug', 'name', 'description', 'files', 'is_private']));
+		$list = LoadOrder::create($validated);
 
 		// return
 		return response()->json($list);
+	}
+
+	public function destroy(LoadOrder $loadOrder)
+	{
+		$loadOrder->delete();
 	}
 }

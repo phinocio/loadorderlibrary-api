@@ -21,3 +21,4 @@ use App\Http\Controllers\LoadOrderController;
 
 Route::get('/lists', [LoadOrderController::class, 'index'])->name('lists');
 Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store');
+Route::delete('/lists/{id}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy')->middleware('auth:api');

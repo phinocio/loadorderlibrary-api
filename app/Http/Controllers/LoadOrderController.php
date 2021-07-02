@@ -13,7 +13,7 @@ class LoadOrderController extends Controller
 
 	public function index()
 	{
-		$lists = LoadOrder::all();
+		$lists = LoadOrder::where('is_private', false)->get();
 		return response()->json($lists, 200);
 	}
 

@@ -15,9 +15,15 @@ use App\Models\File;
 class LoadOrderController extends Controller
 {
 
-	public function index()
-	{
-		$lists = LoadOrder::where('is_private', false)->with('files')->get();
+	public function index(Request $request)
+	{	
+		$query = LoadOrder::whereIsPrivate(false);
+
+		if($request->query('author')) {
+			$author = User::whereName($request->query('author'))->first();
+			$query->whereUserId($author->id);
+		}
+		$lists = LoadOrder::where('is_private', false)->get();
 		return response()->json($lists, 200);
 	}
 

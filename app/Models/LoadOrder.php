@@ -10,7 +10,7 @@ class LoadOrder extends Model
     use HasFactory;
 
 	protected $guarded = [];
-	protected $with = ['files'];
+	protected $with = ['files', 'game'];
 	protected $hidden = ['id'];
 
 	public function game()

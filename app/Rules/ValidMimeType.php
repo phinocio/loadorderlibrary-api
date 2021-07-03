@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class ValidMimetype implements Rule
+class ValidMimeType implements Rule
 {
 
 	protected $file = '';

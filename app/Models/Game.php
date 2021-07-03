@@ -13,6 +13,6 @@ class Game extends Model
 
 	public function loadOrders()
 	{
-
+		return $this->hasMany('\App\Models\LoadOrder');
 	}
 }

@@ -44,26 +44,24 @@ class LoadOrdersTest extends TestCase
 	/** @test */
     public function a_guest_can_create_a_list()
     {
-		$files = [
-			UploadedFile::fake()->create('modlist.txt', 1),
-			UploadedFile::fake()->create('plugins.txt', 3)
-		];
 
-		$attributes = LoadOrder::factory()->raw(['files' => $files]);
+		$attributes = LoadOrder::factory()->make();
 
 		$this->assertGuest();
-        $response = $this->postJson('/api/lists', $attributes)->assertStatus(200)->assertJsonStructure([
-			'id',
-			'user_id',
-			'game_id',
-			'slug',
-			'name',
-			'description',
-			'files',
-			'is_private',
-			'created_at',
-			'updated_at'
-		]);
+        $response = $this->postJson('/api/lists', $attributes->toArray());
+
+		dd($response);
+		// ->assertStatus(200)->assertJsonStructure([
+		// 	'user_id',
+		// 	'game_id',
+		// 	'slug',
+		// 	'name',
+		// 	'description',
+		// 	'is_private',
+		// 	'created_at',
+		// 	'updated_at',
+		// 	'files'
+		// ]);
 		
 		$this->assertDatabaseHas('load_orders', $response->json());
     }

@@ -9,7 +9,7 @@ class UploadService {
 	 *
 	 * @return void
 	 */
-	public static function uploadFiles(array $files): string
+	public static function uploadFiles(array $files): array
 	{
 		// Get names for the files and return them
 		return UploadService::getFileNames($files);
@@ -21,7 +21,7 @@ class UploadService {
 	 * @param array $files
 	 * @return string
 	 */
-	private static function getFileNames(array $files): string
+	private static function getFileNames(array $files): array
 	{
 		$fileNames = [];
 
@@ -30,7 +30,7 @@ class UploadService {
 			$contents = preg_replace('/[\r\n]+/', "\n", $contents);
 			file_put_contents($file, $contents);
 			$fileName = md5($file->getClientOriginalName() . $contents) . '-' . $file->getClientOriginalName();
-			array_push($fileNames, $fileName);
+			array_push($fileNames, ['name' => $fileName]);
 
 			// Check if file exists, if not, save it to disk.
 			if (!UploadService::checkFileExists($fileName)) {
@@ -38,7 +38,7 @@ class UploadService {
 			}
 		}
 
-		return implode(',', $fileNames);
+		return $fileNames;
 	}
 
 	/**

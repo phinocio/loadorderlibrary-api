@@ -16,6 +16,6 @@ class DatabaseSeeder extends Seeder
 		$this->call([
 			GamesTableSeeder::class
 		]);
-		\App\Models\LoadOrder::factory(5)->create();
+		// \App\Models\LoadOrder::factory(5)->create();
 	}
 }

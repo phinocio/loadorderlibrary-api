@@ -15,16 +15,16 @@ class UploadServiceTest extends TestCase
 	public function files_get_uploaded()
 	{
 		$files = [
-			UploadedFile::fake()->create('modlist.txt', 1),
-			UploadedFile::fake()->create('plugins.txt', 4),
+			UploadedFile::fake()->create('modlist.txt', 1, 'text/plain'),
+			UploadedFile::fake()->create('plugins.txt', 4, 'text/plain'),
 		];
 
 		$files = UploadService::uploadFiles($files);
 
 		Storage::disk('uploads')
-			->assertExists(explode(',', $files));
+			->assertExists($files[0]['name']);
 
 		// Clean up the files
-		Storage::disk('uploads')->delete(explode(',', $files));
+		Storage::disk('uploads')->delete($files[0]['name']);
 	}
 }

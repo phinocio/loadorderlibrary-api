@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-			$table->string('password');
-			$table->smallInteger('is_admin')->nullable();
-            $table->rememberToken();
+			$table->string('name')->unique();
             $table->timestamps();
         });
+
+		// Also add all existing files on disk to the table
+		$files = \Storage::disk('uploads')->allFiles();
+		foreach ($files as $file) {
+			\App\Models\File::create(['name' => $file]);
+		}
     }
 
     /**
@@ -32,6 +33,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('files');
     }
 }

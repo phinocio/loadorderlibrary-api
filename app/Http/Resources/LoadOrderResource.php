@@ -16,7 +16,9 @@ class LoadOrderResource extends JsonResource
     {
 		return [
 			'name' => $this->name,
+			'version' => $this->version,
 			'slug' => $this->slug,
+			'url' => config('app.main') . "/lists/$this->slug",
 			'private' => $this->is_private,
 			'created' => $this->created_at,
 			'updated' => $this->updated_at,

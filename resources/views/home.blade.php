@@ -10,7 +10,8 @@
 				<h3>Load Order Library API Documentation</h3>
 			</div>
 			<div class="card-body">
-				Every route below is relative to <code>{{config('app.url')}}/v1</code>
+				<p>Every route below is relative to <code>{{config('app.url')}}/v1</code>.</p>
+				<p>Send requests with <code>accepts: application/json</code> header.</p>
 			</div>
 		</div>
 	</div>
@@ -26,56 +27,152 @@
 				<div id="listsGetCollapse" class="accordion-collapse collapse show" aria-labelledby="listsGetHeading" data-bs-parent="#listsAccordian">
 					<div class="accordion-body">
 						<p class="text">By default, lists are returned paginated with 14 per page.</p>
+						<p class="text">Returns <code>HTTP 200</code> on successful request and <code>HTTP 422</code> if the request is malformed (author or game doesn't exist, for example).</p>
+						<p class="text">There are a few query parameter options to filter/sort the results. Subsequent queries can be chained by replacing <code>?</code> with <code>&</code>.</p>
 
-						<h4>Example Response</h4>
-						<pre class="code p-2 position-relative"><button type="button" class="btn btn-primary btn-sm text-white position-absolute top-0 end-0 mt-3 me-2" onclick="copyAddress('listGetExample')">Copy</button><code id="listGetExample">{
+						<table class="table text-white">
+							<thead>
+								<tr>
+									<th scope="col">Query Param</th>
+									<th scope="col">Valid Options</th>
+									<th scope="col">Example</th>
+									<th scope="col">Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span style="color:#f66d9b">filter[author]</span></td>
+									<td>Any user's name</td>
+									<td style="color:#f66d9b">?filter[author]=phinocio</td>
+									<td>Filters the results by the author name</td>
+								</tr>
+								<tr>
+									<td><span style="color:#f66d9b">filter[game]</span></td>
+									<td>One of the games supported</td>
+									<td style="color:#f66d9b">?filter[game]=TESIII Morrowind</td>
+									<td>Filters the results by the game name</td>
+								</tr>
+								<tr>
+									<td><span style="color:#f66d9b">sort</span></td>
+									<td>updated | created</td>
+									<td style="color:#f66d9b">?sort=-updated</td>
+									<td>Sorts the results by the updated or created. Prepending <code>-</code> sorts newest first.</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<h5 class="d-inline me-3">Example Response</h5><small><code>/lists?filter[author]=phinocio&filter[game]=TESIII Morrowind&sort=-created</code></small>
+						<pre class="code p-2 position-relative">
+							<button type="button" class="btn btn-primary btn-sm text-white position-absolute top-0 end-0 mt-3 me-2" onclick="copyAddress('listGetExample')">Copy</button>
+<code id="listGetExample">{
     "data": [
         {
-            "name": "My New List! Again",
-            "slug": "my-new-list-again",
+            "name": "A Third Morrowind List!",
+            "version": "2.69.0",
+            "slug": "a-third-morrowind-list",
+            "url": "https://loadorderlibrary.com/lists/a-third-morrowind-list",
             "private": 0,
-            "created": "2021-07-03T02:50:16.000000Z",
-            "updated": "2021-07-03T02:50:16.000000Z",
-            "author": null,
+            "created": 1625604170,
+            "updated": 1625604170,
+            "author": {
+                "name": "Phinocio"
+            },
             "game": {
                 "id": 1,
                 "name": "TESIII Morrowind"
             },
             "files": [
                 {
-                    "name": "9f87e14d8aa888362776f88f995d08cd-Skyrim.ini",
-                    "clean_name": "Skyrim.ini",
-                    "bytes": 3117,
-                    "created": "2021-07-02T22:55:55.000000Z",
-                    "updated": "2021-07-02T22:55:55.000000Z"
+                    "name": "f8456ddcaf77ee434325eeda2af6e032-loadorder.txt",
+                    "clean_name": "loadorder.txt",
+                    "bytes": 3341,
+                    "created": 1624752076,
+                    "updated": 1624752076
+                }
+            ]
+        },
+        {
+            "name": "Morrowind List 2",
+            "version": null,
+            "slug": "morrowind-list-2",
+            "url": "https://loadorderlibrary.com/lists/morrowind-list-2",
+            "private": 0,
+            "created": 1625604151,
+            "updated": 1625604151,
+            "author": {
+                "name": "Phinocio"
+            },
+            "game": {
+                "id": 1,
+                "name": "TESIII Morrowind"
+            },
+            "files": [
+                {
+                    "name": "00acfcec29588e25041c76307b860016-modlist.txt",
+                    "clean_name": "modlist.txt",
+                    "bytes": 8420,
+                    "created": 1624752076,
+                    "updated": 1624752076
+                },
+                {
+                    "name": "6a2c0014a27ebdd573bf5634a78e6ced-plugins.txt",
+                    "clean_name": "plugins.txt",
+                    "bytes": 3405,
+                    "created": 1624752076,
+                    "updated": 1624752076
+                }
+            ]
+        },
+        {
+            "name": "A morrowind List!!!",
+            "version": "1.0.0",
+            "slug": "a-morrowind-list-1",
+            "url": "https://loadorderlibrary.com/lists/a-morrowind-list-1",
+            "private": 0,
+            "created": 1625604128,
+            "updated": 1625604128,
+            "author": {
+                "name": "Phinocio"
+            },
+            "game": {
+                "id": 1,
+                "name": "TESIII Morrowind"
+            },
+            "files": [
+                {
+                    "name": "f8456ddcaf77ee434325eeda2af6e032-loadorder.txt",
+                    "clean_name": "loadorder.txt",
+                    "bytes": 3341,
+                    "created": 1624752076,
+                    "updated": 1624752076
                 },
                 {
                     "name": "00acfcec29588e25041c76307b860016-modlist.txt",
                     "clean_name": "modlist.txt",
                     "bytes": 8420,
-                    "created": "2021-07-02T22:55:55.000000Z",
-                    "updated": "2021-07-02T22:55:55.000000Z"
+                    "created": 1624752076,
+                    "updated": 1624752076
                 },
                 {
-                    "name": "04ff9e544df36ef076bd26e8f42aeee4-plugins.txt",
+                    "name": "6a2c0014a27ebdd573bf5634a78e6ced-plugins.txt",
                     "clean_name": "plugins.txt",
-                    "bytes": 6404,
-                    "created": "2021-07-02T22:55:55.000000Z",
-                    "updated": "2021-07-02T22:55:55.000000Z"
+                    "bytes": 3405,
+                    "created": 1624752076,
+                    "updated": 1624752076
                 }
             ]
         }
     ],
     "links": {
-        "first": "{{config('app.url')}}/v1/lists?sort=-created&page=1",
-        "last": "http://api.loadorderlibrary.localhosdsfdsfdsfdst/api/lists?sort=-created&page=4",
+        "first": "http://api.loadorderlibrary.localhost/v1/lists?filter%5Bauthor%5D=phinocio&filter%5Bgame%5D=TESIII%20MoRRowind&sort=-created&page=1",
+        "last": "http://api.loadorderlibrary.localhost/v1/lists?filter%5Bauthor%5D=phinocio&filter%5Bgame%5D=TESIII%20MoRRowind&sort=-created&page=1",
         "prev": null,
-        "next": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=2"
+        "next": null
     },
     "meta": {
         "current_page": 1,
         "from": 1,
-        "last_page": 4,
+        "last_page": 1,
         "links": [
             {
                 "url": null,
@@ -83,38 +180,24 @@
                 "active": false
             },
             {
-                "url": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=1",
+                "url": "http://api.loadorderlibrary.localhost/v1/lists?filter%5Bauthor%5D=phinocio&filter%5Bgame%5D=TESIII%20MoRRowind&sort=-created&page=1",
                 "label": "1",
                 "active": true
             },
             {
-                "url": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=2",
-                "label": "2",
-                "active": false
-            },
-            {
-                "url": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=3",
-                "label": "3",
-                "active": false
-            },
-            {
-                "url": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=4",
-                "label": "4",
-                "active": false
-            },
-            {
-                "url": "http://api.loadorderlibrary.localhost/api/lists?sort=-created&page=2",
+                "url": null,
                 "label": "Next &raquo;",
                 "active": false
             }
         ],
-        "path": "http://api.loadorderlibrary.localhost/api/lists",
-        "per_page": 1,
-        "to": 1,
-        "total": 4
+        "path": "http://api.loadorderlibrary.localhost/v1/lists",
+        "per_page": 14,
+        "to": 3,
+        "total": 3
     }
 }
-						</code></pre>
+							</code>
+						</pre>
 					</div>
 				</div>
 			</div>
@@ -170,5 +253,14 @@
 	function copyAddress(target) {
 		const address = document.getElementById(target).innerText;
 		navigator.clipboard.writeText(address);
+	}
+
+	function getListsExample() {
+		fetch('/v1/lists?filter[author]=phinocio&filter[game]=TESIII Morrowind&sort=-updated')
+			.then(response => response.json())
+			.then(data => {
+				console.log(JSON.stringify(data.data[0]));
+				document.getElementById('listGetExample').innerHTML = JSON.stringify(data.data[0]);
+			});
 	}
 </script>

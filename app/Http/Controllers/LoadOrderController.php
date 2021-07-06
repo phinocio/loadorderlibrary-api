@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\FiltersAuthorName;
+use App\Filters\FiltersGameName;
 use App\Helpers\CreateSlug;
 use App\Http\Resources\LoadOrderCollection;
 use Illuminate\Http\Request;
@@ -22,24 +24,22 @@ use Illuminate\Database\Eloquent\Builder;
 class LoadOrderController extends Controller
 {
 
-	public function index(Request $request)
+	public function index()
 	{
 		$lists = QueryBuilder::for(LoadOrder::class)
 			->allowedFilters([
-				AllowedFilter::callback('author', function (Builder $query, $value) {	
-					$query->whereUserId(User::whereName($value)->first()->id);
-				}),
+				AllowedFilter::custom('author', new FiltersAuthorName),
+				AllowedFilter::custom('game', new FiltersGameName),
 			])
 			->allowedSorts([
 				AllowedSort::field('created', 'created_at'),
 				AllowedSort::field('updated', 'updated_at')
 			])
 			->where('is_private', false)
-			->paginate(1)
+			->paginate(14)
 			->appends(request()->query());
 		
 		return new LoadOrderCollection($lists);
-		return response()->json($lists, 200);
 	}
 
 	public function store(Request $request)

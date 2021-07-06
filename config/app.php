@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+	'main' => env('APP_MAIN', 'https://loadorderlibrary.com'),
 
     'asset_url' => env('ASSET_URL', null),
 

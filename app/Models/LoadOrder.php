@@ -12,6 +12,10 @@ class LoadOrder extends Model
 	protected $guarded = [];
 	protected $with = ['files', 'game', 'author'];
 	protected $hidden = ['id'];
+	protected $casts = [
+		'created_at' => 'timestamp',
+		'updated_at' => 'timestamp'
+	];
 
 	public function game()
 	{

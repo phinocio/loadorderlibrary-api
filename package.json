@@ -1,6 +1,6 @@
 {
     "private": true,
-	"version": "0.1.1",
+    "version": "0.1.1",
     "scripts": {
         "dev": "npm run development",
         "development": "mix",
@@ -11,9 +11,13 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "axios": "^0.21",
+        "browser-sync": "^2.27.4",
+        "browser-sync-webpack-plugin": "^2.3.0",
         "laravel-mix": "^6.0.6",
-        "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "laravel-mix-purgecss": "^6.0.0",
+        "postcss": "^8.1.14",
+        "resolve-url-loader": "^4.0.0",
+        "sass": "^1.35.1",
+        "sass-loader": "^12.1.0"
     }
 }

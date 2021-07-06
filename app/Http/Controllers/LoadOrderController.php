@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\CreateSlug;
+use App\Http\Resources\LoadOrderCollection;
 use Illuminate\Http\Request;
 use App\Models\LoadOrder;
 use App\Rules\ValidFilename;
@@ -11,19 +12,33 @@ use App\Rules\ValidNumLines;
 use App\Rules\ValidSemver;
 use App\Services\UploadService;
 use App\Models\File;
+use App\Models\Game;
+use App\Models\User;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class LoadOrderController extends Controller
 {
 
 	public function index(Request $request)
-	{	
-		$query = LoadOrder::whereIsPrivate(false);
-
-		if($request->query('author')) {
-			$author = User::whereName($request->query('author'))->first();
-			$query->whereUserId($author->id);
-		}
-		$lists = LoadOrder::where('is_private', false)->get();
+	{
+		$lists = QueryBuilder::for(LoadOrder::class)
+			->allowedFilters([
+				AllowedFilter::callback('author', function (Builder $query, $value) {	
+					$query->whereUserId(User::whereName($value)->first()->id);
+				}),
+			])
+			->allowedSorts([
+				AllowedSort::field('created', 'created_at'),
+				AllowedSort::field('updated', 'updated_at')
+			])
+			->where('is_private', false)
+			->paginate(1)
+			->appends(request()->query());
+		
+		return new LoadOrderCollection($lists);
 		return response()->json($lists, 200);
 	}
 

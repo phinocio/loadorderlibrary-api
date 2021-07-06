@@ -11,6 +11,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "bootstrap": "^5.0.2",
         "browser-sync": "^2.27.4",
         "browser-sync-webpack-plugin": "^2.3.0",
         "laravel-mix": "^6.0.6",

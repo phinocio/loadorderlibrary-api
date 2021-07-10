@@ -26,3 +26,5 @@ Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store'
 Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy');
 
 Route::get('/games', [GameController::class, 'index'])->name('games');
+
+Route::get('/compare', [ComparisonController::class, 'show'])->name('compare.show');

@@ -10,13 +10,7 @@ class FiltersGameName implements Filter{
 	public function __invoke(Builder $query, $value, string $property)
 	{
 		$query->whereHas('game', function (Builder $query) use ($value) {
-			$author = Game::whereName($value)->first();
-
-			if($author) {
-				$query->whereGameId($author->id);
-			} else {
-				abort(422, 'Game name not found');
-			}
+			$query->whereGameId(Game::whereName($value)->firstOrFail()->id);
 		});
 	}
 }

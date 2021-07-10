@@ -6,6 +6,7 @@ use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
 use App\Helpers\CreateSlug;
 use App\Http\Resources\LoadOrderCollection;
+use App\Http\Resources\LoadOrderResource;
 use Illuminate\Http\Request;
 use App\Models\LoadOrder;
 use App\Rules\ValidFilename;
@@ -31,6 +32,7 @@ class LoadOrderController extends Controller
 				AllowedFilter::custom('author', new FiltersAuthorName),
 				AllowedFilter::custom('game', new FiltersGameName),
 			])
+			->defaultSort('-created_at')
 			->allowedSorts([
 				AllowedSort::field('created', 'created_at'),
 				AllowedSort::field('updated', 'updated_at')
@@ -49,7 +51,7 @@ class LoadOrderController extends Controller
 			'name' => 'required',
 			'game_id' => 'required|int',
 			'version' => ['string', 'nullable', new ValidSemver, 'max:15'],	
-			'is_private' => 'required|boolean',
+			'is_private' => 'boolean',
 			'user_id' => 'int|nullable',
 			'description' => 'string|nullable',
 		]);
@@ -75,11 +77,16 @@ class LoadOrderController extends Controller
 		$list->files()->attach($fileIds);
 
 		// return
-		return response()->json($list);
+		return new LoadOrderResource($list);
+	}
+
+	public function show(LoadOrder $loadOrder)
+	{
+		return new LoadOrderResource($loadOrder);
 	}
 
 	public function destroy(LoadOrder $loadOrder)
 	{
-		$loadOrder->delete();
+		return response()->json(['Message' => 'Not implemented'], 501);
 	}
 }

@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return redirect('https://docs.loadorderlibrary.com');
 });
 
-Route::get('/docs', function () {
-	return view('docs');
+Route::get('/v1', function () {
+	return redirect('https://docs.loadorderlibrary.com');
 });

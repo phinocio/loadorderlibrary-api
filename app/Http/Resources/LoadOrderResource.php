@@ -24,7 +24,11 @@ class LoadOrderResource extends JsonResource
 			'updated' => $this->updated_at,
 			'author' => new UserResource($this->author),
 			'game' => new GameResource($this->game),
-			'files' => FileResource::collection($this->files)
+			'files' => FileResource::collection($this->files),
+			'links' => [
+				'url' => config('app.main') . "/lists/$this->slug",
+				'self' => config('app.url') . "/v1/lists/$this->slug"
+			]
 		];
     }
 }

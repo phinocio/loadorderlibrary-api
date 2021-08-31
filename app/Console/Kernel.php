@@ -24,7 +24,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+		$schedule->command('delete:temp')->daily();
+		$schedule->command('delete:orphaned')->weekly();
+		$schedule->command('delete:expired')->everyMinute();
+
+		$schedule->command('backup:db')->sundays()->at('03:00')->evenInMaintenanceMode();
+		$schedule->command('delete:backups')->sundays()->at('03:00')->evenInMaintenanceMode();
     }
 
     /**

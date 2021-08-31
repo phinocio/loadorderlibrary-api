@@ -20,6 +20,7 @@ class LoadOrderResource extends JsonResource
 			'slug' => $this->slug,
 			'url' => config('app.main') . "/lists/$this->slug",
 			'private' => (bool) $this->is_private,
+			'expires' => $this->expires_at,
 			'created' => $this->created_at,
 			'updated' => $this->updated_at,
 			'author' => new UserResource($this->author),

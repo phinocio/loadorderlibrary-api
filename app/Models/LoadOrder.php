@@ -11,9 +11,11 @@ class LoadOrder extends Model
 
 	protected $guarded = [];
 	protected $with = ['files', 'game', 'author'];
-	protected $dates = ['expires_at'];
 	protected $hidden = ['id'];
+
+	protected $dates = ['expires_at'];
 	protected $casts = [
+		'expires_at' => 'timestamp',
 		'created_at' => 'timestamp',
 		'updated_at' => 'timestamp'
 	];

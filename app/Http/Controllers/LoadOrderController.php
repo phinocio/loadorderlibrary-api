@@ -17,6 +17,7 @@ use App\Services\UploadService;
 use App\Models\File;
 use App\Models\Game;
 use App\Models\User;
+use Carbon\Carbon;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -48,11 +49,12 @@ class LoadOrderController extends Controller
 	{
 		// validate
 		$validated = request()->validate([
-			'name' => 'required',
+			'name' => 'required|max:100',
 			'game_id' => 'required|int',
 			'version' => ['string', 'nullable', new ValidSemver, 'max:15'],	
 			'is_private' => 'boolean',
 			'user_id' => 'int|nullable',
+			'expires_at' => 'string|nullable',
 			'description' => 'string|nullable',
 		]);
 
@@ -71,6 +73,28 @@ class LoadOrderController extends Controller
 		}
 		
 		$validated['slug'] = CreateSlug::new($validated['name']);
+
+		// Temp code for auto deleting anonymous lists until I remake it better for the API.
+
+		if (isset($validated['expires_at'])) {
+			switch ($validated['expires_at']) {
+				case '3h':
+					$validated['expires_at'] = Carbon::now()->addHours(3);
+					break;
+				case '24h':
+					$validated['expires_at'] = Carbon::now()->addHours(24);
+					break;
+				case '3d':
+					$validated['expires_at'] = Carbon::now()->addDays(3);
+					break;
+				case '1w':
+					$validated['expires_at'] = Carbon::now()->addWeek();
+					break;
+				default:
+					$validated['expires_at'] = null;
+					break;
+			}
+		}
 		
 		// persist
 		$list = LoadOrder::create($validated);

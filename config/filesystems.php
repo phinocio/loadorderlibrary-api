@@ -47,6 +47,16 @@ return [
 			'root' => storage_path('app/uploads')
 		],
 
+		'backup' => [
+			'driver' => 'local',
+			'root' => storage_path('app/backup')
+		],
+
+		'tmp' => [
+			'driver' => 'local',
+			'root' => storage_path('app/tmp')
+		],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

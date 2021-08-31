@@ -90,8 +90,11 @@ class LoadOrderController extends Controller
 				case '1w':
 					$validated['expires_at'] = Carbon::now()->addWeek();
 					break;
-				default:
+				case 'perm':
 					$validated['expires_at'] = null;
+					break;
+				default:
+					$validated['expires_at'] = Carbon::now()->addHours(24); // every list is anonymous atm.
 					break;
 			}
 		}

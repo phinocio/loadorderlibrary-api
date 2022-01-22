@@ -1,14 +1,14 @@
 {
-    "name": "laravel/laravel",
+    "name": "phinocio/loadorderlibrary-api",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "API for Load Order Library",
     "keywords": [
-        "framework",
-        "laravel"
+        "loadorderlibrary",
+		"api"
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": ">8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

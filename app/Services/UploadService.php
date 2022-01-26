@@ -19,7 +19,7 @@ class UploadService {
 	 * Get a list of filenames with MD5 Hashes prepended, and store to disk if not already.
 	 *
 	 * @param array $files
-	 * @return string
+	 * @return array
 	 */
 	private static function getFileNames(array $files): array
 	{

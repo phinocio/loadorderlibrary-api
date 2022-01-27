@@ -21,13 +21,13 @@ class ComparisonService {
 		$list1Files = [];
 		foreach ($list1->files as $list1File) {
 			$filesParts = explode('-', $list1File->name);
-			$list1Files[$filesParts[1]] = $filesParts[0];
+			$list1Files[strtolower($filesParts[1])] = $filesParts[0];
 		}
 
 		$list2Files = [];
 		foreach ($list2->files as $list2File) {
 			$filesParts = explode('-', $list2File->name);
-			$list2Files[$filesParts[1]] = $filesParts[0];
+			$list2Files[strtolower($filesParts[1])] = $filesParts[0];
 		}
 
 		// 2. figure out the files list1 has missing and added compared to list2

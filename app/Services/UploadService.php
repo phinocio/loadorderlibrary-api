@@ -29,7 +29,7 @@ class UploadService {
 			$contents = file_get_contents($file);
 			$contents = preg_replace('/[\r\n]+/', "\n", $contents);
 			file_put_contents($file, $contents);
-			$fileName = md5(strtolower($file->getClientOriginalName()) . $contents) . '-' . strtolower($file->getClientOriginalName());
+			$fileName = strtolower(md5($file->getClientOriginalName() . $contents) . '-' . $file->getClientOriginalName());
 			array_push($fileNames, ['name' => $fileName]);
 
 			// Check if file exists, if not, save it to disk.

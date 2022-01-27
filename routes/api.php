@@ -4,6 +4,7 @@ use App\Http\Controllers\GameController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoadOrderController;
+use App\Http\Controllers\ComparisonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,4 @@ Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'
 
 Route::get('/games', [GameController::class, 'index'])->name('games');
 
-Route::get('/compare', [ComparisonController::class, 'show'])->name('compare.show');
+Route::get('/compare/{list1}/{list2}', [ComparisonController::class, 'show'])->name('compare.show');

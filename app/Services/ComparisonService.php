@@ -3,16 +3,23 @@
 namespace App\Services;
 
 use App\Models\LoadOrder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ComparisonService {
 
-	public static function compare(string $list1, string $list2): array
+	public static function compare(string $list1, string $list2): array | JsonResponse
 	{
 		$list1 = LoadOrder::whereSlug($list1)->first();
 		$list2 = LoadOrder::whereSlug($list2)->first();
 
-		$response = ComparisonService::compareLists($list1, $list2);
-		return $response;
+		if (!$list1 || !$list2) {
+			return response()->json(['Message' => 'One or both lists do not exist, try again'], 404);
+		} else {
+			$response = ComparisonService::compareLists($list1, $list2);
+			return $response;
+		}
+
 	}
 	
 	private static function compareLists($list1, $list2): array

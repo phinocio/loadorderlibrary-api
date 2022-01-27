@@ -14,6 +14,6 @@ class ComparisonController extends Controller
 		// contruct the response with a resource collection
 		$results = ComparisonService::compare($list1, $list2);
 
-		return $list1 . $list2;
+		return $results;
 	}
 }

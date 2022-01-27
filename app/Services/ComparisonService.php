@@ -11,9 +11,7 @@ class ComparisonService {
 		$list1 = LoadOrder::whereSlug($list1)->first();
 		$list2 = LoadOrder::whereSlug($list2)->first();
 
-		
 		$response = ComparisonService::compareLists($list1, $list2);
-		dd($response);
 		return $response;
 	}
 	

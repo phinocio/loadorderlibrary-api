@@ -4,11 +4,18 @@
 
 <!-- TOC depthto:1 -->
 
+- [v1.1.1](#v111)
 - [v1.1.0](#v110)
 - [v1.0.1](#v101)
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+# v1.1.1
+> 2022-01-31
+
+## Fixed
+- Fixed wrong added/missing for list comparison items
 
 # v1.1.0
 > 2022-01-26

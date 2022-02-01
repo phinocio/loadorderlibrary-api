@@ -38,8 +38,8 @@ class ComparisonService {
 		}
 
 		// 2. figure out the files list1 has missing and added compared to list2
-		$missing = array_diff_key($list1Files, $list2Files);
-		$added = array_diff_key($list2Files, $list1Files);
+		$missing = array_diff_key($list2Files, $list1Files);
+		$added = array_diff_key($list1Files, $list2Files);
 
 		// 3. get the list1 and 2 files arrays to only contain the files that they both have
 		$list1Files = array_diff($list1Files, $missing);

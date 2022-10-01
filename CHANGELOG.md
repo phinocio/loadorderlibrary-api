@@ -11,6 +11,14 @@
 
 <!-- /TOC -->
 
+# v1.1.2
+> 2022-10-01
+ 
+## Internals
+- Composer
+	- Updated to Laravel 9
+	- Updated with `composer update`
+
 # v1.1.1
 > 2022-01-31
 

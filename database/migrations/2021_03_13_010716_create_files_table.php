@@ -15,15 +15,17 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-			$table->string('name')->unique();
+            $table->string('name')->unique();
+            $table->string('clean_name');
+            $table->unsignedBigInteger('size_in_bytes');
             $table->timestamps();
         });
 
-		// Also add all existing files on disk to the table
-		$files = \Storage::disk('uploads')->allFiles();
-		foreach ($files as $file) {
-			\App\Models\File::create(['name' => $file]);
-		}
+        // Also add all existing files on disk to the table
+        $files = \Storage::disk('uploads')->allFiles();
+        foreach ($files as $file) {
+            \App\Models\File::create(['name' => $file]);
+        }
     }
 
     /**

@@ -27,11 +27,13 @@ class CreateLoadOrdersTable extends Migration
             $table->string('slug', 100)->unique();
             $table->string('name', 100);
             $table->text('description')->nullable();
-            $table->string('files');
+            $table->string('version', 15)->nullable();
+            $table->string('website')->nullable()->default(null);
+            $table->string('readme')->nullable()->default(null);
+            $table->string('discord')->nullable()->default(null);
             $table->boolean('is_private')->default(false);
+            $table->timestamp('expires_at')->nullable()->default(null);
             $table->timestamps();
-
-
         });
     }
 

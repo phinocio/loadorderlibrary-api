@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
 	protected $fillable = ['name', 'clean_name', 'size_in_bytes'];
 	protected $hidden = ['id'];

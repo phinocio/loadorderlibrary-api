@@ -16,9 +16,9 @@ class CreateBackupsTable extends Migration
     {
         Schema::create('backups', function (Blueprint $table) {
             $table->id();
-            $table->string('file', 100)->unique();
-            $table->string('size', 50);
-            $table->timestamp('expires_at')->default(Carbon::now()->addDays(30));
+			$table->string('file', 100)->unique();
+			$table->string('size', 50);
+			$table->timestamp('expires_at')->default(Carbon::now()->addDays(30));
             $table->timestamps();
         });
     }

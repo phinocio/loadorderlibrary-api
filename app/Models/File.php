@@ -14,11 +14,6 @@ class File extends Model
 
     protected $hidden = ['id'];
 
-    protected $casts = [
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-    ];
-
     public function lists(): BelongsToMany
     {
         return $this->belongsToMany('\App\Models\LoadOrder')->withTimestamps();

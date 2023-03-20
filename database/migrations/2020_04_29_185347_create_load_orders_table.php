@@ -30,8 +30,6 @@ class CreateLoadOrdersTable extends Migration
             $table->string('files');
             $table->boolean('is_private')->default(false);
             $table->timestamps();
-
-
         });
     }
 

@@ -10,10 +10,10 @@ class Game extends Model
 {
     use HasFactory;
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public function loadOrders(): HasMany
-	{
-		return $this->hasMany('\App\Models\LoadOrder');
-	}
+    public function loadOrders(): HasMany
+    {
+        return $this->hasMany('\App\Models\LoadOrder');
+    }
 }

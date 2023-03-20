@@ -14,18 +14,18 @@ class AddCleanNameColumnToFilesTable extends Migration
     public function up()
     {
         Schema::table('files', function (Blueprint $table) {
-			$table->after('name', function ($table) {
-				$table->string('clean_name');
-			});
+            $table->after('name', function ($table) {
+                $table->string('clean_name');
+            });
         });
 
-		$files = \App\Models\File::all();
+        $files = \App\Models\File::all();
 
-		foreach ($files as $file) {
-			$cleanName = explode('-', $file->name);
-			$file->clean_name = $cleanName[1];
-			$file->save();
-		}
+        foreach ($files as $file) {
+            $cleanName = explode('-', $file->name);
+            $file->clean_name = $cleanName[1];
+            $file->save();
+        }
     }
 
     /**

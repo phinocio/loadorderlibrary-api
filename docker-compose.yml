@@ -51,6 +51,3 @@ services:
 networks:
     sail:
         driver: bridge
-volumes:
-    sail-mariadb:
-        driver: local

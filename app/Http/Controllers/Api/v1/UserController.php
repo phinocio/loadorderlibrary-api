@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function show()
     {
-		return new UserResource(auth()->user());
+        return new UserResource(auth()->user());
     }
 
     /**
@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        return response()->json(['message' => 'not implemented'], 501);
     }
 
     /**
@@ -38,14 +38,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-		try {
-			$user->delete();
-			/*
-			 * TODO: A proper response
-			 */
-			return ['deleted'];
-		} catch (\Throwable $th) {
-			return $th->getMessage();
-		}
+        try {
+            if (auth()->user()->id === $user->id || auth()->user()->isAdmin()) {
+                $user->delete();
+
+                return response()->json(null, 204);
+            } else {
+                return response()->json(['message' => 'Unauthorized.'], 401);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'something went wrong deleting the user. Please let Phinocio know.', 'error' => $th->getMessage()], 500);
+        }
     }
 }

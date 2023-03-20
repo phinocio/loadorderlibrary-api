@@ -14,9 +14,9 @@ class AddVersionColumnToLoadOrdersTable extends Migration
     public function up()
     {
         Schema::table('load_orders', function (Blueprint $table) {
-			$table->string('version', 15)
-				->after('description')
-				->nullable();
+            $table->string('version', 15)
+                ->after('description')
+                ->nullable();
         });
     }
 

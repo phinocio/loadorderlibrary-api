@@ -13,12 +13,12 @@ class AddExpiresColumnToLoadOrdersTable extends Migration
      */
     public function up()
     {
-		Schema::table('load_orders', function (Blueprint $table) {
-			$table->timestamp('expires_at')
-			->after('is_private')
-			->nullable()
-			->default(null);
-		});
+        Schema::table('load_orders', function (Blueprint $table) {
+            $table->timestamp('expires_at')
+            ->after('is_private')
+            ->nullable()
+            ->default(null);
+        });
     }
 
     /**
@@ -28,8 +28,8 @@ class AddExpiresColumnToLoadOrdersTable extends Migration
      */
     public function down()
     {
-		Schema::table('load_orders', function (Blueprint $table) {
-			$table->dropColumn('expires_at');
-		});
+        Schema::table('load_orders', function (Blueprint $table) {
+            $table->dropColumn('expires_at');
+        });
     }
 }

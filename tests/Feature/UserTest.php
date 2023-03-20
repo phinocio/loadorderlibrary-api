@@ -52,7 +52,7 @@ class UserTest extends TestCase
 
         $this->postJson('/register', $data);
         $this->postJson('/logout');
-        $response = $this->postJson('/register', $data)->assertUnprocessable();
+        $this->postJson('/register', $data)->assertUnprocessable();
     }
 
     /** @test */
@@ -71,5 +71,24 @@ class UserTest extends TestCase
 
         $this->postJson('/login', ['name' => $user->name, 'password' => 'password']);
         $this->postJson('/logout')->assertNoContent();
+    }
+
+    /** @test */
+    public function a_user_can_be_deleted(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->delete('/v1/user/'.$user->name)->assertNoContent();
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    /** @test */
+    public function a_user_can_not_delete_another_user(): void
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $this->actingAs($user)->delete('/v1/user/'.$user2->name)->assertUnauthorized();
+        $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
 }

@@ -14,7 +14,7 @@ class AddTimestampsToFileLoadOrderTable extends Migration
     public function up()
     {
         Schema::table('file_load_order', function (Blueprint $table) {
-			$table->timestamps();
+            $table->timestamps();
         });
     }
 
@@ -26,7 +26,7 @@ class AddTimestampsToFileLoadOrderTable extends Migration
     public function down()
     {
         Schema::table('file_load_order', function (Blueprint $table) {
-			$table->dropColumn(['created_at', 'updated_at']);
+            $table->dropColumn(['created_at', 'updated_at']);
         });
     }
 }

@@ -20,22 +20,22 @@ class CreateFileLoadOrderPivotTable extends Migration
             $table->primary(['file_id', 'load_order_id']);
         });
 
-		// Also create the entries for each existing list.
-		$lists = \App\Models\LoadOrder::all();
-		$files = \App\Models\File::all();
+        // Also create the entries for each existing list.
+        $lists = \App\Models\LoadOrder::all();
+        $files = \App\Models\File::all();
 
-		foreach ($lists as $list) {
-			$listFiles = explode(',', $list->files);
+        foreach ($lists as $list) {
+            $listFiles = explode(',', $list->files);
 
-			foreach ($listFiles as $listFile) {
-				foreach ($files as $file) {
-					if ($listFile == $file->name) {
-						echo $list->id, $file->id;
-						$list->files()->attach($file->id);
-					}
-				}
-			}
-		}
+            foreach ($listFiles as $listFile) {
+                foreach ($files as $file) {
+                    if ($listFile == $file->name) {
+                        echo $list->id, $file->id;
+                        $list->files()->attach($file->id);
+                    }
+                }
+            }
+        }
     }
 
     /**

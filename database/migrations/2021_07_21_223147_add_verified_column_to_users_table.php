@@ -14,9 +14,9 @@ class AddVerifiedColumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-			$table->boolean('is_verified')
-			->after('password')
-			->default(false);
+            $table->boolean('is_verified')
+            ->after('password')
+            ->default(false);
         });
     }
 

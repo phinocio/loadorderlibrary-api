@@ -10,15 +10,13 @@ use App\Http\Requests\StoreLoadOrderRequest;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\File;
 use App\Models\LoadOrder;
-use App\Rules\ValidFilename;
-use App\Rules\ValidMimeType;
-use App\Rules\ValidNumLines;
 use App\Services\UploadService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
+use Storage;
 
 class LoadOrderController extends Controller
 {
@@ -52,7 +50,7 @@ class LoadOrderController extends Controller
 		$validated = $request->validated();
 		$fileNames = UploadService::uploadFiles($validated['files']);
 
-		// Determine the expiration of the list. Logged in users default to
+		// Determine the expiration of the list. Logged-in users default to
 		// perm, guests default to 24. If the expires field was not sent, check that.
 		if(!array_key_exists('expires', $validated)) {
 			auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
@@ -70,7 +68,7 @@ class LoadOrderController extends Controller
 		$fileIds = [];
 		foreach ($fileNames as $file) {
 			$file['clean_name'] = explode('-', $file['name'])[1];
-			$file['size_in_bytes'] = \Storage::disk('uploads')->size($file['name']);
+			$file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
 			$fileIds[] = File::firstOrCreate($file)->id;
 		}
 
@@ -81,17 +79,11 @@ class LoadOrderController extends Controller
 		$loadOrder->name        = $validated['name'];
 		$loadOrder->description = $validated['description'];
 		$loadOrder->version 	= $validated['version'] ?? null;
-		// We simply remove the http/s of an input url so we can add https:// to all on display.
+		// We simply remove the http/s of an input url, so we can add https:// to all on display.
 		// If a site doesn't support TSL at this point, that's on them, I'm not linking to an insecure url.
-		$loadOrder->website     = array_key_exists('website', $validated)
-			? str_replace(['https://', 'http://'], '', $validated['website'])
-			: null;
-		$loadOrder->discord     = array_key_exists('discord', $validated)
-			? str_replace(['https://', 'http://'], '', $validated['discord'])
-			: null;
-		$loadOrder->readme      = array_key_exists('readme', $validated)
-			? str_replace(['https://', 'http://'], '', $validated['readme'])
-			: null;
+		$loadOrder->website     = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
+		$loadOrder->discord     = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
+		$loadOrder->readme      = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
 		$loadOrder->is_private  = $request->input('private') != null;
 		$loadOrder->expires_at  = $validated['expires'];
 		$loadOrder->save();

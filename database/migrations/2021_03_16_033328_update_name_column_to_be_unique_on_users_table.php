@@ -14,7 +14,7 @@ class UpdateNameColumnToBeUniqueOnUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-			$table->string('name')->unique()->change();
+            $table->string('name')->unique()->change();
         });
     }
 
@@ -26,7 +26,7 @@ class UpdateNameColumnToBeUniqueOnUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-			$table->string('name')->change();
+            $table->string('name')->change();
         });
     }
 }

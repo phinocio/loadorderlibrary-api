@@ -2,51 +2,32 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
-class ValidMimeType implements Rule
+class ValidMimeType implements ValidationRule
 {
-
-	protected $file = '';
-	protected $mimetype = '';
-
-	protected $validMimes = [
-		'text/plain',
-		'application/x-wine-extension-ini'
-	];
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct()
+	/**
+	 * Run the validation rule.
+	 *
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @param Closure $fail
+	 */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
-    }
+		$validMimes = [
+			'text/plain',
+			'application/x-wine-extension-ini'
+		];
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
-    {
-		$this->file = $value->getClientOriginalName();
+		$file = $value->getClientOriginalName();
 
-		$this->mimetype = mime_content_type($value->getRealPath());
+		$mimetype = $value->getClientMimeType();
 
-		return in_array($this->mimetype, $this->validMimes);
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return $this->file . ' has an invalid mimetype. Detected mimetype is: ' . $this->mimetype;
+		if (!in_array($mimetype, $validMimes)) {
+			$fail('The :value has an invalid mimetype. Detected mimetype is: ' . $mimetype);
+		}
     }
 }

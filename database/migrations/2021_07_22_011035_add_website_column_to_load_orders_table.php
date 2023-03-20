@@ -14,10 +14,10 @@ class AddWebsiteColumnToLoadOrdersTable extends Migration
     public function up()
     {
         Schema::table('load_orders', function (Blueprint $table) {
-			$table->string('website')
-			->after('version')
-			->nullable()
-			->default(null);
+            $table->string('website')
+            ->after('version')
+            ->nullable()
+            ->default(null);
         });
     }
 

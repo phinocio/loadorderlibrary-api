@@ -26,7 +26,7 @@ class DropFilesColumnFromLoadOrdersTable extends Migration
     public function down()
     {
         Schema::table('load_orders', function (Blueprint $table) {
-			$table->text('files');
+            $table->text('files');
         });
     }
 }

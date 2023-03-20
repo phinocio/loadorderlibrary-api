@@ -14,17 +14,17 @@ class AddSizeInBytesColumnToFilesTable extends Migration
     public function up()
     {
         Schema::table('files', function (Blueprint $table) {
-			$table->after('clean_name', function ($table) {
-				$table->unsignedBigInteger('size_in_bytes');
-			});
+            $table->after('clean_name', function ($table) {
+                $table->unsignedBigInteger('size_in_bytes');
+            });
         });
 
-		$files = \App\Models\File::all();
+        $files = \App\Models\File::all();
 
-		foreach ($files as $file) {
-			$file->size_in_bytes = \Storage::disk('uploads')->size($file->name);
-			$file->save();
-		}
+        foreach ($files as $file) {
+            $file->size_in_bytes = \Storage::disk('uploads')->size($file->name);
+            $file->save();
+        }
     }
 
     /**

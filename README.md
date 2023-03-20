@@ -1,66 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Load Order Library
+Load Order Library is a tool mostly intended to help in debugging/supporting Mod Organizer lists for Bethesda games. It's meant to serve as an alternative/replacement for [Modwatch](https://modwat.ch/). The premiere feature being a list comparison tool.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+I have a Patreon I guess. Don't feel the need to contribute or anything, I have no intention of doing perks/goals (should things take off and people want me to, I probably will). If anything, the only thing I care about is covering the costs of the site/server, which atm are like CA$14/yr for the domain, and ~CA$8/mn for Digital Ocean hosting (though I host a few things on it). See EXPENSES.md for details.
 
-## About Laravel
+https://www.patreon.com/phinocio
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Table Of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<!-- TOC -->
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Goal](#goal)
+- [Features](#features)
+- [Planned Features](#planned-features)
+- [Privacy](#privacy)
+- [Support/Issues](#supportissues)
+- [Thanks](#thanks)
 
-## Learning Laravel
+<!-- /TOC -->
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Goal
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+The goal of Load Order Library is to make the life of people doing support for mod lists easier. Often times we ask for an upload to [Modwatch](https://modwat.ch/) and then manually go through the files to determine if a mod is missing, or a mod is added. Whether the ini settings are correct, etc. By using the comparison tool, you get a quick view at a glance at what files are missing/added, and what contents of those files are also missing/added.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+![Image of comparison tool](https://cdn.discordapp.com/attachments/577715234752430082/811766182856097802/unknown.png)
 
-## Laravel Sponsors
+# Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Load Order Library has a slew of features.
 
-### Premium Partners
+- No registration required. Lists can be uploaded anonymously. You do need and account to delete lists, however. Anonymous ones can't be deleted.
+- Private lists. Only people with the link can view them.
+- For users that decide to register, you can have as many lists as you want - modwatch only ever lets you have 1.
+- Comparison tool.
+- Completely free. No Ads.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+More planned and coming soon!
 
-## Contributing
+# Planned Features
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+See [TODO.md](https://github.com/phinocio/loadorderlibrary/blob/master/TODO.md).
 
-## Code of Conduct
+# Privacy
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Load Order Library uses no analytic services at all. Some 3rd party tools are used, but no external requests are made, they are served with the page itself. Files uploaded currently are on the server forever, however one of the next things I'm doing is implementing a way for files to be deleted if a list that contains them is the only one that does and it is deleted (the same files are shared across lists to save on disk space).
 
-## Security Vulnerabilities
+Data provided is entirely for the use of the site, and does not leave the server except in the case of database backups. Passwords are hashed and never stored in plain text. The server is hosted via Digital Ocean and located in Toronto, Canada.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Support/Issues
 
-## License
+If you find any issues or have any questions, please make an issue on this repository or find help on the [Discord server](https://discord.gg/K3KnEgrQE4).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Changelog
+
+See [CHANGELOG.md](https://github.com/phinocio/loadorderlibrary/blob/master/CHANGELOG.md).
+
+# Thanks
+
+Thanks to RingComics for helping me test.
+
+Thaks to Gatonegro for the icons. 

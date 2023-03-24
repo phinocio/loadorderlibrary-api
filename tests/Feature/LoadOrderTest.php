@@ -106,4 +106,51 @@ class LoadOrderTest extends TestCase
 		$this->deleteJson('/v1/lists/' . $list['data']['slug'])->assertUnauthorized();
 		$this->assertDatabaseHas('load_orders', ['slug' => $list['data']['slug']]);
 	}
+
+	/** @test */
+	public function a_list_owner_can_delete_a_list(): void
+	{
+		$this->seed(GameSeeder::class);
+		$user = User::factory()->create();
+
+		$file = UploadedFile::fake()->create('modlist.txt', 4, 'text/plain');
+		$attributes = [
+			'name' => $this->faker->name(),
+			'description' => $this->faker->paragraph(),
+			'game' => $this->faker->randomDigit() + 10,
+			'expires' => '3h',
+			'files' => [
+				$file
+			]
+		];
+
+		$resp = $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+		$list = $resp->json();
+		$this->deleteJson('/v1/lists/' . $list['data']['slug'])->assertNoContent();
+		$this->assertDatabaseMissing('load_orders', ['slug' => $list['data']['slug']]);
+	}
+
+	/** @test */
+	public function a_user_can_not_delete_another_users_list(): void
+	{
+		$this->seed(GameSeeder::class);
+		$user = User::factory()->create();
+		$user2 = User::factory()->create();
+
+		$file = UploadedFile::fake()->create('modlist.txt', 4, 'text/plain');
+		$attributes = [
+			'name' => $this->faker->name(),
+			'description' => $this->faker->paragraph(),
+			'game' => $this->faker->randomDigit() + 10,
+			'expires' => '3h',
+			'files' => [
+				$file
+			]
+		];
+
+		$resp = $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+		$list = $resp->json();
+		$this->actingAs($user2)->deleteJson('/v1/lists/' . $list['data']['slug'])->assertUnauthorized();
+		$this->assertDatabaseHas('load_orders', ['slug' => $list['data']['slug']]);
+	}
 }

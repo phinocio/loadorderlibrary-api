@@ -83,4 +83,27 @@ class LoadOrderTest extends TestCase
 		$this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
 		$this->assertDatabaseHas('load_orders', ['user_id' => $user->id]);
 	}
+
+	/** @test */
+	public function a_guest_can_not_delete_a_list(): void
+	{
+		$this->seed(GameSeeder::class);
+		$this->assertGuest();
+
+		$file = UploadedFile::fake()->create('modlist.txt', 4, 'text/plain');
+		$attributes = [
+			'name' => $this->faker->name(),
+			'description' => $this->faker->paragraph(),
+			'game' => $this->faker->randomDigit() + 10,
+			'expires' => '3h',
+			'files' => [
+				$file
+			]
+		];
+
+		$resp = $this->postJson('/v1/lists', $attributes)->assertCreated();
+		$list = $resp->json();
+		$this->deleteJson('/v1/lists/' . $list['data']['slug'])->assertUnauthorized();
+		$this->assertDatabaseHas('load_orders', ['slug' => $list['data']['slug']]);
+	}
 }

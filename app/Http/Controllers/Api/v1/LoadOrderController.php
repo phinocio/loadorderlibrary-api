@@ -112,8 +112,23 @@ class LoadOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(LoadOrder $loadOrder)
     {
-        //
+		// TODO: Make this actually use proper permissions stuff (rules? authorizations?)
+		if(!auth()->check()) {
+			return response()->json(['message' => 'Unauthorized.'], 401);
+		}
+
+		try {
+			if (auth()->user()->id === $loadOrder->user_id || auth()->user()->isAdmin()) {
+				$loadOrder->delete();
+
+				return response()->json(null, 204);
+			} else {
+				return response()->json(['message' => 'Unauthorized.'], 401);
+			}
+		} catch (\Throwable $th) {
+			return response()->json(['message' => 'something went wrong deleting the load order. Please let Phinocio know.', 'error' => $th->getMessage()], 500);
+		}
     }
 }

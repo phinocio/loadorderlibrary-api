@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Game;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,7 @@ class LoadOrderFactory extends Factory
             'slug' => $this->faker->slug(),
             'description' => $this->faker->paragraph(),
             'is_private' => $this->faker->boolean(),
-            'game_id' => $this->faker->randomDigit() + 1,
+            'game_id' => Game::factory()->create(),
             'user_id' => User::factory()->create(),
         ];
     }

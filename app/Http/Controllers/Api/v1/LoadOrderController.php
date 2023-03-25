@@ -56,6 +56,10 @@ class LoadOrderController extends Controller
 			auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
 		}
 
+		if(!array_key_exists('private', $validated)) {
+			$validated['private'] = false;
+		}
+
 		$validated['expires'] = match ($validated['expires']) {
 			'3h' => Carbon::now()->addHours(3),
 			'3d' => Carbon::now()->addDays(3),
@@ -84,7 +88,7 @@ class LoadOrderController extends Controller
 		$loadOrder->website     = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
 		$loadOrder->discord     = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
 		$loadOrder->readme      = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
-		$loadOrder->is_private  = $request->input('private') != null;
+		$loadOrder->is_private  = $validated['private'];
 		$loadOrder->expires_at  = $validated['expires'];
 		$loadOrder->save();
 		$loadOrder->files()->attach($fileIds);
@@ -96,9 +100,9 @@ class LoadOrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(LoadOrder $loadOrder)
     {
-        //
+        return new LoadOrderResource($loadOrder);
     }
 
     /**

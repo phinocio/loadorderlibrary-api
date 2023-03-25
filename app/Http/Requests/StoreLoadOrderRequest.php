@@ -35,7 +35,8 @@ class StoreLoadOrderRequest extends FormRequest
 			'readme' => 'string|nullable',
 			'files' => 'required',
 			'files.*' => [new ValidMimetype, 'max:512', new ValidNumLines, new ValidFilename],
-			'expires' => 'string|nullable'
+			'expires' => 'string|nullable',
+			'private' => 'bool|nullable'
 		];
     }
 }

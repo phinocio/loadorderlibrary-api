@@ -16,20 +16,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
+	Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'show'])->name('user.show');
 
-        /*
-         * Passing an instance of a resource to the controller for deletion is
-         * convention of other resources. In addition, this will allow an
-         * admin to delete any user they choose by passing a name.
-         */
+		/*
+		 * Passing an instance of a resource to the controller for deletion is
+		 * convention of other resources. In addition, this will allow an
+		 * admin to delete any user they choose by passing a name.
+		 */
         Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
+		Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy');
     });
+
 
 	Route::get('/lists', [LoadOrderController::class, 'index'])->name('lists');
 	Route::get('/lists/{load_order:slug}', [LoadOrderController::class, 'show'])->name('lists.show');
 	Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store');
-	Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy');
-
 });

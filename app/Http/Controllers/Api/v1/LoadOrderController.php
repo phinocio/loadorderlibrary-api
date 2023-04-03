@@ -20,33 +20,33 @@ use Storage;
 
 class LoadOrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $lists = QueryBuilder::for(LoadOrder::class)
-            ->allowedFilters([
-                AllowedFilter::custom('author', new FiltersAuthorName()),
-                AllowedFilter::custom('game', new FiltersGameName()),
-            ])
-            ->defaultSort('-created_at')
-            ->allowedSorts([
-                AllowedSort::field('created', 'created_at'),
-                AllowedSort::field('updated', 'updated_at'),
-            ])
-            ->where('is_private', false)
-            ->paginate(14)
-            ->appends(request()->query());
+	/**
+	 * Display a listing of the resource.
+	 */
+	public function index()
+	{
+		$lists = QueryBuilder::for(LoadOrder::class)
+			->allowedFilters([
+				AllowedFilter::custom('author', new FiltersAuthorName()),
+				AllowedFilter::custom('game', new FiltersGameName()),
+			])
+			->defaultSort('-created_at')
+			->allowedSorts([
+				AllowedSort::field('created', 'created_at'),
+				AllowedSort::field('updated', 'updated_at'),
+			])
+			->where('is_private', false)
+			->paginate(14)
+			->appends(request()->query());
 
-        return LoadOrderResource::collection($lists);
-    }
+		return LoadOrderResource::collection($lists);
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLoadOrderRequest $request)
-    {
+	/**
+	 * Store a newly created resource in storage.
+	 */
+	public function store(StoreLoadOrderRequest $request)
+	{
 		$validated = $request->validated();
 		$fileNames = UploadService::uploadFiles($validated['files']);
 
@@ -61,11 +61,11 @@ class LoadOrderController extends Controller
 		}
 
 		$validated['expires'] = match ($validated['expires']) {
-			'3h' => Carbon::now()->addHours(3),
+		'3h' => Carbon::now()->addHours(3),
 			'3d' => Carbon::now()->addDays(3),
 			'1w' => Carbon::now()->addWeek(),
 			'perm' => null,
-			default => auth()->check() ? null : Carbon::now()->addHours(24),
+default => auth()->check() ? null : Carbon::now()->addHours(24),
 		};
 
 		// Persist the file entries to the database.
@@ -84,7 +84,7 @@ class LoadOrderController extends Controller
 		$loadOrder->description = $validated['description'];
 		$loadOrder->version 	= $validated['version'] ?? null;
 		// We simply remove the http/s of an input url, so we can add https:// to all on display.
-		// If a site doesn't support TSL at this point, that's on them, I'm not linking to an insecure url.
+		// If a site doesn't support TLS at this point, that's on them, I'm not linking to an insecure url.
 		$loadOrder->website     = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
 		$loadOrder->discord     = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
 		$loadOrder->readme      = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
@@ -95,29 +95,29 @@ class LoadOrderController extends Controller
 
 		// return
 		return new LoadOrderResource($loadOrder);
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(LoadOrder $loadOrder)
-    {
-        return new LoadOrderResource($loadOrder);
-    }
+	/**
+	 * Display the specified resource.
+	 */
+	public function show(LoadOrder $loadOrder)
+	{
+		return new LoadOrderResource($loadOrder);
+	}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+	/**
+	 * Update the specified resource in storage.
+	 */
+	public function update(Request $request, string $id)
+	{
+		//
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(LoadOrder $loadOrder)
-    {
+	/**
+	 * Remove the specified resource from storage.
+	 */
+	public function destroy(LoadOrder $loadOrder)
+	{
 		// TODO: Make this actually use proper permissions stuff (rules? authorizations?)
 		if(!auth()->check()) {
 			return response()->json(['message' => 'Unauthorized.'], 401);
@@ -134,5 +134,5 @@ class LoadOrderController extends Controller
 		} catch (\Throwable $th) {
 			return response()->json(['message' => 'something went wrong deleting the load order. Please let Phinocio know.', 'error' => $th->getMessage()], 500);
 		}
-    }
+	}
 }

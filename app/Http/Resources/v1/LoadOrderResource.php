@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Http\Resources\v1\AuthorResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,7 +28,7 @@ class LoadOrderResource extends JsonResource
             'expires' => $this->expires_at,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
-            'author' => new UserResource($this->author),
+            'author' => new AuthorResource($this->author),
             'game' => new GameResource($this->game),
             'files' => FileResource::collection($this->files),
             'links' => [

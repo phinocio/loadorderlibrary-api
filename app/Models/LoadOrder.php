@@ -13,7 +13,7 @@ class LoadOrder extends Model
 
     protected $guarded = [];
 
-    protected $with = ['files', 'game', 'author'];
+    protected $with = ['game', 'author'];
 
     protected $hidden = ['id'];
 

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             GameSeeder::class,
             UserSeeder::class,
+//			FileSeeder::class, // Migration handles this for existing files on disk.
             LoadOrderSeeder::class,
         ]);
     }

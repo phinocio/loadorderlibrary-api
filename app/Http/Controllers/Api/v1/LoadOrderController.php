@@ -36,7 +36,7 @@ class LoadOrderController extends Controller
 				AllowedSort::field('updated', 'updated_at'),
 			])
 			->where('is_private', false)
-			->paginate(14)
+			->paginate(6)
 			->appends(request()->query());
 
 		return LoadOrderResource::collection($lists);

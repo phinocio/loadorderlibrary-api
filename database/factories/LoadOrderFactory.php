@@ -18,12 +18,14 @@ class LoadOrderFactory extends Factory
      */
     public function definition(): array
     {
+		$games = Game::count();
+
         return [
             'name' => $this->faker->name(),
             'slug' => $this->faker->slug(),
             'description' => $this->faker->paragraph(),
             'is_private' => $this->faker->boolean(),
-            'game_id' => Game::factory()->create(),
+            'game_id' => rand(1, $games),
             'user_id' => User::factory()->create(),
         ];
     }

@@ -25,6 +25,7 @@ class LoadOrderController extends Controller
 	 */
 	public function index()
 	{
+
 		$lists = QueryBuilder::for(LoadOrder::class)
 			->allowedFilters([
 				AllowedFilter::custom('author', new FiltersAuthorName()),
@@ -36,7 +37,7 @@ class LoadOrderController extends Controller
 				AllowedSort::field('updated', 'updated_at'),
 			])
 			->where('is_private', false)
-			->paginate(6)
+			->paginate(120)
 			->appends(request()->query());
 
 		return LoadOrderResource::collection($lists);

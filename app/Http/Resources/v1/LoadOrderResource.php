@@ -28,9 +28,9 @@ class LoadOrderResource extends JsonResource
             'expires' => $this->expires_at,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
-            'author' => new AuthorResource($this->author),
-            'game' => new GameResource($this->game),
-            'files' => FileResource::collection($this->files),
+            'author' => new AuthorResource($this->whenLoaded('author')),
+            'game' => new GameResource($this->whenLoaded('game')),
+            'files' => FileResource::collection($this->whenLoaded('files')),
             'links' => [
                 'url' => config('app.frontend_url')."/lists/$this->slug",
                 'self' => config('app.url')."/v1/lists/$this->slug",

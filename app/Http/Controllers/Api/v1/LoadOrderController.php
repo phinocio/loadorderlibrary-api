@@ -103,7 +103,7 @@ default => auth()->check() ? null : Carbon::now()->addHours(24),
 	 */
 	public function show(LoadOrder $loadOrder)
 	{
-		return new LoadOrderResource($loadOrder);
+		return new LoadOrderResource($loadOrder->load('files'));
 	}
 
 	/**

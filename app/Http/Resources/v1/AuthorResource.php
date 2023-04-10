@@ -15,7 +15,8 @@ class AuthorResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-			'name' => $this->name
+			'name' => $this->name,
+			'verified' => (bool) $this->is_verified
 		];
     }
 }

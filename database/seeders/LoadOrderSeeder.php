@@ -13,7 +13,7 @@ class LoadOrderSeeder extends Seeder
      */
     public function run(): void
     {
-        LoadOrder::factory(1500)->create();
+        LoadOrder::factory(300)->create();
 
 		$filesCount = File::count();
 

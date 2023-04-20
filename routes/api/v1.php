@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
 	Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'show'])->name('user.show');
+		Route::get('/user/lists', [UserController::class, 'lists'])->name('user.lists');
 
 		/*
 		 * Passing an instance of a resource to the controller for deletion is

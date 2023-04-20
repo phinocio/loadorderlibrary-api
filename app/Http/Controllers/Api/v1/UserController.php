@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v1\LoadOrderResource;
 use App\Http\Resources\v1\UserResource;
+use App\Models\LoadOrder;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,12 +27,10 @@ class UserController extends Controller
 		return new UserResource(auth()->user());
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 */
-	public function update(Request $request, User $user)
+	public function lists()
 	{
-		return response()->json(['message' => 'not implemented'], 501);
+		$lists = LoadOrder::whereUserId(auth()->user()->id)->get();
+		return LoadOrderResource::collection($lists);
 	}
 
 	/**

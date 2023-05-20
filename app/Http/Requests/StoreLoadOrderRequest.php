@@ -36,7 +36,7 @@ class StoreLoadOrderRequest extends FormRequest
 			'files' => 'required',
 			'files.*' => [new ValidMimetype, 'max:512', new ValidNumLines, new ValidFilename],
 			'expires' => 'string|nullable',
-			'private' => 'bool|nullable'
+			'private' => 'string|nullable'
 		];
     }
 }

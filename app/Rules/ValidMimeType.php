@@ -22,7 +22,9 @@ class ValidMimeType implements ValidationRule
 			'application/x-wine-extension-ini'
 		];
 
-		$file = $value->getClientOriginalName();
+//		dd($value);
+
+//		$file = $value->getClientOriginalName();
 
 		$mimetype = $value->getClientMimeType();
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Support\Facades\Route;
@@ -33,4 +34,6 @@ Route::prefix('v1')->group(function () {
 	Route::get('/lists', [LoadOrderController::class, 'index'])->name('lists');
 	Route::get('/lists/{load_order:slug}', [LoadOrderController::class, 'show'])->name('lists.show');
 	Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store');
+
+	Route::get("/games", [GameController::class, 'index'])->name('games');
 });

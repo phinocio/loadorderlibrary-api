@@ -82,14 +82,14 @@ default => auth()->check() ? null : Carbon::now()->addHours(24),
 		$loadOrder->game_id     = (int) $validated['game'];
 		$loadOrder->slug        = CreateSlug::new($validated['name']);
 		$loadOrder->name        = $validated['name'];
-		$loadOrder->description = $validated['description'];
+		$loadOrder->description = $validated['description'] ?? null;
 		$loadOrder->version 	= $validated['version'] ?? null;
 		// We simply remove the http/s of an input url, so we can add https:// to all on display.
 		// If a site doesn't support TLS at this point, that's on them, I'm not linking to an insecure url.
 		$loadOrder->website     = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
 		$loadOrder->discord     = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
 		$loadOrder->readme      = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
-		$loadOrder->is_private  = $validated['private'];
+		$loadOrder->is_private  = (bool)$validated['private'];
 		$loadOrder->expires_at  = $validated['expires'];
 		$loadOrder->save();
 		$loadOrder->files()->attach($fileIds);

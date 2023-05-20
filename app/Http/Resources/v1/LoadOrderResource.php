@@ -32,7 +32,7 @@ class LoadOrderResource extends JsonResource
             'game' => new GameResource($this->whenLoaded('game')),
             'files' => FileResource::collection($this->whenLoaded('files')),
             'links' => [
-                'url' => config('app.frontend_url')."/lists/$this->slug",
+                'url' => "/lists/$this->slug",
                 'self' => config('app.url')."/v1/lists/$this->slug",
             ],
         ];

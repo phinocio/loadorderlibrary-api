@@ -29,7 +29,7 @@ class UserController extends Controller
 
 	public function lists()
 	{
-		$lists = LoadOrder::whereUserId(auth()->user()->id)->get();
+		$lists = LoadOrder::whereUserId(auth()->user()->id)->orderBy('created_at', 'desc')->get();
 		return LoadOrderResource::collection($lists);
 	}
 

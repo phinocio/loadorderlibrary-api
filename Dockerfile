@@ -1,6 +1,6 @@
 # Adapted from https://www.digitalocean.com/community/tutorials/how-to-install-and-set-up-laravel-with-docker-compose-on-ubuntu-22-04
 
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Set important ENV
 
@@ -28,7 +28,7 @@ COPY docker/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
 # Install needed PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd opcache
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd opcache iconv
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

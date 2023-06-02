@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return ['Laravel' => '5'];
+    return ['msg' => 'I should do something proper for requests to /'];
 });

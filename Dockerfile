@@ -28,7 +28,7 @@ COPY docker/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
 # Install needed PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd opcache iconv
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd opcache iconv zip
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

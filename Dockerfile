@@ -18,13 +18,14 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY docker/start.sh /usr/local/bin/start
+COPY docker/php/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
 # Install needed PHP extensions

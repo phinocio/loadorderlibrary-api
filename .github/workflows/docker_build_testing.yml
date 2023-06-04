@@ -1,6 +1,7 @@
 name: Create Testing Container
 
-IMAGE_NAME=loadorderlibrary-api
+env:
+  IMAGE_NAME: loadorderlibrary-api
 
 on:
   push:

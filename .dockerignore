@@ -1,4 +1,11 @@
-node_modules/
-vendor/
-.git/
-.env
+*
+*/
+!composer.*
+!app/
+!bootstrap/
+!config/
+!public/
+!routes/
+!storage/
+!artisan
+!docker/

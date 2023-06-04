@@ -27,18 +27,17 @@ jobs:
           docker tag $TAG ${{ env.REGISTRY }}/$USER/$TAG:${{ env.VERSION }}
           docker push ${{ env.REGISTRY }}/$USER/$TAG:${{ env.VERSION }}
   deploy:
-    name: Deploy Container to Server
-    runs-on: ubuntu-latest
-    steps:
-      - uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /home/lolapi/loadorderlibrary-api
-            git checkout -f testing
-            git pull
-            docker compose pull app
-            docker compose up -d
+    - name: Deploy Container to Server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/lolapi/loadorderlibrary-api
+          git checkout -f testing
+          git pull
+          docker compose pull app
+          docker compose -f docker-compose.testing.yml up -d
+          docker image prune -f

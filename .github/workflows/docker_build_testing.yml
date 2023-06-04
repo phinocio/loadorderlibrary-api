@@ -29,6 +29,7 @@ jobs:
   deploy:
     name: Deploy Container to Server
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: appleboy/ssh-action@v0.1.10
         with:
@@ -40,6 +41,6 @@ jobs:
             cd /home/lolapi/loadorderlibrary-api
             git checkout -f testing
             git pull
-            docker compose pull app
+            docker compose -f docker-compose.testing.yml pull app
             docker compose -f docker-compose.testing.yml up -d
             docker image prune -f

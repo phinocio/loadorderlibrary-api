@@ -1,7 +1,7 @@
 name: Create Testing Container
 
 env:
-  IMAGE_NAME: loadorderlibrary-api
+  TAG: loadorderlibrary-api
   
 on:
   push:
@@ -12,7 +12,6 @@ jobs:
     name: Build Testing Container
     runs-on: ubuntu-latest
     env:
-      TAG: $IMAGE_NAME
       USER: ${{ github.repository_owner }}
       REGISTRY: ghcr.io
       VERSION: testing

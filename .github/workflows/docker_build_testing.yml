@@ -2,7 +2,7 @@ name: Create Testing Container
 
 env:
   IMAGE_NAME: loadorderlibrary-api
-
+  
 on:
   push:
     branches: [ testing ]
@@ -11,6 +11,11 @@ jobs:
   build:
     name: Build Testing Container
     runs-on: ubuntu-latest
+    env:
+      TAG: $IMAGE_NAME
+      USER: ${{ github.repository_owner }}
+      REGISTRY: ghcr.io
+      VERSION: testing
     steps:
       - uses: actions/checkout@v2
       
@@ -18,10 +23,11 @@ jobs:
         run: docker build . --file Dockerfile --target prod --tag $IMAGE_NAME:testing
       
       - name: Login to GHCR
-        run: echo "${{ secrets.GH_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
       
       - name: Push image to GitHub CR
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:testing
+          IMAGE_ID=ghcr.io/$USER/$IMAGE_NAME:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID
           docker push $IMAGE_ID
         

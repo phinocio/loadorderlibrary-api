@@ -28,7 +28,7 @@ services:
             - ./:/var/www
         networks:
             - lol-api
-        depends_on: [ db ]
+        depends_on: [db]
     nginx:
         image: nginx:1.25.0-alpine
         container_name: lolapi-nginx
@@ -39,10 +39,9 @@ services:
             - ./public:/var/www/public
             - ./docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./docker/dev/nginx/sites-enabled:/etc/nginx/sites-enabled
-            - /var/log/nginx/lolapi-dev:/var/logs/nginx
         networks:
             - lol-api
-        depends_on: [ app ]
+        depends_on: [app]
 
 networks:
     lol-api:

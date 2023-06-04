@@ -67,7 +67,7 @@ services:
       - certbot_var:/var/lib/letsencrypt
       - ./public:/var/www/public
     depends_on: [nginx]
-    command: certonly --webroot --webroot-path=/var/www/public --email letsencrypt@loadorderlibrary.com --agree-tos --no-eff-email --staging -d dockertest.loadorderlibrary.com
+    command: certonly --webroot --webroot-path=/var/www/public --email letsencrypt@loadorderlibrary.com --agree-tos --no-eff-email --force-renewal -d dockertest.loadorderlibrary.com
 
 networks:
   lol-api:

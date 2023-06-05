@@ -21,12 +21,10 @@ class AddCleanNameColumnToFilesTable extends Migration
 
         $files = \App\Models\File::all();
 
-        if ($files) {
-            foreach ($files as $file) {
-                $cleanName = explode('-', $file->name);
-                $file->clean_name = $cleanName[1];
-                $file->save();
-            }
+        foreach ($files as $file) {
+            $cleanName = explode('-', $file->name);
+            $file->clean_name = $cleanName[1];
+            $file->save();
         }
     }
 

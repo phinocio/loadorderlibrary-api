@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      echo "${{ secrets.KEY }}" > ~/.ssh/id_ed25519
-      ssh -i ~/.ssh/id_ed25519 "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
-      sudo /home/lolapi/loadorderlibrary-api/test.sh
+      - name: SSH and deploy?
+        run:
+          echo "${{ secrets.KEY }}" > ~/.ssh/id_ed25519
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
+          sudo /home/lolapi/loadorderlibrary-api/test.sh

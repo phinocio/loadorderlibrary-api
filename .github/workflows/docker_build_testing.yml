@@ -34,6 +34,6 @@ jobs:
     steps:
       - name: SSH and deploy?
         run:
-          echo "${{ secrets.KEY }}" > ~/.ssh/id_ed25519
-          ssh -i ~/.ssh/id_ed25519 "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
+          echo "${{ secrets.KEY }}" > id_meow
+          ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
           sudo /home/lolapi/loadorderlibrary-api/test.sh

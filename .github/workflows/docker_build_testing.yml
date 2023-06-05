@@ -33,7 +33,7 @@ jobs:
     needs: build
     steps:
       - name: SSH and deploy?
-        run:
+        run: |
           echo "${{ secrets.KEY }}" > id_meow
           ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
           sudo /home/lolapi/loadorderlibrary-api/test.sh

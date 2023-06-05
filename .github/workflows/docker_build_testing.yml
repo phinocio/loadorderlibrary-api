@@ -36,4 +36,4 @@ jobs:
           echo "${{ secrets.KEY }}" > id_meow
           chmod 600 id_meow
           ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" -o "StrictHostKeyChecking no"
-          sudo /home/lolapi/loadorderlibrary-api/test.sh
+          sudo -S /home/lolapi/loadorderlibrary-api/test.sh

@@ -19,6 +19,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build Container Image
+        # We target prod because testing and prod have the same considerations, just different code in the image.
         run: docker build --target prod -t $TAG .
 
       - name: Push to GHCR

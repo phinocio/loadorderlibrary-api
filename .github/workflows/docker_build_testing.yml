@@ -35,4 +35,4 @@ jobs:
         run: |
           echo "${{ secrets.KEY }}" > id_meow
           chmod 600 id_meow
-          ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" -o "StrictHostKeyChecking no" "sudo /home/lolapi/loadorderlibrary-api/test.sh"
+          ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" -o "StrictHostKeyChecking no" "sudo /opt/lol/deploy_lolapi-testing.sh"

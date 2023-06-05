@@ -32,16 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /home/lolapi/loadorderlibrary-api
-            git checkout -f testing
-            git pull
-            docker compose -f docker-compose.testing.yml pull app
-            docker compose -f docker-compose.testing.yml up -d
-            docker image prune -f
+      echo "${{ secrets.KEY }}" > ~/.ssh/id_ed25519
+      ssh -i ~/.ssh/id_ed25519 "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}"
+      sudo /home/lolapi/loadorderlibrary-api/test.sh

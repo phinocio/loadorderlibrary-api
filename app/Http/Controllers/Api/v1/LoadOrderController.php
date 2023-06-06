@@ -25,7 +25,7 @@ class LoadOrderController extends Controller
 	 */
 	public function index()
 	{
-
+		dd($_SERVER);
 		$lists = QueryBuilder::for(LoadOrder::class)
 			->allowedFilters([
 				AllowedFilter::custom('author', new FiltersAuthorName()),

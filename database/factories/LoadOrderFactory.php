@@ -18,19 +18,17 @@ class LoadOrderFactory extends Factory
      */
     public function definition(): array
     {
-		$games = Game::count();
-		$users = User::count();
 
         return [
             'name' => $this->faker->name(),
             'slug' => $this->faker->slug(),
             'description' => $this->faker->paragraph(),
             'is_private' => $this->faker->boolean(),
-			'discord' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', $this->faker->url() ?? null) : null,
-			'website' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', $this->faker->url() ?? null) : null,
-			'readme' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', $this->faker->url() ?? null) : null,
-            'game_id' => rand(1, $games),
-            'user_id' => rand(1, $users),
+			'discord' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/discord' ?? null) : null,
+			'website' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/website' ?? null) : null,
+			'readme' => rand(1,3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/readme' ?? null) : null,
+            'game_id' => Game::factory()->create()->id,
+            'user_id' => null,
         ];
     }
 }

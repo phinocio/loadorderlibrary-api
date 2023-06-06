@@ -20,7 +20,7 @@ services:
     image: ghcr.io/phinocio/loadorderlibrary-api:testing
     container_name: lolapi-testing
     restart: unless-stopped
-    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate && exec php-fpm"
+    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed && exec php-fpm"
     environment:
       APP_NAME: ${APP_NAME}
       APP_ENV: ${APP_ENV}
@@ -55,7 +55,7 @@ services:
       - /var/log/nginx/lolapi-dev:/var/log/nginx
       - certbot_etc:/etc/letsencrypt
       - certbot_var:/var/lib/letsencrypt
-      - ./public:/var/www/_letsencrypt
+      - le_challenge:/var/www/_letsencrypt
       - ./docker/testing/nginx/dhparam:/etc/nginx/dhparam
     networks:
       - lol-api
@@ -66,8 +66,8 @@ services:
     volumes:
       - certbot_etc:/etc/letsencrypt
       - certbot_var:/var/lib/letsencrypt
-      - ./public:/var/www/_letsencrypt
-    depends_on: [app, nginx]
+      - le_challenge:/var/www/_letsencrypt
+    depends_on: [nginx]
     command: certonly --webroot -d dockertest2.loadorderlibrary.com --email letsencrypt@loadorderlibrary.com -w /var/www/_letsencrypt -n --agree-tos --force-renewal --no-eff-email --dry-run
 
 networks:
@@ -78,3 +78,4 @@ volumes:
   mariadb_data:
   certbot_etc:
   certbot_var:
+  le_challenge:

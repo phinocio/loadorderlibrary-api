@@ -20,7 +20,7 @@ services:
     image: ghcr.io/phinocio/loadorderlibrary-api:testing
     container_name: lolapi-prod
     restart: unless-stopped
-    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh && exec php-fpm"
+    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate && exec php-fpm"
     environment:
       APP_NAME: ${APP_NAME}
       APP_ENV: ${APP_ENV}

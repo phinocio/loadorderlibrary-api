@@ -36,11 +36,11 @@ COPY --from=build-prod /app .
 
 RUN chown -R $user:$user /var/www
 
-RUN rmdir /var/www/html && rm /var/www/composer.*
+RUN rmdir /var/www/html
 
 USER $user
 
-
+######################################################################################3
 # Development build
 FROM composer:2.5.7 as build-dev
 
@@ -50,19 +50,21 @@ COPY . .
 RUN composer install
 
 # Development app
-FROM php:8.2-fpm as dev
+FROM php:8.2-fpm-alpine3.18 as dev
 
 ARG user=lolapi
-RUN useradd -G www-data,root -d /home/$user $user
+RUN adduser -D $user
 
 WORKDIR /var/www
 
 # Install system deps
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add \
     libzip-dev
 
 # Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apk cache clean && \
+    rm -rf /var/lib/apk/lists/* && \
+    rm -rf /var/cache/apk/*
 
 # Install needed PHP extensions
 RUN docker-php-ext-configure opcache --enable-opcache && \
@@ -71,12 +73,12 @@ RUN docker-php-ext-configure opcache --enable-opcache && \
 # Set move OPCache config
 COPY docker/dev/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+
 # Copy project to container
 COPY --from=build-dev /app .
 
-RUN mkdir /home/$user && \
-	chown -R $user:$user /home/$user && \
-    chown -R $user:$user /var/www
+RUN chown -R $user:$user /var/www
 
 RUN rmdir /var/www/html
 

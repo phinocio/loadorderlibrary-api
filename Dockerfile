@@ -9,8 +9,7 @@ RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interacti
 FROM php:8.2-fpm-alpine3.18 as prod
 
 ARG user=lolapi
-ARG uid=2000
-RUN adduser -u $uid -D $user
+RUN adduser -D $user
 
 WORKDIR /var/www
 
@@ -59,8 +58,7 @@ RUN composer install
 FROM php:8.2-fpm as dev
 
 ARG user=lolapi
-ARG uid=1000
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN useradd -G www-data,root -d /home/$user $user
 
 WORKDIR /var/www
 

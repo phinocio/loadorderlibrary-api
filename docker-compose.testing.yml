@@ -29,13 +29,14 @@ services:
       APP_URL: ${APP_URL}
       FRONTEND_URL: ${FRONTEND_URL}
       SESSION_DOMAIN: ${SESSION_DOMAIN}
-      LOCAL_DOMAINS: ${LOCAL_DOMAINS}git
+      LOCAL_DOMAINS: ${LOCAL_DOMAINS}
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+    user: ${UID}:${GID}
     volumes:
       - ./storage/:/var/www/storage/
     networks:
@@ -46,29 +47,14 @@ services:
     container_name: lolapi-nginx
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-      # - "8000:80"
+      - "8000:80"
     volumes:
       - ./public:/var/www/public
       - ./docker/testing/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /var/log/nginx/lolapi-dev:/var/log/nginx
-      - certbot_etc:/etc/letsencrypt
-      - certbot_var:/var/lib/letsencrypt
-      - le_challenge:/var/www/_letsencrypt
-      - ./docker/testing/nginx/dhparam:/etc/nginx/dhparam
     networks:
       - lol-api
     depends_on: [app]
-  certbot:
-    image: certbot/certbot
-    container_name: certbot-api
-    volumes:
-      - certbot_etc:/etc/letsencrypt
-      - certbot_var:/var/lib/letsencrypt
-      - le_challenge:/var/www/_letsencrypt
-    depends_on: [nginx]
-    command: certonly --webroot -d dockertest2.loadorderlibrary.com --email letsencrypt@loadorderlibrary.com -w /var/www/_letsencrypt -n --agree-tos --force-renewal --no-eff-email --dry-run
 
 networks:
   lol-api:

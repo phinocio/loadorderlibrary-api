@@ -10,7 +10,6 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
       SERVICE_NAME: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql

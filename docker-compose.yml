@@ -38,6 +38,7 @@ services:
         volumes:
             - ./public:/var/www/public
             - ./docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./docker/dev/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
         networks:
             - lol-api
         depends_on: [app]

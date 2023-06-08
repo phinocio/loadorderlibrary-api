@@ -13,11 +13,6 @@ RUN adduser -D $user
 
 WORKDIR /var/www
 
-# Set important ENV
-ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
-    PHP_OPCACHE_MAX_ACCELERATED_FILES=10000 \
-    PHP_OPCACHE_MEMORY_CONSUMPTION=192
-
 # Install system deps
 RUN apk update && apk add \
     libzip-dev
@@ -61,11 +56,6 @@ ARG user=lolapi
 RUN useradd -G www-data,root -d /home/$user $user
 
 WORKDIR /var/www
-
-# Set important ENV
-ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS=1 \
-    PHP_OPCACHE_MAX_ACCELERATED_FILES=10000 \
-    PHP_OPCACHE_MEMORY_CONSUMPTION=192
 
 # Install system deps
 RUN apt-get update && apt-get install -y \

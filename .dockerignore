@@ -6,6 +6,7 @@
 !config/
 !public/
 !routes/
+!storage/
 !artisan
 !docker/
 !database/

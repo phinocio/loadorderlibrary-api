@@ -1,9 +1,9 @@
-# Testing docker-compose File
-version: "3.7"
+# Docker compose file for testing environment
+
 services:
   db:
     image: mariadb:10.9
-    container_name: lolapi-db
+    container_name: lol-testingapi-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -13,12 +13,12 @@ services:
       SERVICE_NAME: mariadb
     profiles: ["testing", "local"]
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - lol-testingapi-db:/var/lib/mysql
     networks:
       - lol-api
   app:
     image: ghcr.io/phinocio/loadorderlibrary-api:testing
-    container_name: lolapi-testing
+    container_name: lol-testingapi-app
     restart: unless-stopped
     entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed && exec php-fpm"
     env_file: .env
@@ -33,7 +33,7 @@ services:
     depends_on: [db]
   nginx:
     image: nginx:1.25.0-alpine
-    container_name: lolapi-nginx
+    container_name: lol-testingapi-nginx
     restart: unless-stopped
     profiles: ["local"]
     ports:
@@ -52,7 +52,4 @@ networks:
     driver: bridge
 
 volumes:
-  mariadb_data:
-  certbot_etc:
-  certbot_var:
-  le_challenge:
+  lol-testingapi-db:

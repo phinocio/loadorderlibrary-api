@@ -24,8 +24,6 @@ services:
     env_file: .env
     user: "2000:2000"
     profiles: ["testing", "local"]
-    ports:
-      - "127.0.0.1:9000:9000"
     volumes:
       - ./storage/:/var/www/storage/
     networks:
@@ -53,7 +51,6 @@ networks:
     external: true
   lolapi-db:
     driver: bridge
-  
 
 volumes:
   lol-testingapi-db:

@@ -26,13 +26,13 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
           docker tag $TAG ${{ env.REGISTRY }}/$USER/$TAG:${{ env.VERSION }}
           docker push ${{ env.REGISTRY }}/$USER/$TAG:${{ env.VERSION }}
-  deploy:
-    name: Deploy Container to Server
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: SSH and deploy?
-        run: |
-          echo "${{ secrets.KEY }}" > id_meow
-          chmod 600 id_meow
-          ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" -o "StrictHostKeyChecking no" "sudo /opt/lol/deploy_lolapi-testing.sh"
+  # deploy:
+  #   name: Deploy Container to Server
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: SSH and deploy?
+  #       run: |
+  #         echo "${{ secrets.KEY }}" > id_meow
+  #         chmod 600 id_meow
+  #         ssh -i id_meow "${{ secrets.USERNAME }}"@"${{ secrets.HOST }}" -o "StrictHostKeyChecking no" "sudo /opt/lol/deploy_lolapi-testing.sh"

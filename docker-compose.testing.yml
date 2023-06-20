@@ -35,8 +35,6 @@ services:
     container_name: lol-testingapi-nginx
     restart: unless-stopped
     profiles: ["local"]
-    ports:
-      - "8000:80"
     volumes:
       - ./public:/var/www/public
       - ./docker/testing/nginx/nginx.conf:/etc/nginx/nginx.conf

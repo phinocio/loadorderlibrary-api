@@ -16,7 +16,7 @@ jobs:
       REGISTRY: ghcr.io
       VERSION: testing
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build Container Image
         run: docker build --target prod -t $TAG .

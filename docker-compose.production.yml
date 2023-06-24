@@ -1,9 +1,9 @@
-# Production docker-compose File
-version: "3.7"
+# Docker compose file for production environment
+
 services:
   db:
     image: mariadb:10.9
-    container_name: lolapi-db
+    container_name: lol-prodapi-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -11,41 +11,44 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       SERVICE_NAME: mariadb
+    profiles: ["prod", "local"]
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - lol-prodapi-db:/var/lib/mysql
     networks:
-      - lol-api
+      - lolapi-db
   app:
     image: ghcr.io/phinocio/loadorderlibrary-api:latest
-    container_name: lolapi-prod
+    container_name: lol-prodapi-app
     restart: unless-stopped
     entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed --force && exec php-fpm"
     env_file: .env
-    environment:
-      USER: ${USER}
+    user: "2000:2000"
+    profiles: ["prod", "local"]
     volumes:
       - ./storage/:/var/www/storage/
     networks:
-      - lol-api
+      - lol
+      - lolapi-db
     depends_on: [db]
   nginx:
     image: nginx:1.25.0-alpine
-    container_name: lolapi-nginx
+    container_name: lol-prodapi-nginx
     restart: unless-stopped
-    ports:
-      - "8000:80"
+    profiles: ["local"]
     volumes:
       - ./public:/var/www/public
       - ./docker/prod/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/prod/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - /var/log/nginx/lolapi-prod:/var/log/nginx
     networks:
-      - lol-api
+      - lol
     depends_on: [app]
 
 networks:
-  lol-api:
+  lol:
+    external: true
+  lolapi-db:
     driver: bridge
 
 volumes:
-  mariadb_data:
+  lol-prodapi-db:

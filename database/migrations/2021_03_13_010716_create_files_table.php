@@ -4,26 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up(): void
+	{
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-			$table->string('name')->unique();
+            $table->string('name')->unique();
+			$table->string('clean_name');
+			$table->unsignedBigInteger('size_in_bytes');
             $table->timestamps();
         });
-
-		// Also add all existing files on disk to the table
-		$files = \Storage::disk('uploads')->allFiles();
-		foreach ($files as $file) {
-			\App\Models\File::create(['name' => $file]);
-		}
     }
 
     /**
@@ -31,8 +27,8 @@ class CreateFilesTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down(): void
+	{
         Schema::dropIfExists('files');
     }
-}
+};

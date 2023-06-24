@@ -2,44 +2,27 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
 use App\Helpers\ValidFiles;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
-class ValidFilename implements Rule
+class ValidFilename implements ValidationRule
 {
-	protected $file = '';
 
 	/**
-	 * Create a new rule instance.
+	 * Run the validation rule.
 	 *
-	 * @return void
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @param Closure $fail
 	 */
-	public function __construct()
-	{
-		//
-	}
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+		$file = $value->getClientOriginalName();
 
-	/**
-	 * Determine if the validation rule passes.
-	 *
-	 * @param  string  $attribute
-	 * @param  mixed  $value
-	 * @return bool
-	 */
-	public function passes($attribute, $value)
-	{
-		$this->file = $value->getClientOriginalName();
-
-		return in_array(strtolower($this->file), ValidFiles::all());
-	}
-
-	/**
-	 * Get the validation error message.
-	 *
-	 * @return string
-	 */
-	public function message()
-	{
-		return $this->file . ' is not named correctly. Please double check valid filenames on the right and try again.';
-	}
+		if (!in_array(strtolower($file), ValidFiles::all())) {
+			$fail('The :value is not named correctly.');
+		}
+    }
 }

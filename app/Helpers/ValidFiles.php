@@ -2,13 +2,10 @@
 
 namespace App\Helpers;
 
-use App\LoadOrder;
-use Illuminate\Support\Str;
-
 class ValidFiles
 {
 
-	static function all()
+	static function all(): array
 	{
 		return [
 			'enblocal.ini',

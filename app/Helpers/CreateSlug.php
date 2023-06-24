@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class CreateSlug
 {
 
-	static function new($name)
+	static function new($name): string
 	{
 		$slug = Str::slug($name, '-');
 
@@ -23,7 +23,6 @@ class CreateSlug
 
 	protected static function exists($slug)
 	{
-		$slugs = LoadOrder::where('slug', 'like', $slug . "%")->get();
-		return $slugs;
+		return LoadOrder::where('slug', 'like', $slug . "%")->get();
 	}
 }

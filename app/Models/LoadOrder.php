@@ -4,34 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LoadOrder extends Model
 {
     use HasFactory;
 
-	protected $guarded = [];
-	protected $with = ['files', 'game', 'author'];
-	protected $hidden = ['id'];
+    protected $guarded = [];
 
-	protected $dates = ['expires_at'];
-	protected $casts = [
-		'expires_at' => 'timestamp',
-		'created_at' => 'timestamp',
-		'updated_at' => 'timestamp'
-	];
+    protected $with = ['game', 'author'];
 
-	public function game()
-	{
-		return $this->belongsTo('\App\Models\Game');
-	}
+    protected $hidden = ['id'];
 
-	public function author()
-	{
-		return $this->belongsTo('\App\Models\User', 'user_id');
-	}
+    protected $casts = [
+        'expires_at' => 'datetime'
+    ];
 
-	public function files()
-	{
-		return $this->belongsToMany('\App\Models\File')->withTimestamps();
-	}
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo('\App\Models\Game');
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo('\App\Models\User', 'user_id');
+    }
+
+    public function files(): BelongsToMany
+    {
+        return $this->belongsToMany('\App\Models\File')->withTimestamps();
+    }
 }

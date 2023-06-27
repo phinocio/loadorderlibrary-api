@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Game;
 use App\Models\LoadOrder;
 use App\Models\User;
 use Database\Seeders\GameSeeder;
@@ -13,15 +12,15 @@ use Tests\TestCase;
 
 class LoadOrderTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker;
 
-    /** @test */
-    public function index_returns_valid_format(): void
-    {
+	/** @test */
+	public function index_returns_valid_format(): void
+	{
 		LoadOrder::factory(5)->create();
-        $this->getJson('/v1/lists')->assertOk()->assertJsonStructure([
+		$this->getJson('/v1/lists')->assertOk()->assertJsonStructure([
 			'data' => [
-				'*' =>[
+				'*' => [
 					'name',
 					'version',
 					'slug',
@@ -33,14 +32,13 @@ class LoadOrderTest extends TestCase
 					'updated',
 					'author',
 					'game',
-					'files',
 					'links'
 				]
 			],
 			'links',
 			'meta'
-		])->assertJsonMissing(['private' => true]);
-    }
+		])->assertJsonMissing(['private' => true, 'files' => true]);
+	}
 
 	/** @test */
 	public function anyone_can_view_a_public_list(): void

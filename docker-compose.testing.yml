@@ -29,7 +29,7 @@ services:
     networks:
       - lol
       - lol-db
-    depends_on: [lol-testing-db]
+    depends_on: [db]
   nginx:
     image: nginx:1.25.0-alpine
     container_name: lol-testingapi-nginx
@@ -51,4 +51,4 @@ networks:
     external: true
 
 volumes:
-  lol-testingapi-db:
+  lol-testing-db:

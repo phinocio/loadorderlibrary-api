@@ -1,5 +1,5 @@
-# GithHub Actions Workflow generated with Ghygen
-# Original configuration: https://ghygen.hi-folks.dev?code=61c8b44a896f64a3ad3c2888d2228f71
+# Adapted from GithHub Actions Workflow generated with Ghygen
+# Original configuration: https://ghygen.hi-folks.dev?code=6628d4c79a971c9a7816ba6fa5093d23
 name: Template - Laravel application (Mysql)
 on:
   push:
@@ -21,6 +21,7 @@ jobs:
         operating-system: [ubuntu-latest]
         php-versions: ["8.2"]
         dependency-stability: ["prefer-stable"]
+        laravel: ["10"]
 
     name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
@@ -30,24 +31,26 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v3
+        id: vendor-cache
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
       - name: Install Dependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Generate key
         run: php artisan key:generate
+
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
-      - name: Run Migrations
-        # Set environment
-        env:
-          SESSION_DRIVER: array
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
-
-        run: php artisan migrate
 
       - name: Show dir
         run: pwd

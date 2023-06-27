@@ -35,7 +35,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./public:/var/www/public
+      - ./public:/srv/testingapi.loadorderlibrary.com/public
       - ./docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/dev/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - /var/log/nginx/lolapi-dev:/var/log/nginx

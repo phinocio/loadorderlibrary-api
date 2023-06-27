@@ -3,7 +3,7 @@
 services:
   db:
     image: mariadb:10.9
-    container_name: lol-testingapi-db
+    container_name: lol-testing-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -13,9 +13,9 @@ services:
       SERVICE_NAME: mariadb
     profiles: ["testing", "local"]
     volumes:
-      - lol-testingapi-db:/var/lib/mysql
+      - lol-testing-db:/var/lib/mysql
     networks:
-      - lolapi-db
+      - lol-db
   app:
     image: ghcr.io/phinocio/loadorderlibrary-api:testing
     container_name: lol-testingapi-app
@@ -28,8 +28,8 @@ services:
       - ./storage/:/var/www/storage/
     networks:
       - lol
-      - lolapi-db
-    depends_on: [db]
+      - lol-db
+    depends_on: [lol-testing-db]
   nginx:
     image: nginx:1.25.0-alpine
     container_name: lol-testingapi-nginx
@@ -47,8 +47,8 @@ services:
 networks:
   lol:
     external: true
-  lolapi-db:
-    driver: bridge
+  lol-db:
+    external: true
 
 volumes:
   lol-testingapi-db:

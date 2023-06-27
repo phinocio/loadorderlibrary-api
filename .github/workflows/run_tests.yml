@@ -1,5 +1,5 @@
 # GithHub Actions Workflow generated with Ghygen
-# Original configuration: https://ghygen.hi-folks.dev?code=6f358d9d6f3e45d5104bba20dc6cb215
+# Original configuration: https://ghygen.hi-folks.dev?code=61c8b44a896f64a3ad3c2888d2228f71
 name: Template - Laravel application (Mysql)
 on:
   push:
@@ -10,7 +10,7 @@ on:
   pull_request:
     branches:
       - main
-      - testing
+      - develop
 
 jobs:
   laravel-tests:
@@ -22,10 +22,6 @@ jobs:
         php-versions: ["8.2"]
         dependency-stability: ["prefer-stable"]
 
-        laravel: ["10.*"]
-        include:
-          - laravel: 10.*
-
     name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
     steps:
@@ -34,25 +30,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-      - name: Get Composer Cache Directory 2
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v3
-        id: actions-cache
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: Cache PHP dependencies
-        uses: actions/cache@v3
-        id: vendor-cache
-        with:
-          path: vendor
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Install Dependencies
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Generate key
         run: php artisan key:generate

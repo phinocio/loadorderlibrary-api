@@ -1,16 +1,15 @@
 # Adapted from GithHub Actions Workflow generated with Ghygen
 # Original configuration: https://ghygen.hi-folks.dev?code=6628d4c79a971c9a7816ba6fa5093d23
-name: Template - Laravel application (Mysql)
+name: Run tests with phpunit
 on:
   push:
     branches:
       - main
       - testing
-      - ci-test-workflow
   pull_request:
     branches:
       - main
-      - develop
+      - testing
 
 jobs:
   laravel-tests:
@@ -23,7 +22,7 @@ jobs:
         dependency-stability: ["prefer-stable"]
         laravel: ["10"]
 
-    name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
+    name: "Run Tests: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}"
 
     steps:
       - uses: actions/checkout@v3

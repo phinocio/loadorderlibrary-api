@@ -50,4 +50,4 @@ networks:
     external: true
 
 volumes:
-  lol-testing-db:
+  lol-dev-db:

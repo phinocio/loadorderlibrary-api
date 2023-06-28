@@ -12,11 +12,8 @@ RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interacti
 FROM php:8.2-fpm-alpine3.18 as prod
 
 ARG user=lolapi
-ARG group=uploads
 ARG uid=2000
-ARG gid=2010
-RUN addgroup -g $gid $group && \
-    adduser -u $uid -D $user -G $group
+RUN adduser -u $uid -D $user
 
 WORKDIR /srv/testingapi.loadorderlibrary.com
 
@@ -41,7 +38,7 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 # Copy project to container
 COPY --from=build-prod /app .
 
-RUN chown -R $user:$group /srv/testingapi.loadorderlibrary.com
+RUN chown -R $user:$user /srv/testingapi.loadorderlibrary.com
 
 USER $user
 

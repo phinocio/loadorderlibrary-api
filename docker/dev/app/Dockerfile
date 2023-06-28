@@ -12,11 +12,8 @@ RUN composer install
 FROM php:8.2-fpm-alpine3.18 as dev
 
 ARG user=lolapi
-ARG group=uploads
 ARG uid=1000
-ARG gid=2010
-RUN addgroup -g $gid $group && \
-    adduser -u $uid -D $user -G $group
+RUN adduser -u $uid -D $user -G $group
 
 WORKDIR /var/www
 

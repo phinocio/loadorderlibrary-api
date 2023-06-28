@@ -13,11 +13,10 @@ FROM php:8.2-fpm-alpine3.18 as dev
 
 ARG user=lolapi
 ARG group=uploads
-# Most users are 1000 UID, use ARG if it's different...
 ARG uid=1000
 ARG gid=2010
-RUN adduser -u $uid -D $user --disabled-password
-RUN addgroup -g $gid $group && addgroup $user $group
+RUN addgroup -g $gid $group && \
+    adduser -u $uid -D $user -G $group
 
 WORKDIR /var/www
 
@@ -42,8 +41,8 @@ RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 # Copy project to container
 COPY --from=build-dev /app .
 
-RUN chown -R $user:$user /var/www && chown -R $user:$group /var/www/storage/app/uploads
+RUN pwd
 
-RUN rmdir /var/www/html
+RUN chown -R $user:$group /var/www
 
 USER $user

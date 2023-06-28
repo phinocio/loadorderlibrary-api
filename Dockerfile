@@ -15,7 +15,7 @@ ARG gid=2010
 RUN adduser -u $uid -D $user --disabled-password
 RUN addgroup -g $gid $group && addgroup $user $group
 
-WORKDIR /srv/testingapi.loadorderlibrary.com
+WORKDIR /var/www
 
 # Install system deps
 RUN apk update && apk add \
@@ -38,7 +38,7 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 # Copy project to container
 COPY --from=build-prod /app .
 
-RUN chown -R $user:$user /srv/testingapi.loadorderlibrary.com && chown -R $user:$group /srv/testingapi.loadorderlibrary.com/storage/app/uploads
+RUN chown -R $user:$user /var/www && chown -R $user:$group /var/www/storage/app/uploads
 
 RUN rmdir /var/www/html
 

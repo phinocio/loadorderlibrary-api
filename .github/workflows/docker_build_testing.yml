@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build Container Image
-        run: docker build --target prod -t $TAG .
+        run: docker build --target app-testing -t $TAG -f docker/testing/app/Dockerfile .
 
       - name: Push to GHCR
         run: |

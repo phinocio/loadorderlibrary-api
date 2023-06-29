@@ -30,19 +30,6 @@ services:
       - lol
       - lol-db
     depends_on: [db]
-  nginx:
-    image: nginx:1.25.0-alpine
-    container_name: lol-testingapi-nginx
-    restart: unless-stopped
-    profiles: ["local"]
-    volumes:
-      - ./public:/var/www/public
-      - ./docker/testing/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/testing/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - /var/log/nginx/lolapi-testing:/var/log/nginx
-    networks:
-      - lol
-    depends_on: [app]
 
 networks:
   lol:

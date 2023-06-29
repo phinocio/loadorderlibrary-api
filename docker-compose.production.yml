@@ -3,7 +3,7 @@
 services:
   db:
     image: mariadb:10.9
-    container_name: lol-prodapi-db
+    container_name: lol-prod-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
@@ -13,14 +13,14 @@ services:
       SERVICE_NAME: mariadb
     profiles: ["prod", "local"]
     volumes:
-      - lol-prodapi-db:/var/lib/mysql
+      - lol-prod-db:/var/lib/mysql
     networks:
-      - lolapi-db
+      - lol-db
   app:
     image: ghcr.io/phinocio/loadorderlibrary-api:latest
     container_name: lol-prodapi-app
     restart: unless-stopped
-    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed --force && exec php-fpm"
+    entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate --force && exec php-fpm"
     env_file: .env
     user: "2000:2000"
     profiles: ["prod", "local"]
@@ -28,27 +28,14 @@ services:
       - ./storage/:/var/www/storage/
     networks:
       - lol
-      - lolapi-db
+      - lol-db
     depends_on: [db]
-  nginx:
-    image: nginx:1.25.0-alpine
-    container_name: lol-prodapi-nginx
-    restart: unless-stopped
-    profiles: ["local"]
-    volumes:
-      - ./public:/var/www/public
-      - ./docker/prod/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/prod/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - /var/log/nginx/lolapi-prod:/var/log/nginx
-    networks:
-      - lol
-    depends_on: [app]
 
 networks:
   lol:
     external: true
-  lolapi-db:
-    driver: bridge
+  lol-db:
+    external: true
 
 volumes:
-  lol-prodapi-db:
+  lol-prod-db:

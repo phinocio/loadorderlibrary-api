@@ -25,7 +25,7 @@ services:
     user: "2000:2000"
     profiles: ["testing", "local"]
     volumes:
-      - ./storage:/var/www/storage
+      - ./storage:/srv/testingapi.loadorderlibrary.com/storage
     networks:
       - lol
       - lol-db

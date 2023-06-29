@@ -23,7 +23,7 @@ services:
     env_file: .env
     user: "2000:2000"
     volumes:
-      - ./storage/:/var/www/storage/
+      - ./storage:/srv/testingapi.loadorderlibrary.com/storage
     networks:
       - lol
       - lol-db

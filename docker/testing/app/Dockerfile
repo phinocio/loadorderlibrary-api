@@ -15,7 +15,7 @@ ARG user=lolapi
 ARG uid=2000
 RUN adduser -u $uid -D $user
 
-WORKDIR /var/www
+WORKDIR /srv/testingapi.loadorderlibrary.com
 
 # Install system deps
 RUN apk update && apk add \
@@ -38,7 +38,7 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 # Copy project to container
 COPY --from=build-testing-composer /app .
 
-RUN chown -R $user:$user /var/www
+RUN chown -R $user:$user /srv/testingapi.loadorderlibrary.com
 
 USER $user
 

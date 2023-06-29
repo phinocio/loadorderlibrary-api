@@ -25,7 +25,7 @@ services:
     user: "2000:2000"
     profiles: ["testing", "local"]
     volumes:
-      - ./storage/:/var/www/storage/
+      - ./storage:/var/www/storage
     networks:
       - lol
       - lol-db

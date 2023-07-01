@@ -11,7 +11,6 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       SERVICE_NAME: mariadb
-    profiles: ["testing", "local"]
     volumes:
       - lol-testing-db:/var/lib/mysql
     networks:
@@ -23,7 +22,6 @@ services:
     entrypoint: sh -c "php artisan config:cache && php artisan route:cache && php artisan migrate:fresh --seed && exec php-fpm"
     env_file: .env
     user: "2000:2000"
-    profiles: ["testing", "local"]
     volumes:
       - ./storage:/srv/testingapi.loadorderlibrary.com/storage
     networks:

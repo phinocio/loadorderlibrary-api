@@ -13,7 +13,7 @@ FROM php:8.2-fpm-alpine3.18 as dev
 
 ARG user=lolapi
 ARG uid=1000
-RUN adduser -u $uid -D $user -G $group
+RUN adduser -u $uid -D $user
 
 WORKDIR /var/www
 

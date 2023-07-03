@@ -6,7 +6,7 @@ COPY . .
 RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
 
 # Production App
-FROM php:8.2-fpm-alpine3.18 as prod
+FROM php:8.2-fpm-alpine3.18 as app-prod
 
 ARG user=lolapi
 ARG uid=2000

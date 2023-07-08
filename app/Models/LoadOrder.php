@@ -18,7 +18,7 @@ class LoadOrder extends Model
     protected $hidden = ['id'];
 
     protected $casts = [
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
     ];
 
     public function game(): BelongsTo

@@ -16,7 +16,7 @@ class GameController extends Controller
     {
         $games = Game::orderBy('name', 'asc')->get();
 
-		return GameResource::collection($games);
+        return GameResource::collection($games);
     }
 
     /**

@@ -21,7 +21,7 @@ class UploadServiceTest extends TestCase
 
         Storage::disk('uploads')
             ->assertExists($files[0]['name'])
-			->assertExists($files[1]['name']);
+            ->assertExists($files[1]['name']);
 
         // Clean up the files
         Storage::disk('uploads')->delete($files[0]['name'], $files[1]['name']);

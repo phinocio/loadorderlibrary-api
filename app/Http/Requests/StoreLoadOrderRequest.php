@@ -25,18 +25,18 @@ class StoreLoadOrderRequest extends FormRequest
      */
     public function rules(): array
     {
-		return [
-			'name' => 'required|string|max:100',
-			'description' => 'string|nullable',
-			'game' => 'required',
-			'version' => ['string', 'nullable', 'max:15'],
-			'website' => 'string|nullable',
-			'discord' => 'string|nullable',
-			'readme' => 'string|nullable',
-			'files' => 'required',
-			'files.*' => [new ValidMimetype, 'max:512', new ValidNumLines, new ValidFilename],
-			'expires' => 'string|nullable',
-			'private' => 'string|nullable'
-		];
+        return [
+            'name' => 'required|string|max:100',
+            'description' => 'string|nullable',
+            'game' => 'required',
+            'version' => ['string', 'nullable', 'max:15'],
+            'website' => 'string|nullable',
+            'discord' => 'string|nullable',
+            'readme' => 'string|nullable',
+            'files' => 'required',
+            'files.*' => [new ValidMimetype(), 'max:512', new ValidNumLines(), new ValidFilename()],
+            'expires' => 'string|nullable',
+            'private' => 'string|nullable',
+        ];
     }
 }

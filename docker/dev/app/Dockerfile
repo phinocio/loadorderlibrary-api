@@ -15,7 +15,7 @@ ARG user=lolapi
 ARG uid=1000
 RUN adduser -u $uid -D $user
 
-WORKDIR /var/www
+WORKDIR /srv/dev.loadorderlibrary.com
 
 # Install system deps
 RUN apk update && apk add \
@@ -40,6 +40,6 @@ COPY --from=build-dev /app .
 
 RUN pwd
 
-RUN chown -R $user:$group /var/www
+RUN chown -R $user:$group /srv/dev.loadorderlibrary.com
 
 USER $user

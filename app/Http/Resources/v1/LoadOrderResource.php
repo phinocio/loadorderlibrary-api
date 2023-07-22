@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Models\LoadOrder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin LoadOrder */
 class LoadOrderResource extends JsonResource
 {
     /**

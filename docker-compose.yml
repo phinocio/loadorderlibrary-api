@@ -4,6 +4,8 @@ services:
     image: mariadb:10.9
     container_name: lol-dev-db
     restart: unless-stopped
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -50,8 +52,10 @@ services:
 
 networks:
   lol:
+    name: lol
     external: true
   lol-db:
+    name: lol-db
     external: true
 
 volumes:

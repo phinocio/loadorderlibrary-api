@@ -23,14 +23,14 @@ services:
       args:
         uid: 1000
         gid: 2010
-      dockerfile: docker/dev/app/Dockerfile
+      dockerfile: docker/local/app/Dockerfile
       target: dev
     image: loadorderlibrary-api:dev
     entrypoint: sh -c "php artisan migrate:fresh --seed && exec php-fpm"
     container_name: lol-devapi-app
     restart: unless-stopped
     volumes:
-      - ./:/srv/dev.loadorderlibrary.com
+      - ./:/srv/local.loadorderlibrary.com
     networks:
       - lol
       - lol-db
@@ -42,10 +42,10 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./public:/srv/dev.loadorderlibrary.com/public
-      - ./docker/dev/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/dev/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/dev/nginx/log:/var/log/nginx
+      - ./public:/srv/local.loadorderlibrary.com/public
+      - ./docker/local/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/local/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/local/nginx/log:/var/log/nginx
     networks:
       - lol
     depends_on: [app]

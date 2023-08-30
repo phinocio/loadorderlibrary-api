@@ -37,7 +37,7 @@ class LoadOrderPolicy
      */
     public function update(User $user, LoadOrder $loadOrder): bool
     {
-        return $user->id == $loadOrder->user_id; // Only the owner of a list can update it
+        return $user->id === $loadOrder->user_id; // Only the owner of a list can update it
     }
 
     /**
@@ -45,6 +45,6 @@ class LoadOrderPolicy
      */
     public function delete(User $user, LoadOrder $loadOrder): bool
     {
-        return $user->id == $loadOrder->user_id || $user->isAdmin(); // List owner or Admin can delete
+        return $user->isAdmin() || $user->id === $loadOrder->user_id; // List owner or Admin can delete
     }
 }

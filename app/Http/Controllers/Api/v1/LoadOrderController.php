@@ -28,7 +28,7 @@ class LoadOrderController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(LoadOrder::class, 'loadOrder');
+        $this->authorizeResource(LoadOrder::class);
     }
 
     /**

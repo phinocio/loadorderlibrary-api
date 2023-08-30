@@ -14,7 +14,7 @@ class GameController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(Game::class, 'game');
+        $this->authorizeResource(Game::class);
     }
 
     /**

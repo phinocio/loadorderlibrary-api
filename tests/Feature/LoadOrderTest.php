@@ -58,7 +58,7 @@ class LoadOrderTest extends TestCase
     {
         $this->seed(GameSeeder::class);
         $this->assertGuest();
-        $file = UploadedFile::fake()->create('modlist.txt', 4, 'text/plain');
+        $file = UploadedFile::fake()->createWithContent('modlist.txt', 'Fake text so it has a mimetype!');
         $attributes = [
             'name' => $this->faker->name(),
             'description' => $this->faker->paragraph(),
@@ -79,7 +79,7 @@ class LoadOrderTest extends TestCase
         $this->seed(GameSeeder::class);
         $user = User::factory()->create();
 
-        $file = UploadedFile::fake()->create('modlist.txt', 4, 'text/plain');
+        $file = UploadedFile::fake()->createWithContent('modlist.txt', 'Fake text so it has a mimetype!');
         $attributes = [
             'name' => $this->faker->name(),
             'description' => $this->faker->paragraph(),
@@ -98,6 +98,7 @@ class LoadOrderTest extends TestCase
     public function a_guest_can_not_delete_a_list(): void
     {
         $loadOrder = LoadOrder::factory()->create();
+        // A guest is firstly unauthorized, so we assert that before forbidden.
         $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertUnauthorized();
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
@@ -119,7 +120,8 @@ class LoadOrderTest extends TestCase
         $user2 = User::factory()->create();
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
 
-        $this->actingAs($user2)->deleteJson('/v1/lists/'.$loadOrder->slug)->assertUnauthorized();
+        // A user is authenticated, so we assert forbidden because they are not authorized
+        $this->actingAs($user2)->deleteJson('/v1/lists/'.$loadOrder->slug)->assertForbidden();
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
 }

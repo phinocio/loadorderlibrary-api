@@ -28,8 +28,8 @@ class StoreLoadOrderRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'description' => 'string|nullable',
-            'game' => 'required',
-            'version' => ['string', 'nullable', 'max:15'],
+            'game' => 'required|exists:games,id',
+            'version' => 'string|nullable|max:15',
             'website' => 'string|nullable',
             'discord' => 'string|nullable',
             'readme' => 'string|nullable',

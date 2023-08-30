@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 class GameController extends Controller
 {
     /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Game::class, 'game');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -20,19 +28,15 @@ class GameController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate(['name' => "required|max:32"]);
+
+        $game = Game::create(['name' => $validated['name']]);
+
+        return new GameResource($game);
     }
 
     /**
@@ -40,7 +44,7 @@ class GameController extends Controller
      */
     public function show(Game $game)
     {
-        //
+        return new GameResource($game);
     }
 
     /**

@@ -35,4 +35,6 @@ Route::prefix('v1')->group(function () {
     Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store');
 
     Route::get('/games', [GameController::class, 'index'])->name('games');
+    Route::get('/games/{game:name}', [GameController::class, 'show'])->name('games.show');
+    Route::post('/games', [GameController::class, 'store'])->name('games.store');
 });

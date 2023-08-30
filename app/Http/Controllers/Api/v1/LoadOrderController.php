@@ -52,11 +52,11 @@ class LoadOrderController extends Controller
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24. If the expires field was not sent, check that.
-        if (! array_key_exists('expires', $validated)) {
+        if (!array_key_exists('expires', $validated)) {
             auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
-        if (! array_key_exists('private', $validated)) {
+        if (!array_key_exists('private', $validated)) {
             $validated['private'] = false;
         }
 
@@ -94,7 +94,7 @@ class LoadOrderController extends Controller
         $loadOrder->files()->attach($fileIds);
 
         // return
-        return new LoadOrderResource($loadOrder);
+        return new LoadOrderResource($loadOrder->load('author'));
     }
 
     /**
@@ -119,7 +119,7 @@ class LoadOrderController extends Controller
     public function destroy(LoadOrder $loadOrder)
     {
         // TODO: Make this actually use proper permissions stuff (rules? authorizations?)
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             return response()->json(['message' => 'Unauthorized.'], 401);
         }
 

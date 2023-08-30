@@ -27,14 +27,38 @@ Route::prefix('v1')->group(function () {
          * admin to delete any user they choose by passing a name.
          */
         Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
+
+        /*
+         * List
+         * List related routes
+         */
         Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy');
+
+        /*
+         * Game
+         * Game related routes
+         */
+        Route::post('/games', [GameController::class, 'store'])->name('games.store');
     });
 
-    Route::get('/lists', [LoadOrderController::class, 'index'])->name('lists');
-    Route::get('/lists/{load_order:slug}', [LoadOrderController::class, 'show'])->name('lists.show');
-    Route::post('/lists', [LoadOrderController::class, 'store'])->name('lists.store');
+    // The following routes are usable by guests, so don't need sanctum middleware
 
-    Route::get('/games', [GameController::class, 'index'])->name('games');
-    Route::get('/games/{game:name}', [GameController::class, 'show'])->name('games.show');
-    Route::post('/games', [GameController::class, 'store'])->name('games.store');
+    /*
+     * List
+     * List related routes
+     */
+    Route::controller(LoadOrderController::class)->group(function () {
+        Route::get('/lists', 'index')->name('lists');
+        Route::get('/lists/{load_order:slug}', 'show')->name('lists.show');
+        Route::post('/lists', 'store')->name('lists.store');
+    });
+
+    /*
+     * Game
+     * Game related routes
+     */
+    Route::controller(LoadOrderController::class)->group(function () {
+        Route::get('/games', 'index')->name('games');
+        Route::get('/games/{game:name}', 'show')->name('games.show');
+    });
 });

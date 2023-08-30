@@ -12,7 +12,7 @@ class ValidNumLines implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! count(explode("\n", file_get_contents($value))) >= 1) {
+        if (!count(explode("\n", file_get_contents($value))) >= 1) {
             $fail(':value is not valid. If you believe this is wrong, contact Phinocio.');
         }
     }

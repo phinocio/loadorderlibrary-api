@@ -32,19 +32,15 @@ Route::prefix('v1')->group(function () {
          * List
          * List related routes
          */
-        Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])->name('list.destroy')->middleware(['auth:sanctum', 'ability:delete']);
+        Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])
+            ->name('list.destroy')
+            ->middleware(['auth:sanctum', 'ability:delete']);
 
         /*
          * Game
          * Game related routes
          */
         Route::post('/games', [GameController::class, 'store'])->name('games.store');
-
-        Route::post('/tokens/create', function (Request $request) {
-            $token = $request->user()->createToken($request->token_name);
-
-            return ['token' => $token->plainTextToken];
-        });
     });
 
     // The following routes are usable by guests, so don't need sanctum middleware

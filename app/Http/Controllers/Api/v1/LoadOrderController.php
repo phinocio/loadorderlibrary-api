@@ -140,7 +140,7 @@ class LoadOrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        return response()->json(['message' => 'Not implemented.'], 501);
     }
 
     /**

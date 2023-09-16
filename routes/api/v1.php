@@ -59,7 +59,7 @@ Route::prefix('v1')->group(function () {
      * Game
      * Game related routes
      */
-    Route::controller(LoadOrderController::class)->group(function () {
+    Route::controller(GameController::class)->group(function () {
         Route::get('/games', 'index')->name('games');
         Route::get('/games/{game:name}', 'show')->name('games.show');
     });

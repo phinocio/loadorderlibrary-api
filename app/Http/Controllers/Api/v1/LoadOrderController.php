@@ -69,7 +69,7 @@ class LoadOrderController extends Controller
                 return response()->json(["message" => "Unauthorized. (Token doesn't have permission for this action.)"], 401);
             }
         } elseif (request()->bearerToken() && !$user = Auth::guard('sanctum')->check()) {
-            return response()->json(["message" => "Unauthenticated. (Make sure the token is correct.)"], 401);
+            return response()->json(["message" => "Unauthenticated. (Make sure the token is correct.)" . request()->bearerToken()], 401);
         }
 
         $validated = $request->validated();

@@ -7,13 +7,13 @@ use App\Filters\FiltersGameName;
 use App\Helpers\CreateSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLoadOrderRequest;
+use App\Http\Requests\UpdateLoadOrderRequest;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\File;
 use App\Models\LoadOrder;
 use App\Services\UploadService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +30,7 @@ class LoadOrderController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(LoadOrder::class);
+        $this->authorizeResource(LoadOrder::class, 'load_order');
     }
 
     /**
@@ -138,9 +138,60 @@ class LoadOrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateLoadOrderRequest $request, LoadOrder $loadOrder): LoadOrderResource
     {
-        return response()->json(['message' => 'Not implemented.'], 501);
+        // Unlike the store() method, auth is done on the route level
+
+        $validated = $request->validated();
+        $fileNames = UploadService::uploadFiles($validated['files']);
+
+        // Determine the expiration of the list. Logged-in users default to
+        // perm, guests default to 24h. If the expires field was not sent, check that.
+        if (!array_key_exists('expires', $validated)) {
+            auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
+        }
+
+        if (!array_key_exists('private', $validated)) {
+            $validated['private'] = false;
+        }
+
+        $validated['expires'] = match ($validated['expires']) {
+            '3h' => Carbon::now()->addHours(3),
+            '3d' => Carbon::now()->addDays(3),
+            '1w' => Carbon::now()->addWeek(),
+            'perm' => null,
+            default => auth()->check() ? null : Carbon::now()->addHours(24),
+        };
+
+        // Since multiple DB actions need to be taken, use a transaction.
+        DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
+            // Persist the file entries to the database.
+            $fileIds = [];
+            foreach ($fileNames as $file) {
+                $file['clean_name'] = explode('-', $file['name'])[1];
+                $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
+                $fileIds[] = File::firstOrCreate($file)->id;
+            }
+
+            $loadOrder->game_id     = (int) $validated['game'];
+            $loadOrder->name        = $validated['name'];
+            $loadOrder->description = $validated['description'] ?? null;
+            $loadOrder->version     = $validated['version'] ?? null;
+            // We simply remove the http/s of an input url, so we can add https:// to all on display.
+            // If a site doesn't support TLS at this point, that's on them, I'm not linking to an insecure url.
+            $loadOrder->website     = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
+            $loadOrder->discord     = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
+            $loadOrder->readme      = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
+            $loadOrder->is_private  = (bool) $validated['private'];
+            $loadOrder->expires_at  = $validated['expires'];
+            $loadOrder->save();
+            $loadOrder->files()->sync($fileIds);
+        });
+
+
+        // We load the game relation again to get the updated game,
+        // otherwise it returns with the old game.
+        return new LoadOrderResource($loadOrder->load(['author', 'game']));
     }
 
     /**

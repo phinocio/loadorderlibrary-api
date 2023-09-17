@@ -32,7 +32,6 @@ class ApiTokenTest extends TestCase
                 $file,
             ],
         ];
-
         Sanctum::actingAs($user, ['create']);
         $this->postJson('/v1/lists', $attributes)->assertCreated();
         $this->assertDatabaseHas('load_orders', ['user_id' => $user->id]);

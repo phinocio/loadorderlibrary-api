@@ -32,9 +32,16 @@ Route::prefix('v1')->group(function () {
          * List
          * List related routes
          */
-        Route::delete('/lists/{load_order:slug}', [LoadOrdercontroller::class, 'destroy'])
-            ->name('list.destroy')
-            ->middleware(['auth:sanctum', 'ability:delete']);
+        Route::controller(LoadOrderController::class)->group(function () {
+            Route::put('/lists/{load_order:slug}', 'update')
+                ->name('list.update')
+                ->middleware(['auth:sanctum', 'ability:update']);
+
+            Route::delete('/lists/{load_order:slug}', 'destroy')
+                ->name('list.destroy')
+                ->middleware(['auth:sanctum', 'ability:delete']);
+        });
+
 
         /*
          * Game
@@ -50,9 +57,9 @@ Route::prefix('v1')->group(function () {
      * List related routes
      */
     Route::controller(LoadOrderController::class)->group(function () {
-        Route::get('/lists', 'index')->name('lists');
-        Route::get('/lists/{load_order:slug}', 'show')->name('lists.show');
-        Route::post('/lists', 'store')->name('lists.store');
+        Route::get('/lists', 'index')->name('list');
+        Route::get('/lists/{load_order:slug}', 'show')->name('list.show');
+        Route::post('/lists', 'store')->name('list.store');
     });
 
     /*

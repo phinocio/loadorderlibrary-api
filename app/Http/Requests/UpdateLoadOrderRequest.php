@@ -5,10 +5,10 @@ namespace App\Http\Requests;
 use App\Rules\ValidFilename;
 use App\Rules\ValidMimeType;
 use App\Rules\ValidNumLines;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreLoadOrderRequest extends FormRequest
+class UpdateLoadOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,7 @@ class StoreLoadOrderRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, Rule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {

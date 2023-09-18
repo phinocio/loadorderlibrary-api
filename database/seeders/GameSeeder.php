@@ -156,5 +156,10 @@ class GameSeeder extends Seeder
             'id' => 29,
             'name' => 'Enderal SE',
         ]);
+
+        DB::table('games')->insert([
+            'id' => 30,
+            'name' => 'Starfield',
+        ]);
     }
 }

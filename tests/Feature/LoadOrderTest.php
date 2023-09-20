@@ -124,4 +124,29 @@ class LoadOrderTest extends TestCase
         $this->actingAs($user2)->deleteJson('/v1/lists/'.$loadOrder->slug)->assertForbidden();
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
+
+    /** @test */
+    public function a_list_being_deleted_shouldnt_break_slugs(): void
+    {
+        $this->seed(GameSeeder::class);
+        $user = User::factory()->create();
+
+        $file = UploadedFile::fake()->createWithContent('modlist.txt', 'Fake text so it has a mimetype!');
+        $attributes = [
+            'name' => 'test',
+            'description' => $this->faker->paragraph(),
+            'game' => $this->faker->randomDigit() + 10,
+            'expires' => '3h',
+            'files' => [
+                $file,
+            ],
+        ];
+
+        $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+        $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+        $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+        $this->actingAs($user)->deleteJson('/v1/lists/test-2')->assertNoContent();
+        $this->actingAs($user)->postJson('/v1/lists', $attributes)->assertCreated();
+        $this->assertDatabaseHas('load_orders', ['slug' => 'test-4']);
+    }
 }

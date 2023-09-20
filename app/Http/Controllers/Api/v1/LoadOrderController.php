@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
-use App\Helpers\CreateSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLoadOrderRequest;
 use App\Http\Requests\UpdateLoadOrderRequest;
@@ -107,7 +106,7 @@ class LoadOrderController extends Controller
 
             $loadOrder->user_id     = auth()->check() ? auth()->user()->id : null;
             $loadOrder->game_id     = (int) $validated['game'];
-            $loadOrder->slug        = CreateSlug::new($validated['name']);
+            //            $loadOrder->slug        = CreateSlug::new($validated['name']);
             $loadOrder->name        = $validated['name'];
             $loadOrder->description = $validated['description'] ?? null;
             $loadOrder->version     = $validated['version'] ?? null;

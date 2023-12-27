@@ -15,6 +15,7 @@
 		"laravel/framework": "^10.21.0",
 		"laravel/sanctum": "^3.2.6",
 		"laravel/tinker": "^2.8.2",
+		"spatie/laravel-json-api-paginate": "^1.13",
 		"spatie/laravel-query-builder": "^5.3"
 	},
 	"require-dev": {

@@ -2,9 +2,12 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
+/** @mixin File */
 class FileResource extends JsonResource
 {
     /**
@@ -18,6 +21,7 @@ class FileResource extends JsonResource
             'name' => $this->name,
             'clean_name' => $this->clean_name,
             'bytes' => $this->size_in_bytes,
+            'content' => explode("\n", trim(Storage::disk('uploads')->get($this->name))),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

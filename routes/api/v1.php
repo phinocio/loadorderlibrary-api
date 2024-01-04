@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
 use App\Http\Controllers\Api\v1\UserController;
@@ -35,7 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::controller(LoadOrderController::class)->group(function () {
             Route::put('/lists/{load_order:slug}', 'update')
                 ->name('list.update')
-                ->middleware(['auth:sanctum', 'ability:update']);
+                ->middleware(['ability:update']); //TODO: Check that simply defining the ability here works since it's already in a sanctum middleware group
 
             Route::delete('/lists/{load_order:slug}', 'destroy')
                 ->name('list.destroy')
@@ -69,5 +70,14 @@ Route::prefix('v1')->group(function () {
     Route::controller(GameController::class)->group(function () {
         Route::get('/games', 'index')->name('games');
         Route::get('/games/{game:name}', 'show')->name('games.show');
+    });
+
+    /*
+     * File
+     * File related routes
+     */
+    Route::controller(FileController::class)->group(function () {
+        Route::get('/lists/{load_order:slug}/download', 'index')->name('files');
+        Route::get('/lists/{load_order:slug}/download/{file:name}', 'show')->name('files.show');
     });
 });

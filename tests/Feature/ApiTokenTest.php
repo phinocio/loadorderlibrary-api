@@ -44,7 +44,7 @@ class ApiTokenTest extends TestCase
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
 
         Sanctum::actingAs($user, ['delete']);
-        $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertNoContent();
+        $this->deleteJson('/v1/lists/' . $loadOrder->slug)->assertNoContent();
         $this->assertDatabaseMissing('load_orders', ['slug' => $loadOrder->slug]);
     }
 
@@ -57,7 +57,7 @@ class ApiTokenTest extends TestCase
 
         // A user is authenticated, so we assert forbidden because they are not authorized
         Sanctum::actingAs($user2, ['delete']);
-        $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertForbidden();
+        $this->deleteJson('/v1/lists/' . $loadOrder->slug)->assertForbidden();
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
 
@@ -67,7 +67,7 @@ class ApiTokenTest extends TestCase
         $user = User::factory()->create();
 
         Sanctum::actingAs($user, ['delete']);
-        $this->delete('/v1/user/'.$user->name)->assertNoContent();
+        $this->delete('/v1/user/' . $user->name)->assertNoContent();
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
@@ -78,7 +78,7 @@ class ApiTokenTest extends TestCase
         $user2 = User::factory()->create();
 
         Sanctum::actingAs($user, ['delete']);
-        $this->delete('/v1/user/'.$user2->name)->assertUnauthorized();
+        $this->delete('/v1/user/' . $user2->name)->assertUnauthorized();
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
 }

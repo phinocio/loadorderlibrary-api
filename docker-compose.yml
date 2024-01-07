@@ -1,62 +1,55 @@
-# Local Development docker-compose File.
 services:
-  db:
-    image: mariadb:10.9
-    container_name: lol-dev-db
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mariadb
-    volumes:
-      - lol-dev-db:/var/lib/mysql
-    networks:
-      - lol-db
-  app:
-    build:
-      context: .
-      args:
-        uid: 1000
-        gid: 2010
-      dockerfile: docker/local/app/Dockerfile
-      target: dev
-    image: loadorderlibrary-api:dev
-    entrypoint: sh -c "php artisan migrate:fresh --seed && exec php-fpm"
-    container_name: lol-devapi-app
-    restart: unless-stopped
-    volumes:
-      - ./:/srv/local.loadorderlibrary.com
-    networks:
-      - lol
-      - lol-db
-    depends_on: [db]
-  nginx:
-    image: nginx:1.25.0-alpine
-    container_name: lol-devapi-nginx
-    restart: unless-stopped
-    ports:
-      - "8000:80"
-    volumes:
-      - ./public:/srv/local.loadorderlibrary.com/public
-      - ./docker/local/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/local/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/local/nginx/log:/var/log/nginx
-    networks:
-      - lol
-    depends_on: [app]
-
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.2
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.2/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+#            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - mariadb
+    mariadb:
+        image: 'mariadb:10'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+            - 'sail-mariadb:/var/lib/mysql'
+            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - '-p${DB_PASSWORD}'
+            retries: 3
+            timeout: 5s
 networks:
-  lol:
-    name: lol
-    external: true
-  lol-db:
-    name: lol-db
-    external: true
-
+    sail:
+        driver: bridge
 volumes:
-  lol-dev-db:
+    sail-mariadb:
+        driver: local

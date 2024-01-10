@@ -32,7 +32,7 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate(['name' => "required|max:32"]);
+        $validated = $request->validate(['name' => 'required|max:32']);
 
         $game = Game::create(['name' => $validated['name']]);
 

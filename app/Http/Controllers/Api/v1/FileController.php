@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v1\FileResource;
 use App\Models\LoadOrder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
@@ -19,29 +21,32 @@ class FileController extends Controller
         }
 
         $zip = new ZipArchive();
-        $zipFile = $loadOrder->name . '.zip';
-        if ($zip->open(storage_path('app/tmp/' . $zipFile), ZipArchive::CREATE)) {
+        $zipFile = $loadOrder->name.'.zip';
+        if ($zip->open(storage_path('app/tmp/'.$zipFile), ZipArchive::CREATE)) {
             foreach ($listFiles as $file) {
-                $zip->addFile(storage_path('app/uploads/' . $file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
+                $zip->addFile(storage_path('app/uploads/'.$file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
             }
             $zip->close();
 
-            return \Storage::download('tmp/' . $zipFile);
+            return \Storage::download('tmp/'.$zipFile);
         }
     }
 
-
     public function show(LoadOrder $loadOrder, string $fileName): StreamedResponse
     {
-        echo $loadOrder->name . ' - ' . $fileName;
-        $listFiles = [];
+        $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
 
-        foreach ($loadOrder->files as $file) {
-            $listFiles[] = strtolower($file->name);
+        return Storage::download('uploads/'.$file->name, $fileName);
+    }
+
+    public function embed(LoadOrder $loadOrder, string $fileName): FileResource|JsonResponse
+    {
+        $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
+
+        if (! $file) {
+            return response()->json(['message' => 'File not found'], 404);
         }
 
-        $file = implode(preg_grep("/$fileName/", $listFiles));
-
-        return Storage::download('uploads/' . $file, $fileName);
+        return new FileResource($loadOrder->load('files')->files()->whereCleanName($fileName)->first());
     }
 }

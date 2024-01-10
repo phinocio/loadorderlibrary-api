@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 
+// TODO: The index/show methods should be the ones that return just the model representation (name, clean_name, etc)
+// and the actual downloading of the files should be moved to either a dedicated DownloadController, or different
+// methods in this file.
+
 class FileController extends Controller
 {
     public function index(LoadOrder $loadOrder)

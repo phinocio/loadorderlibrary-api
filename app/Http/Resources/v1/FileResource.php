@@ -39,14 +39,13 @@ class FileResource extends JsonResource
         // modlist.txt itself is in "reverse" order, so we need to reverse that to get it into
         // the expected order for a human to read.
         if ($this->clean_name === 'modlist.txt') {
-            $content = array_reverse(explode("\n", $content));
-        }
-
-        if ($this->clean_name === 'plugins.txt') {
+            return array_reverse(explode("\n", $content));
+        } elseif ($this->clean_name === 'plugins.txt') {
             $content = explode("\n", preg_replace('/[*]/', '', $content));
             array_splice($content, 0, 1);
+            return $content;
+        } else {
+            return explode("\n", $content);
         }
-
-        return $content;
     }
 }

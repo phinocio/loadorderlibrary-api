@@ -16,7 +16,7 @@ class ValidFilename implements ValidationRule
         $file = $value->getClientOriginalName();
 
         if (! in_array(strtolower($file), ValidFiles::all())) {
-            $fail('The :value is not named correctly.');
+            $fail('The :file is not named correctly.');
         }
     }
 }

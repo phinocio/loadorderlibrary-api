@@ -140,7 +140,11 @@ class LoadOrderController extends Controller
         // Unlike the store() method, auth is done on the route level
 
         $validated = $request->validated();
-        $fileNames = UploadService::uploadFiles($validated['files']);
+
+        $fileNames = [];
+        if (isset($validated['files'])) {
+            $fileNames = UploadService::uploadFiles($validated['files']);
+        }
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
@@ -162,12 +166,14 @@ class LoadOrderController extends Controller
 
         // Since multiple DB actions need to be taken, use a transaction.
         DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
-            // Persist the file entries to the database.
             $fileIds = [];
-            foreach ($fileNames as $file) {
-                $file['clean_name'] = explode('-', $file['name'])[1];
-                $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
-                $fileIds[] = File::firstOrCreate($file)->id;
+            if (count($fileNames) > 0) {
+                // Persist the file entries to the database.
+                foreach ($fileNames as $file) {
+                    $file['clean_name'] = explode('-', $file['name'])[1];
+                    $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
+                    $fileIds[] = File::firstOrCreate($file)->id;
+                }
             }
 
             $loadOrder->game_id = (int) $validated['game'];
@@ -182,7 +188,10 @@ class LoadOrderController extends Controller
             $loadOrder->is_private = (bool) $validated['private'];
             $loadOrder->expires_at = $validated['expires'];
             $loadOrder->save();
-            $loadOrder->files()->sync($fileIds);
+
+            if (count($fileIds) > 0) {
+                $loadOrder->files()->sync($fileIds);
+            }
         });
 
         // We load the game relation again to get the updated game,

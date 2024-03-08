@@ -33,7 +33,7 @@ class UpdateLoadOrderRequest extends FormRequest
             'website' => 'string|nullable',
             'discord' => 'string|nullable',
             'readme' => 'string|nullable',
-            'files' => 'required',
+            'files' => 'nullable',
             'files.*' => [new ValidMimetype(), 'max:512', new ValidNumLines(), new ValidFilename()],
             'expires' => 'string|nullable',
             'private' => 'string|nullable',

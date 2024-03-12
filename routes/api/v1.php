@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/user/lists', [UserController::class, 'lists'])->name('user.lists');
         Route::get('/user/api-tokens', [UserController::class, 'apiTokens'])->name('user.api-tokens');
         Route::post('/user/api-tokens', [UserController::class, 'createApiToken'])->name('user.create-token');
+        Route::delete('/user/api-tokens/{tokenId}', [UserController::class, 'destroyApiToken'])->name('user.destroy-token');
 
         /*
          * Passing an instance of a resource to the controller for deletion is

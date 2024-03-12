@@ -77,6 +77,13 @@ class UserController extends Controller
         ];
     }
 
+    public function destroyApiToken($tokenId)
+    {
+        auth()->user()->tokens->find($tokenId)->delete();
+
+        return response()->json(null, 204);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

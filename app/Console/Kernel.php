@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,35 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('delete:temp')
+            ->daily()
+            ->onSuccess(function () {
+                Log::channel('cleanup')->info('✅ Delete Temp Files');
+            })
+            ->onFailure(function () {
+                Log::channel('cleanup')->error('❌ Delete Temp Files');
+            })
+            ->appendOutputTo(storage_path('logs/scheduled.log'));
+
+        $schedule->command('delete:orphaned')
+            ->daily()
+            ->onSuccess(function () {
+                Log::channel('cleanup')->info('✅ Delete Orphaned Files');
+            })
+            ->onFailure(function () {
+                Log::channel('cleanup')->error('❌ Delete Orphaned Files');
+            })
+            ->appendOutputTo(storage_path('logs/scheduled.log'));
+
+        $schedule->command('delete:expired')
+            ->everyMinute()
+            ->onSuccess(function () {
+                Log::channel('cleanup')->info('✅ Delete Expired Lists');
+            })
+            ->onFailure(function () {
+                Log::channel('cleanup')->error('❌ Delete Expired Lists');
+            })
+            ->appendOutputTo(storage_path('logs/scheduled.log'));
     }
 
     /**

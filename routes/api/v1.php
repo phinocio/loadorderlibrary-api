@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
+use App\Http\Controllers\Api\v1\TokenController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,9 +22,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'show'])->name('user.show');
         Route::get('/user/lists', [UserController::class, 'lists'])->name('user.lists');
-        Route::get('/user/api-tokens', [UserController::class, 'apiTokens'])->name('user.api-tokens');
-        Route::post('/user/api-tokens', [UserController::class, 'createApiToken'])->name('user.create-token');
-        Route::delete('/user/api-tokens/{tokenId}', [UserController::class, 'destroyApiToken'])->name('user.destroy-token');
 
         /*
          * Passing an instance of a resource to the controller for deletion is
@@ -31,6 +29,7 @@ Route::prefix('v1')->group(function () {
          * admin to delete any user they choose by passing a name.
          */
         Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
+
 
         /*
          * List
@@ -54,6 +53,18 @@ Route::prefix('v1')->group(function () {
         Route::post('/games', [GameController::class, 'store'])->name('games.store');
     });
 
+    // Routes that require auth, but don't want to allow token auth.
+    Route::middleware('auth')->group(function () {
+        /*
+         * Token
+         * Token related routes
+         */
+        Route::controller(TokenController::class)->group(function () {
+            Route::get('/user/api-tokens', 'index')->name('token.index');
+            Route::post('/user/api-tokens', 'store')->name('token.store');
+            Route::delete('/user/api-tokens/{id}', 'destroy')->name('token.destroy');
+        });
+    });
     // The following routes are usable by guests, so don't need sanctum middleware
 
     /*

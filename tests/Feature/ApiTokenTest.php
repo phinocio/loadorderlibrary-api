@@ -81,4 +81,10 @@ class ApiTokenTest extends TestCase
         $this->delete('/v1/user/' . $user2->name)->assertUnauthorized();
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
+
+    /** @test */
+    public function a_guest_can_not_create_a_token()
+    {
+        $this->postJson('/v1/user/api-tokens', ['token_name' => 'test'])->assertUnauthorized();
+    }
 }

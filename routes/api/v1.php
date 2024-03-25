@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\ComparisonController;
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
@@ -97,4 +98,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/lists/{load_order:slug}/download/{file:name}', 'show')->name('files.show');
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
+
+    Route::get('/compare/{load_order1}/{load_order2}', [ComparisonController::class, 'show'])->name('compare');
 });

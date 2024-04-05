@@ -15,6 +15,10 @@ class ComparisonController extends Controller
         $loadOrder1 = LoadOrder::where('slug', $loadOrder1)->with('files')->first();
         $loadOrder2 = LoadOrder::where('slug', $loadOrder2)->with('files')->first();
 
+        if (!$loadOrder1 || !$loadOrder2) {
+            return response()->json(['message' => 'Load order not found.'], 404);
+        }
+
         // Check for clean file names that exist in both lists
         $loadOrder1Files = $loadOrder1->files->pluck('clean_name')->toArray();
         $loadOrder2Files = $loadOrder2->files->pluck('clean_name')->toArray();
@@ -40,8 +44,8 @@ class ComparisonController extends Controller
 
         return response()->json([
             'data' => [
-                'load_order1' =>  new LoadOrderResource($loadOrder1),
-                'load_order2' => new LoadOrderResource($loadOrder2),
+                'list1' =>  new LoadOrderResource($loadOrder1),
+                'list2' => new LoadOrderResource($loadOrder2),
                 'diffs' => $compare
             ]
         ]);

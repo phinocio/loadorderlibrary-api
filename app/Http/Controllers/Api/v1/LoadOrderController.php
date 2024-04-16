@@ -47,7 +47,7 @@ class LoadOrderController extends Controller
                 AllowedSort::field('created', 'created_at'),
                 AllowedSort::field('updated', 'updated_at'),
             ])
-            ->where('is_private', false)
+            ->where("is_private", "=", false)
             ->jsonPaginate(900, 30);
 
         return LoadOrderResource::collection($lists);

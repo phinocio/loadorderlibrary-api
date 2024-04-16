@@ -99,5 +99,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
 
-    Route::get('/compare/{load_order1}/{load_order2}', [ComparisonController::class, 'show'])->name('compare');
+    Route::get('/compare', [ComparisonController::class, "index"])->name('compare.index');
+    Route::get('/compare/{load_order1}/{load_order2}', [ComparisonController::class, 'show'])->name('compare.show');
 });

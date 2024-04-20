@@ -161,5 +161,10 @@ class GameSeeder extends Seeder
             'id' => 30,
             'name' => 'Starfield',
         ]);
+
+        DB::table('games')->insert([
+            'id' => 31,
+            'name' => "The Witcher: Enhanced Edition"
+        ]);
     }
 }

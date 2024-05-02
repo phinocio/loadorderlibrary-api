@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\v1;
 
+use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin Game */
 class GameResource extends JsonResource
 {
     /**
@@ -17,6 +19,8 @@ class GameResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'lists' => LoadOrderResource::collection($this->whenLoaded('loadOrders')),
+            'lists_count' => $this->load_orders_count
         ];
     }
 }

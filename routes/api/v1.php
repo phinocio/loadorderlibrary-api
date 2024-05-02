@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\v1\ComparisonController;
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
 use App\Http\Controllers\Api\v1\TokenController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,9 +25,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'show'])->name('user.show');
         Route::get('/user/lists', [UserController::class, 'lists'])->name('user.lists');
-
-
-
 
         /*
          * List
@@ -66,6 +65,18 @@ Route::prefix('v1')->group(function () {
             Route::get('/user/api-tokens', 'index')->name('token.index');
             Route::post('/user/api-tokens', 'store')->name('token.store');
             Route::delete('/user/api-tokens/{id}', 'destroy')->name('token.destroy');
+        });
+
+        /*
+         * Admin User
+         * Admin User management routes.
+         */
+        Route::prefix('admin')->middleware(EnsureUserIsAdmin::class)->group(function () {
+            Route::controller(AdminUserController::class)->group(function () {
+                Route::get('/user', 'index')->name('admin.user.index');
+                Route::get('/user/{user:name}', 'show')->name('admin.user.show');
+                Route::put('/user/{user:name}', 'update')->name('admin.user.update');
+            });
         });
     });
     // The following routes are usable by guests, so don't need sanctum middleware

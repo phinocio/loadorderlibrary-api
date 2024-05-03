@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Admin\LoadOrderController as AdminLoadOrderController;
 use App\Http\Controllers\Api\v1\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\v1\ComparisonController;
 use App\Http\Controllers\Api\v1\FileController;
@@ -37,7 +38,7 @@ Route::prefix('v1')->group(function () {
 
             Route::delete('/lists/{load_order:slug}', 'destroy')
                 ->name('list.destroy')
-                ->middleware(['auth:sanctum', 'ability:delete']);
+                ->middleware(['auth:sanctum', 'ability:create']);
         });
 
 
@@ -76,6 +77,10 @@ Route::prefix('v1')->group(function () {
                 Route::get('/user', 'index')->name('admin.user.index');
                 Route::get('/user/{user:name}', 'show')->name('admin.user.show');
                 Route::put('/user/{user:name}', 'update')->name('admin.user.update');
+            });
+
+            Route::controller(AdminLoadOrderController::class)->group(function () {
+                Route::get('/lists', 'index')->name('admin.lists.index');
             });
         });
     });

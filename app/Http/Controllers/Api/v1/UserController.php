@@ -14,14 +14,6 @@ use Throwable;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(): UserResource
-    {
-        return new UserResource(auth()->user());
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(): UserResource

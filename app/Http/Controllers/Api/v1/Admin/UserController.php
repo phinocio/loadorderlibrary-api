@@ -12,6 +12,7 @@ class UserController extends Controller
     public function __construct()
     {
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -35,21 +36,23 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        if (!array_key_exists('verified', $validated)) {
+        if (! array_key_exists('verified', $validated)) {
             $validated['verified'] = false;
         }
 
         // The user wants to remove email, but sending an empty string or value of null
         // for some reason doesn't get put into validated, despite nullable being a rule.
-        if (!array_key_exists('email', $validated) && $request->get('email')) {
+        if (! array_key_exists('email', $validated) && $request->get('email')) {
             $user->email = null;
         } else {
             $user->email = $validated['email'] ?? $user->email;
         }
 
-        $user->is_verified = (bool)$validated['verified'];
+        $user->is_verified = (bool) $validated['verified'];
 
         $user->save();
+
+        return new UserResource($user);
     }
 
     /**
@@ -57,6 +60,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->tokens()->delete();
+        $user->delete();
     }
 }

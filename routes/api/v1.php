@@ -41,7 +41,6 @@ Route::prefix('v1')->group(function () {
                 ->middleware(['auth:sanctum', 'ability:create']);
         });
 
-
         /*
          * Game
          * Game related routes
@@ -74,9 +73,10 @@ Route::prefix('v1')->group(function () {
          */
         Route::prefix('admin')->middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::controller(AdminUserController::class)->group(function () {
-                Route::get('/user', 'index')->name('admin.user.index');
-                Route::get('/user/{user:name}', 'show')->name('admin.user.show');
-                Route::put('/user/{user:name}', 'update')->name('admin.user.update');
+                Route::get('/users', 'index')->name('admin.user.index');
+                Route::get('/users/{user:name}', 'show')->name('admin.user.show');
+                Route::put('/users/{user:name}', 'update')->name('admin.user.update');
+                Route::delete('/users/{user:name}', 'destroy')->name('admin.user.destroy');
             });
 
             Route::controller(AdminLoadOrderController::class)->group(function () {
@@ -115,6 +115,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
 
-    Route::get('/compare', [ComparisonController::class, "index"])->name('compare.index');
+    Route::get('/compare', [ComparisonController::class, 'index'])->name('compare.index');
     Route::get('/compare/{load_order1}/{load_order2}', [ComparisonController::class, 'show'])->name('compare.show');
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\v1\ComparisonController;
 use App\Http\Controllers\Api\v1\FileController;
 use App\Http\Controllers\Api\v1\GameController;
 use App\Http\Controllers\Api\v1\LoadOrderController;
+use App\Http\Controllers\Api\v1\StatsController;
 use App\Http\Controllers\Api\v1\TokenController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Middleware\EnsureUserIsAdmin;
@@ -115,6 +116,23 @@ Route::prefix('v1')->group(function () {
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
 
-    Route::get('/compare', [ComparisonController::class, 'index'])->name('compare.index');
-    Route::get('/compare/{load_order1}/{load_order2}', [ComparisonController::class, 'show'])->name('compare.show');
+    /*
+     * The below routes act on existing models and aren't associated with their own.
+     */
+
+    /*
+     * Comparison related routes
+     */
+    Route::controller(ComparisonController::class)->group(function () {
+        Route::get('/compare', 'index')->name('compare.index');
+        Route::get('/compare/{load_order1}/{load_order2}', 'show')->name('compare.show');
+    });
+
+    /*
+     * Stats related routes
+     */
+    Route::controller(StatsController::class)->group(function () {
+        Route::get('/stats', 'index')->name('stats.index');
+        Route::get('/stats/{resource}', 'show')->name('stats.show');
+    });
 });

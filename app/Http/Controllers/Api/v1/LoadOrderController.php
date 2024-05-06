@@ -47,7 +47,7 @@ class LoadOrderController extends Controller
                 AllowedSort::field('created', 'created_at'),
                 AllowedSort::field('updated', 'updated_at'),
             ])
-            ->where("is_private", "=", false)
+            ->where('is_private', '=', false)
             ->jsonPaginate(900, 30);
 
         return LoadOrderResource::collection($lists);
@@ -63,13 +63,13 @@ class LoadOrderController extends Controller
         // not accidentally uploaded anonymously if the token was typo'd.
         if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
             Auth::setUser($user);
-            if (!$user->tokenCan('create')) {
+            if (! $user->tokenCan('create')) {
                 return response()->json(
                     ['message' => "Unauthorized. (Token doesn't have permission for this action.)"],
                     401
                 );
             }
-        } elseif (request()->bearerToken() && !$user = Auth::guard('sanctum')->check()) {
+        } elseif (request()->bearerToken() && ! $user = Auth::guard('sanctum')->check()) {
             return response()->json(['message' => 'Unauthenticated. (Make sure the token is correct.)'], 401);
         }
 
@@ -78,11 +78,11 @@ class LoadOrderController extends Controller
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
-        if (!array_key_exists('expires', $validated)) {
+        if (! array_key_exists('expires', $validated)) {
             auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
-        if (!array_key_exists('private', $validated)) {
+        if (! array_key_exists('private', $validated)) {
             $validated['private'] = false;
         }
 
@@ -151,11 +151,11 @@ class LoadOrderController extends Controller
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
-        if (!array_key_exists('expires', $validated)) {
+        if (! array_key_exists('expires', $validated)) {
             auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
-        if (!array_key_exists('private', $validated)) {
+        if (! array_key_exists('private', $validated)) {
             $validated['private'] = false;
         }
 
@@ -214,7 +214,7 @@ class LoadOrderController extends Controller
         } catch (Throwable $th) {
             return response()->json([
                 'message' => 'something went wrong deleting the load order. Please let Phinocio know.',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
             ], 500);
         }
     }

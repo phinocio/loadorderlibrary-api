@@ -10,17 +10,31 @@ use App\Http\Resources\v1\UserStatsResource;
 use App\Models\File;
 use App\Models\LoadOrder;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class StatsController extends Controller
 {
-    // TODO: Probably find a way to cache responses for like 15m because they are quite database intensive
-    public function index()
+    /**
+     * For the all stats route, which will I assume be hit the most,
+     * we cache it for 15 minutes in production since it has proven to
+     * be pretty intensive in the past, and instant statistics is not
+     * really needed.
+     */
+    public function index(): StatsResource
     {
-        return new StatsResource([
-            'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
-            'files' => File::with('lists:id')->get(),
-            'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
-        ]);
+        if (config('app.env') !== 'production') {
+            Cache::forget('stats');
+            Cache::forget('stats-updated');
+        }
+
+        return Cache::remember('stats', 900, function () {
+            return new StatsResource([
+                'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
+                'files' => File::with('lists:id')->get(),
+                'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
+            ]);
+        });
     }
 
     /*
@@ -28,7 +42,7 @@ class StatsController extends Controller
      * controllers or methods for each individual stat resource when the Services
      * do the heavy work.
      */
-    public function show(string $resource)
+    public function show(string $resource): UserStatsResource|FileStatsResource|LoadOrderStatsResource|JsonResponse
     {
         return match ($resource) {
             'users' => new UserStatsResource(User::select([

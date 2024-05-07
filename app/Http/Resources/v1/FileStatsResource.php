@@ -26,7 +26,7 @@ class FileStatsResource extends JsonResource
         return [
             'total' => $this->count(),
             'total_size_in_bytes' => $this->sum('size_in_bytes'),
-            'total_tmp_size_in_bytes' => $tmpSize
+            'total_tmp_size_in_bytes' => $tmpSize,
         ];
     }
 }

@@ -15,8 +15,9 @@ class StatsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'users' => new UserStatsResource($this->resource['users']),
             'files' => new FileStatsResource($this->resource['files']),
+            'lists' => new LoadOrderStatsResource($this->resource['lists']),
+            'users' => new UserStatsResource($this->resource['users']),
         ];
     }
 }

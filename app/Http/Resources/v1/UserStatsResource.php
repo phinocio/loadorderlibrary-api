@@ -30,9 +30,9 @@ class UserStatsResource extends JsonResource
             'with_lists' => count($this->resource->filter(function ($value) {
                 return count($value->lists);
             })),
-            'last_registered' => Carbon::createFromTime($this->resource[0]->created_at)->diffForHumans(),
+            'last_registered' => Carbon::createFromDate($this->resource[0]->created_at)->diffForHumans(),
             'links' => [
-                'self' => config('app.url').'/v1/stats/users',
+                'self' => route('stats.show', 'users'),
             ],
         ];
     }

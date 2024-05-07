@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\FileStatsResource;
+use App\Http\Resources\v1\LoadOrderStatsResource;
 use App\Http\Resources\v1\StatsResource;
 use App\Http\Resources\v1\UserStatsResource;
 use App\Models\File;
+use App\Models\LoadOrder;
 use App\Models\User;
 
 class StatsController extends Controller
@@ -15,8 +17,9 @@ class StatsController extends Controller
     public function index()
     {
         return new StatsResource([
-            'users' => User::select(['id', 'is_verified', 'is_admin', 'email'])->with('lists:id,user_id')->latest()->get(),
+            'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
             'files' => File::with('lists:id')->get(),
+            'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
         ]);
     }
 
@@ -29,9 +32,10 @@ class StatsController extends Controller
     {
         return match ($resource) {
             'users' => new UserStatsResource(User::select([
-                'id', 'is_verified', 'is_admin', 'email',
+                'id', 'is_verified', 'is_admin', 'email', 'created_at',
             ])->with('lists:id,user_id')->latest()->get()),
             'files' => new FileStatsResource(File::with('lists:id')->latest()->get()),
+            'lists' => new LoadOrderStatsResource(LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get()),
             default => response()->json(['message' => 'No stats exist for this resource.'], 404),
         };
     }

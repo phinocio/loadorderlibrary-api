@@ -20,14 +20,21 @@ class StatsResource extends JsonResource
             'files' => new FileStatsResource($this->resource['files']),
             'lists' => new LoadOrderStatsResource($this->resource['lists']),
             'users' => new UserStatsResource($this->resource['users']),
-            'links' => [
-                'self' => route('stats.index'),
-            ],
-            'meta' => [
-                'last_updated' => Cache::remember('stats-updated', 900, function () {
-                    return Carbon::now();
-                }),
-            ],
         ];
+    }
+
+    public function with(Request $request): array
+    {
+       return [
+           'links' => [
+               'self' => route('stats.index'),
+           ],
+           'meta' => [
+               'last_updated' => Cache::remember('stats-updated', 900, function () {
+                   return Carbon::now();
+               }),
+           ],
+
+       ];
     }
 }

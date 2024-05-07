@@ -35,8 +35,10 @@ class UserController extends Controller
     /** @mixin User */
     public function destroy(User $user): JsonResponse
     {
+        // TOOD: The auth here should be handled by a UserPolicy
         try {
             if (auth()->user()->id === $user->id || auth()->user()->isAdmin()) {
+                $user->tokens()->delete();
                 $user->delete();
 
                 return response()->json(null, 204);

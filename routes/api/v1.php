@@ -34,12 +34,10 @@ Route::prefix('v1')->group(function () {
          */
         Route::controller(LoadOrderController::class)->group(function () {
             Route::put('/lists/{load_order:slug}', 'update')
-                ->name('list.update')
-                ->middleware(['ability:update']); //TODO: Check that simply defining the ability here works since it's already in a sanctum middleware group
+                ->name('list.update');
 
             Route::delete('/lists/{load_order:slug}', 'destroy')
-                ->name('list.destroy')
-                ->middleware(['auth:sanctum', 'ability:create']);
+                ->name('list.destroy');
         });
 
         /*

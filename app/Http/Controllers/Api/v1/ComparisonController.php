@@ -17,18 +17,18 @@ class ComparisonController extends Controller
     public function index()
     {
         $lists = LoadOrder::where('is_private', '=', 'false')->when(auth()->check(), function (Builder $query) {
-            $query->orWhere("user_id", "=", auth()->user()->id);
+            $query->orWhere('user_id', '=', auth()->user()->id);
         })->latest()->get();
-
 
         return LoadOrderResource::collection($lists);
     }
+
     public function show($loadOrder1, $loadOrder2)
     {
         $loadOrder1 = LoadOrder::where('slug', $loadOrder1)->with('files')->first();
         $loadOrder2 = LoadOrder::where('slug', $loadOrder2)->with('files')->first();
 
-        if (!$loadOrder1 || !$loadOrder2) {
+        if (! $loadOrder1 || ! $loadOrder2) {
             return response()->json(['message' => 'Load order not found.'], 404);
         }
 
@@ -48,13 +48,13 @@ class ComparisonController extends Controller
 
             // The files are not the same, so diff them.
             $builder = new StrictUnifiedDiffOutputBuilder([
-                'collapseRanges'      => true, // ranges of length one are rendered with the trailing `,1`
+                'collapseRanges' => true, // ranges of length one are rendered with the trailing `,1`
                 'commonLineThreshold' => 6,    // number of same lines before ending a new hunk and creating a new one (if needed)
-                'contextLines'        => 3,    // like `diff:  -u, -U NUM, --unified[=NUM]`, for patch/git apply compatibility best to keep at least @ 3
-                'fromFile'            => $file1->clean_name,
-                'fromFileDate'        => null,
-                'toFile'              => $file2->clean_name,
-                'toFileDate'          => null,
+                'contextLines' => 3,    // like `diff:  -u, -U NUM, --unified[=NUM]`, for patch/git apply compatibility best to keep at least @ 3
+                'fromFile' => $file1->clean_name,
+                'fromFileDate' => null,
+                'toFile' => $file2->clean_name,
+                'toFileDate' => null,
             ]);
 
             $differ = new Differ($builder);
@@ -65,8 +65,8 @@ class ComparisonController extends Controller
             'data' => [
                 'list1' => new LoadOrderResource($loadOrder1),
                 'list2' => new LoadOrderResource($loadOrder2),
-                'diffs' => $compare
-            ]
+                'diffs' => $compare,
+            ],
         ]);
     }
 }

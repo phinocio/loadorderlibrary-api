@@ -65,11 +65,11 @@ class LoadOrderController extends Controller
             Auth::setUser($user);
             if (! $user->tokenCan('create')) {
                 return response()->json(
-                    ['message' => "Unauthorized. (Token doesn't have permission for this action.)"],
-                    401
+                    ['message' => "This action is forbidden. (Token doesn't have permission for this action.)"],
+                    403
                 );
             }
-        } elseif (request()->bearerToken() && ! $user = Auth::guard('sanctum')->check()) {
+        } elseif (request()->bearerToken() && ! Auth::guard('sanctum')->check()) {
             return response()->json(['message' => 'Unauthenticated. (Make sure the token is correct.)'], 401);
         }
 

@@ -21,7 +21,7 @@ class FileResource extends JsonResource
             'name' => $this->name,
             'clean_name' => $this->clean_name,
             'bytes' => $this->size_in_bytes,
-            'content' => $this->formatFileContents(),
+            'content' => $this->when(!$request->routeIs('compare.*'), $this->formatFileContents()),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

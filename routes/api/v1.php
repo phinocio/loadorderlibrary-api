@@ -47,12 +47,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/games', [GameController::class, 'store'])->name('games.store');
     });
 
-    /*
-     * Passing an instance of a resource to the controller for deletion is
-     * convention of other resources. In addition, this will allow an
-     * admin to delete any user they choose by passing a name.
-     */
-    Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
 
     // Routes that require auth, but don't want to allow token auth.
     Route::middleware('auth')->group(function () {
@@ -82,6 +76,14 @@ Route::prefix('v1')->group(function () {
                 Route::get('/lists', 'index')->name('admin.lists.index');
             });
         });
+
+        /*
+         * Passing an instance of a resource to the controller for deletion is
+         * convention of other resources. In addition, this will allow an
+         * admin to delete any user they choose by passing a name.
+         */
+        Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
+
     });
     // The following routes are usable by guests, so don't need sanctum middleware
 

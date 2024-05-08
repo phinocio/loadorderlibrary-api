@@ -92,7 +92,7 @@ Route::prefix('v1')->group(function () {
      * List related routes
      */
     Route::controller(LoadOrderController::class)->group(function () {
-        Route::get('/lists', 'index')->name('list');
+        Route::get('/lists', 'index')->name('list.index');
         Route::get('/lists/{load_order:slug}', 'show')->name('list.show');
         Route::post('/lists', 'store')->name('list.store');
     });

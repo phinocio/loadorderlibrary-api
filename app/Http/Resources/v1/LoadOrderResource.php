@@ -30,7 +30,7 @@ class LoadOrderResource extends JsonResource
             'created' => $this->created_at,
             'updated' => $this->updated_at,
             'author' => new AuthorResource($this->whenLoaded('author')),
-            'game' => new GameResource($this->whenLoaded('game')),
+        'game' => new GameResource($this->whenLoaded('game')),
             'files' => FileResource::collection($this->whenLoaded('files')),
             'links' => [
                 'url' => "/lists/$this->slug",

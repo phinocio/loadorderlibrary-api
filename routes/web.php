@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return ['msg' => 'I should do something proper for requests to /'];
+    return response()->json(['message' => 'Check out the API docs at https://docs.loadorderlibrary.com']);
+});
+
+Route::get('/up', function () {
+    return response()->json(['message' => 'healthy']);
 });

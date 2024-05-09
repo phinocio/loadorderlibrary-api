@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\v1;
 
 use App\Rules\ValidFilename;
 use App\Rules\ValidMimeType;
@@ -33,7 +33,7 @@ class UpdateLoadOrderRequest extends FormRequest
             'website' => 'string|nullable',
             'discord' => 'string|nullable',
             'readme' => 'string|nullable',
-            'files' => 'required',
+            'files' => 'nullable',
             'files.*' => [new ValidMimetype(), 'max:512', new ValidNumLines(), new ValidFilename()],
             'expires' => 'string|nullable',
             'private' => 'string|nullable',

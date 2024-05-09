@@ -42,9 +42,9 @@ class ApiTokenTest extends TestCase
     {
         $user = User::factory()->create();
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
+        $token = $user->createToken('meow', ['delete'])->plainTextToken;
 
-        Sanctum::actingAs($user, ['delete']);
-        $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertNoContent();
+        $this->assertGuest()->deleteJson('/v1/lists/'.$loadOrder->slug, [], ['Authorization' => "Bearer $token"])->assertNoContent();
         $this->assertDatabaseMissing('load_orders', ['slug' => $loadOrder->slug]);
     }
 
@@ -80,5 +80,11 @@ class ApiTokenTest extends TestCase
         Sanctum::actingAs($user, ['delete']);
         $this->delete('/v1/user/'.$user2->name)->assertUnauthorized();
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
+    }
+
+    /** @test */
+    public function a_guest_can_not_create_a_token()
+    {
+        $this->postJson('/v1/user/api-tokens', ['token_name' => 'test'])->assertUnauthorized();
     }
 }

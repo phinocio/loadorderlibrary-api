@@ -23,7 +23,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => [
                 'required',
                 'string',
-                'max:255',
+                'max:32',
                 Rule::unique(User::class)],
             'email' => [
                 'nullable',

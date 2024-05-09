@@ -22,7 +22,7 @@ class GameController extends Controller
      */
     public function index()
     {
-        $games = Game::orderBy('name', 'asc')->get();
+        $games = Game::orderBy('name', 'asc')->withCount('loadOrders')->get();
 
         return GameResource::collection($games);
     }
@@ -32,7 +32,7 @@ class GameController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate(['name' => "required|max:32"]);
+        $validated = $request->validate(['name' => 'required|max:32']);
 
         $game = Game::create(['name' => $validated['name']]);
 
@@ -44,6 +44,8 @@ class GameController extends Controller
      */
     public function show(Game $game)
     {
+        $game->load('loadOrders');
+
         return new GameResource($game);
     }
 

@@ -33,7 +33,8 @@ RUN docker-php-ext-configure opcache --enable-opcache && \
 # Set move OPCache config
 COPY docker/prod/app/conf.d/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-RUN cp docker/prod/app/conf.d/php.ini-production /usr/local/etc/php/php.ini
+# Instead of copying the one from inside contianer, do this because memory limit changed.
+COPY docker/prod/app/conf.d/php.ini-production /usr/local/etc/php/php.ini
 
 # Copy project to container
 COPY --from=build-prod /app .

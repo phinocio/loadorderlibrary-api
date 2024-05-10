@@ -21,20 +21,21 @@ class StatsController extends Controller
      * be pretty intensive in the past, and instant statistics is not
      * really needed.
      */
-    public function index(): StatsResource
+    public function index(): JsonResponse
     {
-        if (config('app.env') !== 'production') {
-            Cache::forget('stats');
-            Cache::forget('stats-updated');
+        $stats = Cache::get('stats', null);
+
+        if (! $stats) {
+            $stats = new StatsResource([
+                'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
+                'files' => File::with('lists:id')->get(),
+                'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
+            ]);
+
+            Cache::set('stats', json_encode($stats), 900);
         }
 
-        //        return Cache::remember('stats', 900, function () {
-        return new StatsResource([
-            'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
-            'files' => File::with('lists:id')->get(),
-            'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
-        ]);
-        //        });
+        return response()->json(json_decode($stats));
     }
 
     /*

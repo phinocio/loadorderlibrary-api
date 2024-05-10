@@ -25,16 +25,16 @@ class StatsResource extends JsonResource
 
     public function with(Request $request): array
     {
-       return [
-           'links' => [
-               'self' => route('stats.index'),
-           ],
-           'meta' => [
-               'last_updated' => Cache::remember('stats-updated', 900, function () {
-                   return Carbon::now();
-               }),
-           ],
+        return [
+            'links' => [
+                'self' => route('stats.index'),
+            ],
+            'meta' => [
+                'last_updated' => Cache::remember('stats-updated', 900, function () {
+                    return Carbon::now();
+                }),
+            ],
 
-       ];
+        ];
     }
 }

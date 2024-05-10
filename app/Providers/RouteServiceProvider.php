@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -42,10 +43,10 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            Log::info('Remote: '.$_SERVER['REMOTE_ADDR'].', ReqIP: '.$request->ip());
             // Hopefully means no limit for requests from sveltekit server itself.
-            if ($_SERVER['REMOTE_ADDR'] === '172.20.0.3') {
-                Log::info('exempt');
+            $remoteAddr = $_SERVER['REMOTE_ADDR'];
+            if (IpUtils::checkIp($remoteAddr, '127.20.0.0/24')) {
+                Log::info('exempt ip');
                 return Limit::none();
             }
 

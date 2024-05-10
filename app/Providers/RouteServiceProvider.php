@@ -46,11 +46,10 @@ class RouteServiceProvider extends ServiceProvider
             // Hopefully means no limit for requests from sveltekit server itself.
             $remoteAddr = $_SERVER['REMOTE_ADDR'];
             if (IpUtils::checkIp($remoteAddr, '172.20.0.0/24')) {
-                Log::info('exempt ip');
                 return Limit::none();
             }
 
-            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

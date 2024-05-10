@@ -28,13 +28,13 @@ class StatsController extends Controller
             Cache::forget('stats-updated');
         }
 
-        return Cache::remember('stats', 900, function () {
-            return new StatsResource([
-                'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
-                'files' => File::with('lists:id')->get(),
-                'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
-            ]);
-        });
+        //        return Cache::remember('stats', 900, function () {
+        return new StatsResource([
+            'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
+            'files' => File::with('lists:id')->get(),
+            'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
+        ]);
+        //        });
     }
 
     /*

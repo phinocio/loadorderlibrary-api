@@ -44,7 +44,8 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             Log::info('Remote: '.$_SERVER['REMOTE_ADDR'].', ReqIP: '.$request->ip());
             // Hopefully means no limit for requests from sveltekit server itself.
-            if ($_SERVER['REMOTE_ADDR'] === '172.20.0.2') {
+            if ($_SERVER['REMOTE_ADDR'] === '172.20.0.3') {
+                Log::info('exempt');
                 return Limit::none();
             }
 

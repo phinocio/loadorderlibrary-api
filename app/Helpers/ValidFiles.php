@@ -25,6 +25,7 @@ class ValidFiles
             'oblivionprefs.ini',
             'plugins.txt',
             'settings.txt',
+            'settings.ini',
             'skyrim.ini',
             'skyrimcustom.ini',
             'skyrimprefs.ini',

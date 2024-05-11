@@ -33,6 +33,9 @@ RUN docker-php-ext-configure opcache --enable-opcache && \
 # Set move OPCache config
 COPY docker/prod/app/conf.d/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# Copy php-fpm settings to container
+COPY docker/prod/app/conf.d/www.conf /usr/local/etc/php-fpm.d/www.conf
+
 # Instead of copying the one from inside contianer, do this because memory limit changed.
 COPY docker/prod/app/conf.d/php.ini-production /usr/local/etc/php/php.ini
 

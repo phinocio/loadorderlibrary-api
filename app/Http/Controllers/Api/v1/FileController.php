@@ -25,14 +25,14 @@ class FileController extends Controller
         }
 
         $zip = new ZipArchive();
-        $zipFile = $loadOrder->name . '.zip';
-        if ($zip->open(storage_path('app/tmp/' . $zipFile), ZipArchive::CREATE)) {
+        $zipFile = $loadOrder->name.'.zip';
+        if ($zip->open(storage_path('app/tmp/'.$zipFile), ZipArchive::CREATE)) {
             foreach ($listFiles as $file) {
-                $zip->addFile(storage_path('app/uploads/' . $file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
+                $zip->addFile(storage_path('app/uploads/'.$file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
             }
             $zip->close();
 
-            return Storage::download('tmp/' . $zipFile);
+            return Storage::download('tmp/'.$zipFile);
         }
     }
 
@@ -40,14 +40,14 @@ class FileController extends Controller
     {
         $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
 
-        return Storage::download('uploads/' . $file->name, $fileName);
+        return Storage::download('uploads/'.$file->name, $fileName);
     }
 
     public function embed(LoadOrder $loadOrder, string $fileName): FileResource|JsonResponse
     {
         $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
 
-        if (!$file) {
+        if (! $file) {
             return response()->json(['message' => 'File not found'], 404);
         }
 

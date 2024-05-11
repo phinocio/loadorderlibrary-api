@@ -21,7 +21,7 @@ class FileResource extends JsonResource
             'name' => $this->name,
             'clean_name' => $this->clean_name,
             'bytes' => $this->size_in_bytes,
-            'content' => $this->when(!$request->routeIs('compare.*'), $this->formatFileContents()),
+            'content' => $this->when(! $request->routeIs('compare.*'), $this->formatFileContents()),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];
@@ -36,6 +36,7 @@ class FileResource extends JsonResource
     private function formatFileContents(): array
     {
         $content = trim(Storage::disk('uploads')->get($this->name));
-        return explode("\n", $content);
+
+        return array_reverse(explode("\n", $content));
     }
 }

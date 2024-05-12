@@ -29,7 +29,7 @@ class StatsController extends Controller
             $stats = json_encode(new StatsResource([
                 'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
                 'files' => File::with('lists:id')->get(),
-                'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
+                'lists' => LoadOrder::select(['id', 'is_private', 'user_id', 'created_at'])->latest()->get(),
             ]));
 
             Cache::set('stats', $stats, 900);
@@ -50,7 +50,7 @@ class StatsController extends Controller
                 'id', 'is_verified', 'is_admin', 'email', 'created_at',
             ])->with('lists:id,user_id')->latest()->get()),
             'files' => new FileStatsResource(File::with('lists:id')->latest()->get()),
-            'lists' => new LoadOrderStatsResource(LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get()),
+            'lists' => new LoadOrderStatsResource(LoadOrder::select(['id', 'is_private', 'user_id', 'created_at'])->latest()->get()),
             default => response()->json(['message' => 'No stats exist for this resource.'], 404),
         };
     }

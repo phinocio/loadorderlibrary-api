@@ -3,6 +3,7 @@
 namespace App\Http\Resources\v1;
 
 use App\Models\LoadOrder;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -29,6 +30,7 @@ class LoadOrderStatsResource extends JsonResource
             'anonymous_lists' => count($this->resource->filter(function ($value) {
                 return $value->user_id === null;
             })),
+            'last_created' => Carbon::createFromDate($this->resource[0]->created_at)->diffForHumans(),
             'links' => [
                 'self' => route('stats.show', 'lists'),
             ],

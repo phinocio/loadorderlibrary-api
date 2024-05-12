@@ -26,13 +26,13 @@ class StatsController extends Controller
         $stats = Cache::get('stats', null);
 
         if (! $stats) {
-            $stats = new StatsResource([
+            $stats = json_encode(new StatsResource([
                 'users' => User::select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
                 'files' => File::with('lists:id')->get(),
                 'lists' => LoadOrder::select(['id', 'is_private', 'user_id'])->latest()->get(),
-            ]);
+            ]));
 
-            Cache::set('stats', json_encode($stats), 900);
+            Cache::set('stats', $stats, 900);
         }
 
         return response()->json(json_decode($stats));

@@ -21,7 +21,7 @@ class FileStatsResource extends JsonResource
         $tmpSize = 0;
 
         foreach ($tmpFiles as $file) {
-            $tmpSize += Storage::disk('tmp')->size($file);
+            $tmpSize += Storage::disk('tmp')->size(strtolower($file));
         }
 
         return [

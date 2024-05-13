@@ -27,6 +27,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->load('lists');
+
         return new UserResource($user);
     }
 

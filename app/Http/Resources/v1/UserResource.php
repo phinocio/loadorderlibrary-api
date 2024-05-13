@@ -16,11 +16,12 @@ class UserResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'email' => $request->routeIs('admin.*') ? (bool) $this->email : $this->email, // I don't need to see people's actual emails
+            'email' => $request->routeIs('admin.user.*') ? (bool) $this->email : $this->email, // I don't need to see people's actual emails
             'verified' => (bool) $this->is_verified,
             'admin' => (bool) $this->is_admin,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
+            'lists' => LoadOrderResource::collection($this->whenLoaded('lists')),
         ];
     }
 }

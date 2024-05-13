@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\v1\Admin;
 
+use App\Actions\Fortify\PasswordValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Laravel\Fortify\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
+    use PasswordValidationRules;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -34,6 +37,7 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->user()->id),
             ],
+            'password' => ['nullable', 'string', new Password(), 'confirmed'],
             'verified' => 'nullable|string',
         ];
     }

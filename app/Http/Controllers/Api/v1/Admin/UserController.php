@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Admin\UpdateUserRequest;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -49,6 +50,10 @@ class UserController extends Controller
         }
 
         $user->is_verified = (bool) $validated['verified'];
+
+        if ($validated['password']) {
+            $user->password = Hash::make($validated['password']);
+        }
 
         $user->save();
 

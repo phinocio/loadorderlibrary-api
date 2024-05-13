@@ -51,7 +51,7 @@ class UserController extends Controller
 
         $user->is_verified = (bool) $validated['verified'];
 
-        if ($validated['password']) {
+        if (array_key_exists('password', $validated)) {
             $user->password = Hash::make($validated['password']);
         }
 

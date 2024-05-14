@@ -40,7 +40,7 @@ class FileResource extends JsonResource
         if ($this->clean_name === 'modlist.txt') {
             return array_reverse(explode("\n", $content));
         } else {
-            return explode('\n', $content);
+            return explode("\n", $content);
         }
     }
 }

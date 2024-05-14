@@ -37,6 +37,10 @@ class FileResource extends JsonResource
     {
         $content = trim(Storage::disk('uploads')->get($this->name));
 
-        return array_reverse(explode("\n", $content));
+        if ($this->clean_name === 'modlist.txt') {
+            return array_reverse(explode("\n", $content));
+        } else {
+            return explode('\n', $content);
+        }
     }
 }

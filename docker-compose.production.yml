@@ -16,7 +16,7 @@ services:
     networks:
       - lol-db
   app:
-    image: ghcr.io/phinocio/loadorderlibrary-api:latest
+    image: ghcr.io/phinocio/loadorderlibrary-api:main
     container_name: lol-prodapi-app
     restart: unless-stopped
     entrypoint: sh -c "php artisan config:cache && php artisan route:cache && exec php-fpm"

@@ -27,6 +27,7 @@ class ValidFiles
             'settings.txt',
             'settings.ini',
             'skyrim.ini',
+            'skyrimvr.ini',
             'skyrimcustom.ini',
             'skyrimprefs.ini',
             'starfield.ini',

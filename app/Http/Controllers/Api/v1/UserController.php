@@ -6,23 +6,27 @@ use App\Http\Resources\v1\LoadOrderResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\LoadOrder;
 use App\Models\User;
+use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Gate;
 use Throwable;
 
 class UserController extends ApiController
 {
-    /**
-     * Display the specified resource.
-     */
-    public function show(): UserResource
+    protected string $policyClass = UserPolicy::class;
+
+    public function show(User $user): UserResource
     {
+        Gate::authorize('view', User::class);
+
         return new UserResource(auth()->user());
     }
 
     /** @mixin User */
     public function lists(): AnonymousResourceCollection
     {
+        Gate::authorize('view', User::class);
         $lists = LoadOrder::whereUserId(auth()->user()->id)->orderBy('created_at', 'desc')->get();
 
         return LoadOrderResource::collection($lists);
@@ -34,16 +38,12 @@ class UserController extends ApiController
     /** @mixin User */
     public function destroy(User $user): JsonResponse
     {
-        // TOOD: The auth here should be handled by a UserPolicy
+        Gate::authorize('delete', $user);
         try {
-            if (auth()->user()->id === $user->id || auth()->user()->isAdmin()) {
-                $user->tokens()->delete();
-                $user->delete();
+            $user->tokens()->delete();
+            $user->delete();
 
-                return response()->json(null, 204);
-            } else {
-                return response()->json(['message' => 'Unauthorized.'], 401);
-            }
+            return response()->json(null, 204);
         } catch (Throwable $th) {
             return response()->json(['message' => 'something went wrong deleting the user. Please let Phinocio know.', 'error' => $th->getMessage()], 500);
         }

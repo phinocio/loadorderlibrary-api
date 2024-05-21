@@ -88,7 +88,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
         $user2 = User::factory()->create();
 
-        $this->actingAs($user)->delete('/v1/user/'.$user2->name)->assertUnauthorized();
+        $this->actingAs($user)->delete('/v1/user/'.$user2->name)->assertForbidden();
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
 }

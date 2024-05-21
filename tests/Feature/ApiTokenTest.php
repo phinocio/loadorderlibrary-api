@@ -17,7 +17,7 @@ class ApiTokenTest extends TestCase
     use WithFaker;
 
     /** @test */
-    public function a_user_can_create_a_list_with_api_token(): void
+    public function a_user_can_create_a_list_with_token(): void
     {
         $this->seed(GameSeeder::class);
         $user = User::factory()->create();
@@ -38,7 +38,7 @@ class ApiTokenTest extends TestCase
     }
 
     /** @test */
-    public function a_list_owner_can_delete_a_list(): void
+    public function a_list_owner_can_delete_a_list_with_token(): void
     {
         $user = User::factory()->create();
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
@@ -54,21 +54,21 @@ class ApiTokenTest extends TestCase
         $user = User::factory()->create();
         $user2 = User::factory()->create();
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
+        $token = $user2->createToken('meow', ['delete'])->plainTextToken;
 
         // A user is authenticated, so we assert forbidden because they are not authorized
-        Sanctum::actingAs($user2, ['delete']);
-        $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertForbidden();
+        $this->assertGuest()->deleteJson('/v1/lists/'.$loadOrder->slug, [], ['Authorization' => "Bearer $token"])->assertForbidden();
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
 
     /** @test */
-    public function a_user_can_be_deleted(): void
+    public function a_user_can_not_be_deleted_by_a_token(): void
     {
         $user = User::factory()->create();
+        $token = $user->createToken('meow', ['delete'])->plainTextToken;
 
-        Sanctum::actingAs($user, ['delete']);
-        $this->delete('/v1/user/'.$user->name)->assertNoContent();
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertGuest()->deleteJson('/v1/user/'.$user->name, [], ['Authorization' => "Bearer $token"])->assertUnauthorized();
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
     }
 
     /** @test */
@@ -76,9 +76,9 @@ class ApiTokenTest extends TestCase
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
+        $token = $user->createToken('meow', ['delete'])->plainTextToken;
 
-        Sanctum::actingAs($user, ['delete']);
-        $this->delete('/v1/user/'.$user2->name)->assertUnauthorized();
+        $this->assertGuest()->deleteJson('/v1/user/'.$user2->name, [], ['Authorization' => "Bearer $token"])->assertUnauthorized();
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
 

@@ -4,31 +4,31 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\StoreLoadOrderRequest;
 use App\Http\Requests\v1\UpdateLoadOrderRequest;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\File;
 use App\Models\LoadOrder;
+use App\Policies\v1\LoadOrderPolicy;
 use App\Services\UploadService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
-use Storage;
 use Throwable;
 
-class LoadOrderController extends Controller
+class LoadOrderController extends ApiController
 {
-    /**
-     * Create the controller instance.
-     */
+    protected string $policyClass = LoadOrderPolicy::class;
+
     public function __construct()
     {
+        parent::__construct();
         $this->authorizeResource(LoadOrder::class, 'load_order');
     }
 

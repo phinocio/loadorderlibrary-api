@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TokenController extends Controller
+class TokenController extends ApiController
 {
     /**
      * Display a listing of the resource.

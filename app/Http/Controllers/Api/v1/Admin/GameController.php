@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\v1\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\ApiController;
 use App\Http\Resources\v1\GameResource;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use Throwable;
 
-class GameController extends Controller
+class GameController extends ApiController
 {
     public function store(Request $request)
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\FileResource;
 use App\Models\LoadOrder;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +13,7 @@ use ZipArchive;
 // and the actual downloading of the files should be moved to either a dedicated DownloadController, or different
 // methods in this file.
 
-class FileController extends Controller
+class FileController extends ApiController
 {
     public function index(LoadOrder $loadOrder)
     {

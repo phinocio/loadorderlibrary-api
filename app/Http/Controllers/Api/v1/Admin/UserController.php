@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\v1\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\ApiController;
 use App\Http\Requests\v1\Admin\UpdateUserRequest;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function __construct()
     {

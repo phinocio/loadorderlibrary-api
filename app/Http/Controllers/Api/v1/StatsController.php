@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\FileStatsResource;
 use App\Http\Resources\v1\LoadOrderStatsResource;
 use App\Http\Resources\v1\StatsResource;
@@ -13,7 +12,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
-class StatsController extends Controller
+class StatsController extends ApiController
 {
     /**
      * For the all stats route, which will I assume be hit the most,

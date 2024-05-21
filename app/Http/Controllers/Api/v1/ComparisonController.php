@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\LoadOrder;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 
-class ComparisonController extends Controller
+class ComparisonController extends ApiController
 {
     // Since we want to also have a user's private lists present in the comparison selector
     // We need a separate route to GET lists from than just /lists

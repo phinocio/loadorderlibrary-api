@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\ApiController;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\LoadOrder;
 
-class LoadOrderController extends Controller
+class LoadOrderController extends ApiController
 {
     /**
      * Display a listing of the resource.

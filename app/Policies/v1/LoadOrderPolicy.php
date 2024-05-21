@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\v1;
 
 use App\Models\LoadOrder;
 use App\Models\User;

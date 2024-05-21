@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Http\Resources\v1\UserResource;
 use App\Models\LoadOrder;
@@ -11,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display the specified resource.

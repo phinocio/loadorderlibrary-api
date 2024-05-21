@@ -13,7 +13,7 @@ class LoadOrderSeeder extends Seeder
      */
     public function run(): void
     {
-        LoadOrder::factory(1000)->create();
+        LoadOrder::factory(3000)->create();
         $lists = LoadOrder::all();
 
         foreach ($lists as $list) {

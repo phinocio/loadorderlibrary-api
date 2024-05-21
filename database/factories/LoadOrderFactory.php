@@ -23,11 +23,11 @@ class LoadOrderFactory extends Factory
             'slug' => $this->faker->slug(),
             'description' => rand(1, 100) <= 5 ? $this->faker->paragraph() : null,
             'is_private' => rand(1, 3) === 1,
-            'discord' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/discord') : null,
-            'website' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/website') : null,
-            'readme' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'https://example.com/readme') : null,
+            'discord' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/discord') : null,
+            'website' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/website') : null,
+            'readme' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'https://example.com/readme') : null,
             'game_id' => Game::factory()->create()->id,
-            'user_id' => User::all()->random()->id,
+            'user_id' => rand(1, 3) === 1 ? User::all('id')->random()->id : null,
         ];
     }
 }

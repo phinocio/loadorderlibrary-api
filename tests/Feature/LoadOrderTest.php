@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\LoadOrder;
 use App\Models\User;
 use Database\Seeders\GameSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -18,6 +19,7 @@ class LoadOrderTest extends TestCase
     /** @test */
     public function index_returns_valid_format(): void
     {
+        User::factory(5)->create();
         LoadOrder::factory(5)->create();
         $this->getJson('/v1/lists')->assertOk()->assertJsonStructure([
             'data' => [
@@ -45,6 +47,7 @@ class LoadOrderTest extends TestCase
     public function anyone_can_view_a_public_list(): void
     {
         // NOTE: Private lists are viewable by directly accessing the url, so *all* lists should be viewable.
+        User::factory(5)->create();
         $loadOrder = LoadOrder::factory()->create();
 
         $this->getJson('/v1/lists/'.$loadOrder->slug)->assertJsonFragment([
@@ -97,6 +100,7 @@ class LoadOrderTest extends TestCase
     /** @test */
     public function a_guest_can_not_delete_a_list(): void
     {
+        User::factory(5)->create();
         $loadOrder = LoadOrder::factory()->create();
         // A guest is firstly unauthorized, so we assert that before forbidden.
         $this->deleteJson('/v1/lists/'.$loadOrder->slug)->assertUnauthorized();

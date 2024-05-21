@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Game;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,15 +19,15 @@ class LoadOrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->sentence(rand(1, 7)),
             'slug' => $this->faker->slug(),
-            'description' => $this->faker->paragraph(),
-            'is_private' => $this->faker->boolean(),
-            'discord' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/discord' ?? null) : null,
-            'website' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/website' ?? null) : null,
-            'readme' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'example.com/readme' ?? null) : null,
+            'description' => rand(1, 100) <= 5 ? $this->faker->paragraph() : null,
+            'is_private' => rand(1, 3) === 1,
+            'discord' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/discord') : null,
+            'website' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/website') : null,
+            'readme' => rand(1, 3) == 1 ? str_replace(['https://', 'http://'], '', 'https://example.com/readme') : null,
             'game_id' => Game::factory()->create()->id,
-            'user_id' => null,
+            'user_id' => User::all()->random()->id,
         ];
     }
 }

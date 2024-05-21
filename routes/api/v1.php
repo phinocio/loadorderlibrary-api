@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Admin\GameController as AdminGameController;
 use App\Http\Controllers\Api\v1\Admin\LoadOrderController as AdminLoadOrderController;
 use App\Http\Controllers\Api\v1\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\v1\ComparisonController;
@@ -25,44 +26,39 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/user', [UserController::class, 'show'])->name('user.show');
-        Route::get('/user/lists', [UserController::class, 'lists'])->name('user.lists');
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/user', 'show')->name('user.show');
+            Route::get('/user/lists', 'lists')->name('user.lists');
+        });
 
-        /*
-         * List
-         * List related routes
-         */
         Route::controller(LoadOrderController::class)->group(function () {
             Route::put('/lists/{load_order:slug}', 'update')
                 ->name('list.update');
-
             Route::delete('/lists/{load_order:slug}', 'destroy')
                 ->name('list.destroy');
         });
-
-        /*
-         * Game
-         * Game related routes
-         */
-        Route::post('/games', [GameController::class, 'store'])->name('games.store');
     });
 
-
-    // Routes that require auth, but don't want to allow token auth.
+    // Routes that require auth, but don't want to allow token auth with sanctum.
     Route::middleware('auth')->group(function () {
-        /*
-         * Token
-         * Token related routes
-         */
         Route::controller(TokenController::class)->group(function () {
             Route::get('/user/api-tokens', 'index')->name('token.index');
             Route::post('/user/api-tokens', 'store')->name('token.store');
             Route::delete('/user/api-tokens/{id}', 'destroy')->name('token.destroy');
         });
 
-        /*
-         * Admin User
-         * Admin User management routes.
+        /**
+         * Passing an instance of a resource to the controller for deletion is
+         * convention of other resources. In addition, this will allow an
+         * admin to delete any user they choose by passing a name.
+         * Being in the auth middleware vs auth:sanctum also means accounts can only
+         * be deleted from the website itself.
+         */
+        Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
+
+        /**
+         * Admin Routes
+         * Admin related routes for managing things with the site.
          */
         Route::prefix('admin')->middleware(EnsureUserIsAdmin::class)->group(function () {
             Route::controller(AdminUserController::class)->group(function () {
@@ -75,21 +71,17 @@ Route::prefix('v1')->group(function () {
             Route::controller(AdminLoadOrderController::class)->group(function () {
                 Route::get('/lists', 'index')->name('admin.lists.index');
             });
+
+            Route::controller(AdminGameController::class)->group(function () {
+                Route::post('/games', 'store')->name('admin.games.store');
+                Route::delete('/games/{game:name}', 'destroy')->name('admin.games.destroy');
+            });
         });
-
-        /*
-         * Passing an instance of a resource to the controller for deletion is
-         * convention of other resources. In addition, this will allow an
-         * admin to delete any user they choose by passing a name.
-         */
-        Route::delete('/user/{user:name}', [UserController::class, 'destroy'])->name('user.destroy');
-
     });
-    // The following routes are usable by guests, so don't need sanctum middleware
 
-    /*
-     * List
-     * List related routes
+    /**
+     * GUEST ROUTES
+     * The following routes are usable by guests/anonymous users, so don't need sanctum auth.
      */
     Route::controller(LoadOrderController::class)->group(function () {
         Route::get('/lists', 'index')->name('list.index');
@@ -97,40 +89,22 @@ Route::prefix('v1')->group(function () {
         Route::post('/lists', 'store')->name('list.store');
     });
 
-    /*
-     * Game
-     * Game related routes
-     */
     Route::controller(GameController::class)->group(function () {
-        Route::get('/games', 'index')->name('games');
+        Route::get('/games', 'index')->name('games.index');
         Route::get('/games/{game:name}', 'show')->name('games.show');
     });
 
-    /*
-     * File
-     * File related routes
-     */
     Route::controller(FileController::class)->group(function () {
-        Route::get('/lists/{load_order:slug}/download', 'index')->name('files');
+        Route::get('/lists/{load_order:slug}/download', 'index')->name('files.index');
         Route::get('/lists/{load_order:slug}/download/{file:name}', 'show')->name('files.show');
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
 
-    /*
-     * The below routes act on existing models and aren't associated with their own.
-     */
-
-    /*
-     * Comparison related routes
-     */
     Route::controller(ComparisonController::class)->group(function () {
         Route::get('/compare', 'index')->name('compare.index');
         Route::get('/compare/{load_order1}/{load_order2}', 'show')->name('compare.show');
     });
 
-    /*
-     * Stats related routes
-     */
     Route::controller(StatsController::class)->group(function () {
         Route::get('/stats', 'index')->name('stats.index');
         Route::get('/stats/{resource}', 'show')->name('stats.show');

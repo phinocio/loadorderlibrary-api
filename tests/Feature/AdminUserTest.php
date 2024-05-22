@@ -12,12 +12,7 @@ class AdminUserTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    /**
-     * Ensure that only an admin can get a list of all users
-     *
-     * @test
-     */
-    public function only_an_admin_can_fetch_all_users(): void
+    public function test_only_an_admin_can_fetch_all_users(): void
     {
         User::factory(5)->create();
         $notAdmin = User::factory()->create();
@@ -39,12 +34,7 @@ class AdminUserTest extends TestCase
         ]);
     }
 
-    /**
-     * Ensure that only an admin can verify a user.
-     *
-     * @test
-     */
-    public function only_an_admin_can_verify_a_user(): void
+    public function test_only_an_admin_can_verify_a_user(): void
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $user = User::factory()->create();
@@ -57,12 +47,7 @@ class AdminUserTest extends TestCase
         $this->assertTrue($userResp['data']['verified']); // Also check that the api response is now "true".
     }
 
-    /**
-     * Ensure that only an admin can delete accounts using this route.
-     *
-     * @test
-     */
-    public function only_an_admin_can_delete_a_user(): void
+    public function test_only_an_admin_can_delete_a_user(): void
     {
         $admin = User::factory()->create(['is_admin' => 1]);
         $user = User::factory()->create();

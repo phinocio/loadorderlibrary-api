@@ -10,8 +10,7 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function a_user_can_register_with_email(): void
+    public function test_a_user_can_register_with_email(): void
     {
         $data = [
             'name' => fake()->name(),
@@ -25,8 +24,7 @@ class UserTest extends TestCase
         $this->assertDatabaseHas('users', ['name' => $data['name']]);
     }
 
-    /** @test */
-    public function a_user_can_register_without_email(): void
+    public function test_a_user_can_register_without_email(): void
     {
         $data = [
             'name' => fake()->name(),
@@ -40,8 +38,7 @@ class UserTest extends TestCase
         $this->assertDatabaseHas('users', ['name' => $data['name'], 'email' => null]);
     }
 
-    /** @test */
-    public function a_user_can_not_register_with_existing_name(): void
+    public function test_a_user_can_not_register_with_existing_name(): void
     {
         $data = [
             'name' => fake()->name(),
@@ -55,8 +52,7 @@ class UserTest extends TestCase
         $this->postJson('/register', $data)->assertUnprocessable();
     }
 
-    /** @test */
-    public function a_user_can_login(): void
+    public function test_a_user_can_login(): void
     {
         $user = User::factory()->create();
 
@@ -64,8 +60,7 @@ class UserTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
-    /** @test */
-    public function a_user_can_log_out(): void
+    public function test_a_user_can_log_out(): void
     {
         $user = User::factory()->create();
 
@@ -73,8 +68,7 @@ class UserTest extends TestCase
         $this->postJson('/logout')->assertNoContent();
     }
 
-    /** @test */
-    public function a_user_can_be_deleted(): void
+    public function test_a_user_can_be_deleted(): void
     {
         $user = User::factory()->create();
 
@@ -82,8 +76,7 @@ class UserTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
-    /** @test */
-    public function a_user_can_not_delete_another_user(): void
+    public function test_a_user_can_not_delete_another_user(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();

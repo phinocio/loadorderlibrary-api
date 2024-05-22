@@ -9,8 +9,7 @@ use Tests\TestCase;
 
 class UploadServiceTest extends TestCase
 {
-    /** @test */
-    public function files_get_uploaded()
+    public function test_files_get_uploaded()
     {
         $files = [
             UploadedFile::fake()->create('modlist.txt', 1, 'text/plain'),
@@ -24,6 +23,6 @@ class UploadServiceTest extends TestCase
             ->assertExists($files[1]['name']);
 
         // Clean up the files
-        Storage::disk('uploads')->delete($files[0]['name'], $files[1]['name']);
+        Storage::disk('uploads')->delete([$files[0]['name'], $files[1]['name']]);
     }
 }

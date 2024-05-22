@@ -16,10 +16,8 @@ class ApiTokenTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    /** @test */
-    public function a_user_can_create_a_list_with_token(): void
+    public function test_a_user_can_create_a_list_with_token(): void
     {
-        $this->seed(GameSeeder::class);
         $user = User::factory()->create();
 
         $file = UploadedFile::fake()->createWithContent('modlist.txt', 'Fake text so it has a mimetype!');
@@ -37,8 +35,7 @@ class ApiTokenTest extends TestCase
         $this->assertDatabaseHas('load_orders', ['user_id' => $user->id]);
     }
 
-    /** @test */
-    public function a_list_owner_can_delete_a_list_with_token(): void
+    public function test_a_list_owner_can_delete_a_list_with_token(): void
     {
         $user = User::factory()->create();
         $loadOrder = LoadOrder::factory()->create(['user_id' => $user->id]);
@@ -48,8 +45,7 @@ class ApiTokenTest extends TestCase
         $this->assertDatabaseMissing('load_orders', ['slug' => $loadOrder->slug]);
     }
 
-    /** @test */
-    public function a_user_can_not_delete_another_users_list(): void
+    public function test_a_user_can_not_delete_another_users_list(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -61,8 +57,7 @@ class ApiTokenTest extends TestCase
         $this->assertDatabaseHas('load_orders', ['slug' => $loadOrder->slug]);
     }
 
-    /** @test */
-    public function a_user_can_not_be_deleted_by_a_token(): void
+    public function test_a_user_can_not_be_deleted_by_a_token(): void
     {
         $user = User::factory()->create();
         $token = $user->createToken('meow', ['delete'])->plainTextToken;
@@ -71,8 +66,7 @@ class ApiTokenTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $user->id]);
     }
 
-    /** @test */
-    public function a_user_can_not_delete_another_user(): void
+    public function test_a_user_can_not_delete_another_user(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -82,8 +76,7 @@ class ApiTokenTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $user2->id]);
     }
 
-    /** @test */
-    public function a_guest_can_not_create_a_token()
+    public function test_a_guest_can_not_create_a_token(): void
     {
         $this->postJson('/v1/user/api-tokens', ['token_name' => 'test'])->assertUnauthorized();
     }

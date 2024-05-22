@@ -34,6 +34,7 @@ class LoadOrderController extends ApiController
 
     /**
      * Display a listing of the resource.
+     * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function index(): AnonymousResourceCollection
     {
@@ -48,6 +49,12 @@ class LoadOrderController extends ApiController
                 AllowedSort::field('updated', 'updated_at'),
             ])
             ->where('is_private', '=', false)
+            ->when(request('query'), function ($query) {
+                $query->where(function ($query) {
+                    $query->orWhere('name', 'like', '%'.request('query').'%')
+                        ->orWhere('description', 'like', '%'.request('query').'%');
+                });
+            })
             ->jsonPaginate(900, 30);
 
         return LoadOrderResource::collection($lists);

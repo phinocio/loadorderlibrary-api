@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\LoadOrder;
 use App\Models\User;
-use Database\Seeders\GameSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;

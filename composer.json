@@ -14,7 +14,6 @@
 		"laravel/fortify": "^1.21.3",
 		"laravel/framework": "^11.8",
 		"laravel/sanctum": "^4.0.2",
-		"laravel/scout": "^10.9",
 		"laravel/tinker": "^2.9.0",
 		"sebastian/diff": "^6.0.1",
 		"spatie/laravel-json-api-paginate": "^1.14",

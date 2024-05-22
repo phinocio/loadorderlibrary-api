@@ -26,7 +26,7 @@ class LoadOrderFactory extends Factory
             'discord' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/discord') : null,
             'website' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/website') : null,
             'readme' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'https://example.com/readme') : null,
-            'game_id' => Game::factory()->create()->id,
+            'game_id' => Game::all('id')->random()->id,
             'user_id' => rand(1, 3) === 1 ? User::all('id')->random()->id : null,
         ];
     }

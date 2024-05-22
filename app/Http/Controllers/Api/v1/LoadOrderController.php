@@ -34,6 +34,7 @@ class LoadOrderController extends ApiController
 
     /**
      * Display a listing of the resource.
+     *
      * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function index(): AnonymousResourceCollection
@@ -52,7 +53,9 @@ class LoadOrderController extends ApiController
             ->when(request('query'), function ($query) {
                 $query->where(function ($query) {
                     $query->orWhere('name', 'like', '%'.request('query').'%')
-                        ->orWhere('description', 'like', '%'.request('query').'%');
+                        ->orWhere('description', 'like', '%'.request('query').'%')
+                        ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
+                        ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
                 });
             })
             ->jsonPaginate(900, 30);

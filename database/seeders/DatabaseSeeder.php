@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             GameSeeder::class,
         ]);
 
-        if (! app()->isProduction()) {
+        if (! app()->isProduction() && ! app()->environment('testing')) {
             $this->call([
                 UserSeeder::class,
                 FileSeeder::class,

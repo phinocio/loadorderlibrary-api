@@ -36,29 +36,52 @@ class LoadOrderController extends ApiController
      * Display a listing of the resource.
      *
      * @noinspection PhpVoidFunctionResultUsedInspection
+     * @noinspection DuplicatedCode
      */
     public function index(): AnonymousResourceCollection
     {
-        $lists = QueryBuilder::for(LoadOrder::class)
-            ->allowedFilters([
-                AllowedFilter::custom('author', new FiltersAuthorName()),
-                AllowedFilter::custom('game', new FiltersGameName()),
-            ])
-            ->defaultSort('-created_at')
-            ->allowedSorts([
-                AllowedSort::field('created', 'created_at'),
-                AllowedSort::field('updated', 'updated_at'),
-            ])
-            ->where('is_private', '=', false)
-            ->when(request('query'), function ($query) {
-                $query->where(function ($query) {
-                    $query->orWhere('name', 'like', '%'.request('query').'%')
-                        ->orWhere('description', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
-                });
-            })
-            ->jsonPaginate(900, 30);
+
+        if (request('all')) {
+            $lists = QueryBuilder::for(LoadOrder::class)
+                ->allowedFilters([
+                    AllowedFilter::custom('author', new FiltersAuthorName()),
+                    AllowedFilter::custom('game', new FiltersGameName()),
+                ])
+                ->defaultSort('-created_at')
+                ->allowedSorts([
+                    AllowedSort::field('created', 'created_at'),
+                    AllowedSort::field('updated', 'updated_at'),
+                ])
+                ->where('is_private', '=', false)
+                ->when(request('query'), function ($query) {
+                    $query->where(function ($query) {
+                        $query->orWhere('name', 'like', '%'.request('query').'%')
+                            ->orWhere('description', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+                    });
+                })->get();
+        } else {
+            $lists = QueryBuilder::for(LoadOrder::class)
+                ->allowedFilters([
+                    AllowedFilter::custom('author', new FiltersAuthorName()),
+                    AllowedFilter::custom('game', new FiltersGameName()),
+                ])
+                ->defaultSort('-created_at')
+                ->allowedSorts([
+                    AllowedSort::field('created', 'created_at'),
+                    AllowedSort::field('updated', 'updated_at'),
+                ])
+                ->where('is_private', '=', false)
+                ->when(request('query'), function ($query) {
+                    $query->where(function ($query) {
+                        $query->orWhere('name', 'like', '%'.request('query').'%')
+                            ->orWhere('description', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+                    });
+                })->jsonPaginate(900, 30);
+        }
 
         return LoadOrderResource::collection($lists);
     }

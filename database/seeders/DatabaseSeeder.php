@@ -14,9 +14,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             GameSeeder::class,
-            UserSeeder::class,
-            FileSeeder::class,
-            LoadOrderSeeder::class
         ]);
+
+        if (! app()->isProduction()) {
+            $this->call([
+                UserSeeder::class,
+                FileSeeder::class,
+                LoadOrderSeeder::class,
+            ]);
+        }
     }
 }

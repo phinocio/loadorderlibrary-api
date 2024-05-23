@@ -40,8 +40,7 @@ class LoadOrderController extends ApiController
      */
     public function index(): AnonymousResourceCollection
     {
-
-        if (request('all')) {
+        if (request('page') && request('page')['size'] === 'all') {
             $lists = QueryBuilder::for(LoadOrder::class)
                 ->allowedFilters([
                     AllowedFilter::custom('author', new FiltersAuthorName()),

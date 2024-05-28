@@ -12,8 +12,6 @@ use App\Models\LoadOrder;
 use App\Policies\v1\LoadOrderPolicy;
 use App\Services\UploadService;
 use Carbon\Carbon;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;

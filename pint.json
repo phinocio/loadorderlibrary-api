@@ -1,0 +1,11 @@
+{
+    "preset": "psr12",
+    "rules": {
+        "simplified_null_return": true,
+        "braces": true,
+        "new_with_braces": {
+            "anonymous_class": true,
+            "named_class": true
+        }
+    }
+}

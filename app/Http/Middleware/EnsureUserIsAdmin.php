@@ -15,7 +15,7 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             return response()->json([
                 'message' => 'Only admins can access this route.',
             ], Response::HTTP_FORBIDDEN);

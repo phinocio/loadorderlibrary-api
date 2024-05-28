@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -165,7 +164,7 @@ class GameSeeder extends Seeder
 
         DB::table('games')->insert([
             'id' => 31,
-            'name' => "The Witcher: Enhanced Edition"
+            'name' => 'The Witcher: Enhanced Edition',
         ]);
     }
 }

@@ -11,6 +11,7 @@ use Laravel\Fortify\Rules\Password;
 class UpdateUserRequest extends FormRequest
 {
     use PasswordValidationRules;
+
     /**
      * Determine if the user is authorized to make this request.
      */

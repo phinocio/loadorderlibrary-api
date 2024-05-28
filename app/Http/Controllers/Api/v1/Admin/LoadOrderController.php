@@ -31,6 +31,7 @@ class LoadOrderController extends ApiController
     public function destroy(LoadOrder $loadOrder)
     {
         $loadOrder->delete();
+
         return response()->json(null, 204);
     }
 }

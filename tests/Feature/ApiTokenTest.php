@@ -18,6 +18,7 @@ class ApiTokenTest extends TestCase
     public function test_a_user_can_create_a_list_with_token(): void
     {
         $user = User::factory()->create();
+        $token = $user->createToken('meow', ['create'])->plainTextToken;
 
         $file = UploadedFile::fake()->createWithContent('modlist.txt', 'Fake text so it has a mimetype!');
         $attributes = [
@@ -29,8 +30,8 @@ class ApiTokenTest extends TestCase
                 $file,
             ],
         ];
-        Sanctum::actingAs($user, ['create']);
-        $this->postJson('/v1/lists', $attributes)->assertCreated();
+
+        $this->assertGuest()->postJson('/v1/lists', $attributes, ['Authorization' => "Bearer $token"])->assertCreated();
         $this->assertDatabaseHas('load_orders', ['user_id' => $user->id]);
     }
 

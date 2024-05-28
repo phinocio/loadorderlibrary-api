@@ -10,14 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LoadOrder extends Model
 {
-    use HasFactory;
-    use Sluggable;
-
-    protected $guarded = [];
+    use HasFactory, Sluggable;
 
     protected $with = ['game', 'author'];
-
-    protected $hidden = ['id'];
+   protected $hidden = ['id'];
 
     protected $casts = [
         'expires_at' => 'datetime',
@@ -50,3 +46,4 @@ class LoadOrder extends Model
         ];
     }
 }
+

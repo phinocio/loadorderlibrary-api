@@ -12,10 +12,13 @@ use App\Models\LoadOrder;
 use App\Policies\v1\LoadOrderPolicy;
 use App\Services\UploadService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
@@ -26,12 +29,6 @@ class LoadOrderController extends ApiController
 {
     protected string $policyClass = LoadOrderPolicy::class;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->authorizeResource(LoadOrder::class, 'load_order');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +37,8 @@ class LoadOrderController extends ApiController
      */
     public function index(): AnonymousResourceCollection
     {
+        Gate::authorize('viewAny', LoadOrder::class);
+
         if (request('page') && request('page')['size'] === 'all') {
             $lists = QueryBuilder::for(LoadOrder::class)
                 ->allowedFilters([
@@ -90,6 +89,8 @@ class LoadOrderController extends ApiController
      */
     public function store(StoreLoadOrderRequest $request): LoadOrderResource|JsonResponse
     {
+        Gate::authorize('create', LoadOrder::class);
+
         // TODO: Surely there's a better solution to allow guest uploads than this?
         // Return with a 401 (or maybe 422?) if there is no user associated with a token so a list is
         // not accidentally uploaded anonymously if the token was typo'd.
@@ -164,6 +165,8 @@ class LoadOrderController extends ApiController
      */
     public function show(LoadOrder $loadOrder)
     {
+        Gate::authorize('view', $loadOrder);
+
         return new LoadOrderResource($loadOrder->load('files'));
     }
 
@@ -172,6 +175,8 @@ class LoadOrderController extends ApiController
      */
     public function update(UpdateLoadOrderRequest $request, LoadOrder $loadOrder): LoadOrderResource
     {
+        Gate::authorize('update', $loadOrder);
+
         // Unlike the store() method, auth is done on the route level
 
         $validated = $request->validated();
@@ -239,6 +244,8 @@ class LoadOrderController extends ApiController
      */
     public function destroy(LoadOrder $loadOrder)
     {
+        Gate::authorize('delete', $loadOrder);
+
         try {
             $loadOrder->delete();
 

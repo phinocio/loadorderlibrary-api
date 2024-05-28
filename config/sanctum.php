@@ -16,9 +16,7 @@ return [
     */
 
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s%s',
-        env('LOCAL_DOMAINS', ''),
-        env('APP_URL') ? ',' . parse_url(env('APP_URL'), PHP_URL_HOST) : '',
+        '%s%s',
         env('FRONTEND_URL') ? ',' . parse_url(env('FRONTEND_URL'), PHP_URL_HOST) : '',
         Sanctum::currentApplicationUrlWithPort()
     ))),
@@ -35,7 +33,7 @@ return [
     |
     */
 
-    //    'guard' => ['web'],
+//    'guard' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -43,12 +41,27 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value controls the number of minutes until an issued token will be
-    | considered expired. If this value is null, personal access tokens do
-    | not expire. This won't tweak the lifetime of first-party sessions.
+    | considered expired. This will override any values set in the token's
+    | "expires_at" attribute, but first-party sessions are not affected.
     |
     */
 
     'expiration' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Token Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Sanctum can prefix new tokens in order to take advantage of numerous
+    | security scanning initiatives maintained by open source platforms
+    | that notify developers if they commit tokens into repositories.
+    |
+    | See: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
+    |
+    */
+
+    'token_prefix' => env('SANCTUM_TOKEN_PREFIX', ''),
 
     /*
     |--------------------------------------------------------------------------

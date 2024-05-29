@@ -62,7 +62,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $schedule->command('backup:clean')
             ->daily()->at('01:00')
-            ->environments(['production'])
+            ->environments(['production', 'testing'])
             ->onSuccess(function () {
                 Log::channel('backups')->info('✅ Clean Backups');
             })
@@ -73,7 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $schedule->command('backup:run')
             ->daily()->at('01:30')
-            ->environments(['production'])
+            ->environments(['production', 'testing'])
             ->onSuccess(function () {
                 Log::channel('backups')->info('✅ Clean Backups');
             })

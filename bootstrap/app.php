@@ -69,7 +69,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->onFailure(function () {
                 Log::channel('backups')->error('❌ Clean Backups');
             })
-            ->appendOutputTo(storage_path('logs/scheduled-backups.log'));
+            ->appendOutputTo(storage_path('logs/backups.log'));
 
         $schedule->command('backup:run')
             ->daily()->at('01:30')
@@ -80,5 +80,5 @@ return Application::configure(basePath: dirname(__DIR__))
             ->onFailure(function () {
                 Log::channel('backups')->error('❌ Clean Backups');
             })
-            ->appendOutputTo(storage_path('logs/scheduled-backups.log'));
+            ->appendOutputTo(storage_path('logs/backups.log'));
     })->create();

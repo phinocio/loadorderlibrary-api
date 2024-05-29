@@ -61,8 +61,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->appendOutputTo(storage_path('logs/scheduled.log'));
 
         $schedule->command('backup:clean')
-            ->everyFiveMinutes()
-            /*->daily()->at('01:00')*/
+            ->daily()->at('01:00')
             ->environments(['production', 'testing'])
             ->onSuccess(function () {
                 Log::channel('backups')->info('✅ Clean Backups');
@@ -73,8 +72,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->appendOutputTo(storage_path('logs/backups.log'));
 
         $schedule->command('backup:run')
-            ->everyFiveMinutes()
-            /*->daily()->at('01:30')*/
+            ->daily()->at('01:30')
             ->environments(['production', 'testing'])
             ->onSuccess(function () {
                 Log::channel('backups')->info('✅ Clean Backups');

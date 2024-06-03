@@ -70,6 +70,8 @@ Route::prefix('v1')->group(function () {
 
             Route::controller(AdminLoadOrderController::class)->group(function () {
                 Route::get('/lists', 'index')->name('admin.lists.index');
+                Route::get('/lists/{load_order:slug}', 'show')->name('admin.lists.show');
+                Route::delete('/lists/{load_order:slug}', 'destroy')->name('admin.lists.destroy');
             });
 
             Route::controller(AdminGameController::class)->group(function () {

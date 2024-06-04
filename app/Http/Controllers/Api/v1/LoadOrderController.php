@@ -37,7 +37,7 @@ class LoadOrderController extends ApiController
     {
         Gate::authorize('viewAny', LoadOrder::class);
 
-        if (request('page') && request('page')['size'] === 'all') {
+        if (request('page') && isset(request('page')['size']) && request('page')['size'] === 'all') {
             $lists = QueryBuilder::for(LoadOrder::class)
                 ->allowedFilters([
                     AllowedFilter::custom('author', new FiltersAuthorName()),

@@ -12,6 +12,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "sebastian/diff": "^6.0",
         "spatie/laravel-backup": "^8.8",
         "spatie/laravel-json-api-paginate": "^1.14",
         "spatie/laravel-query-builder": "^6.0",

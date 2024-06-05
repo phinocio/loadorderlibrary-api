@@ -16,6 +16,7 @@ class ValidMimeType implements ValidationRule
         $validMimes = [
             'text/plain',
             'application/x-wine-extension-ini',
+            'application/octet-stream',
         ]; //
 
         /** @noinspection PhpComposerExtensionStubsInspection */
@@ -23,7 +24,7 @@ class ValidMimeType implements ValidationRule
         $mimetype = mime_content_type($value->getRealPath());
 
         if (! in_array($mimetype, $validMimes)) {
-            $fail('The :value has an invalid mimetype. Detected mimetype is: '.$mimetype);
+            $fail('The :attribute has an invalid mimetype. Detected mimetype is: '.$mimetype);
         }
     }
 }

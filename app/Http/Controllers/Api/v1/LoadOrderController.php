@@ -28,8 +28,6 @@ class LoadOrderController extends ApiController
     protected string $policyClass = LoadOrderPolicy::class;
 
     /**
-     * Display a listing of the resource.
-     *
      * @noinspection PhpVoidFunctionResultUsedInspection
      * @noinspection DuplicatedCode
      */
@@ -50,10 +48,10 @@ class LoadOrderController extends ApiController
             ->where('is_private', '=', false)
             ->when(request('query'), function ($query) {
                 $query->where(function ($query) {
-                    $query->orWhere('name', 'like', '%'.request('query').'%')
-                        ->orWhere('description', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+                    $query->orWhere('name', 'like', '%' . request('query') . '%')
+                        ->orWhere('description', 'like', '%' . request('query') . '%')
+                        ->orWhereRelation('author', 'name', 'like', '%' . request('query') . '%')
+                        ->orWhereRelation('game', 'name', 'like', '%' . request('query') . '%');
                 });
             });
 
@@ -64,9 +62,6 @@ class LoadOrderController extends ApiController
         return LoadOrderResource::collection($lists->clone()->jsonPaginate(900, 30));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreLoadOrderRequest $request): LoadOrderResource|JsonResponse
     {
         Gate::authorize('create', LoadOrder::class);
@@ -76,13 +71,13 @@ class LoadOrderController extends ApiController
         // not accidentally uploaded anonymously if the token was typo'd.
         if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
             Auth::setUser($user);
-            if (! $user->tokenCan('create')) {
+            if (!$user->tokenCan('create')) {
                 return response()->json(
                     ['message' => "This action is forbidden. (Token doesn't have permission for this action.)"],
                     403
                 );
             }
-        } elseif (request()->bearerToken() && ! Auth::guard('sanctum')->check()) {
+        } elseif (request()->bearerToken() && !Auth::guard('sanctum')->check()) {
             return response()->json(['message' => 'Unauthenticated. (Make sure the token is correct.)'], 401);
         }
 
@@ -91,11 +86,11 @@ class LoadOrderController extends ApiController
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
-        if (! array_key_exists('expires', $validated)) {
+        if (!array_key_exists('expires', $validated)) {
             auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
-        if (! array_key_exists('private', $validated)) {
+        if (!array_key_exists('private', $validated)) {
             $validated['private'] = false;
         }
 
@@ -168,11 +163,11 @@ class LoadOrderController extends ApiController
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
-        if (! array_key_exists('expires', $validated)) {
+        if (!array_key_exists('expires', $validated)) {
             auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
-        if (! array_key_exists('private', $validated)) {
+        if (!array_key_exists('private', $validated)) {
             $validated['private'] = false;
         }
 

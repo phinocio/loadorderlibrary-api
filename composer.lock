@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b1fd6affe0e367acd4eac2e18f84997",
+    "content-hash": "4a59e07dec210a4821c783b160f1d36d",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -4014,16 +4014,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "8.8.2",
+            "version": "9.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "5b672713283703a74c629ccd67b1d77eb57e24b9"
+                "reference": "9f116d440940f0670016f6f8324a3bf8fd03f9ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/5b672713283703a74c629ccd67b1d77eb57e24b9",
-                "reference": "5b672713283703a74c629ccd67b1d77eb57e24b9",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/9f116d440940f0670016f6f8324a3bf8fd03f9ef",
+                "reference": "9f116d440940f0670016f6f8324a3bf8fd03f9ef",
                 "shasum": ""
             },
             "require": {
@@ -4035,7 +4035,7 @@
                 "illuminate/notifications": "^10.10.0|^11.0",
                 "illuminate/support": "^10.10.0|^11.0",
                 "league/flysystem": "^3.0",
-                "php": "^8.1",
+                "php": "^8.2",
                 "spatie/db-dumper": "^3.0",
                 "spatie/laravel-package-tools": "^1.6.2",
                 "spatie/laravel-signal-aware-command": "^1.2|^2.0",
@@ -4054,7 +4054,8 @@
                 "pestphp/pest": "^1.20|^2.0",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan-deprecation-rules": "^1.0",
-                "phpstan/phpstan-phpunit": "^1.1"
+                "phpstan/phpstan-phpunit": "^1.1",
+                "rector/rector": "^1.1"
             },
             "suggest": {
                 "laravel/slack-notification-channel": "Required for sending notifications via Slack"
@@ -4097,7 +4098,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-backup/issues",
-                "source": "https://github.com/spatie/laravel-backup/tree/8.8.2"
+                "source": "https://github.com/spatie/laravel-backup/tree/9.0.4"
             },
             "funding": [
                 {
@@ -4109,7 +4110,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2024-08-07T11:07:52+00:00"
+            "time": "2024-07-15T08:36:14+00:00"
         },
         {
             "name": "spatie/laravel-json-api-paginate",
@@ -7017,24 +7018,24 @@
         },
         {
             "name": "wnx/laravel-backup-restore",
-            "version": "v1.3.2",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefanzweifel/laravel-backup-restore.git",
-                "reference": "bd130ce636aaafd6d2364ad601759900610003dd"
+                "reference": "69c470cab631fcd0ebb099bd0e5b3db660efefb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefanzweifel/laravel-backup-restore/zipball/bd130ce636aaafd6d2364ad601759900610003dd",
-                "reference": "bd130ce636aaafd6d2364ad601759900610003dd",
+                "url": "https://api.github.com/repos/stefanzweifel/laravel-backup-restore/zipball/69c470cab631fcd0ebb099bd0e5b3db660efefb2",
+                "reference": "69c470cab631fcd0ebb099bd0e5b3db660efefb2",
                 "shasum": ""
             },
             "require": {
                 "ext-zip": "*",
                 "illuminate/contracts": "^10.17.0 || ^11.0",
                 "laravel/prompts": "^0.1.11",
-                "php": "^8.1",
-                "spatie/laravel-backup": "^8.0",
+                "php": "^8.2",
+                "spatie/laravel-backup": "^9.0",
                 "spatie/laravel-package-tools": "^1.14.0",
                 "spatie/temporary-directory": "^2.0"
             },
@@ -7087,7 +7088,7 @@
             ],
             "support": {
                 "issues": "https://github.com/stefanzweifel/laravel-backup-restore/issues",
-                "source": "https://github.com/stefanzweifel/laravel-backup-restore/tree/v1.3.2"
+                "source": "https://github.com/stefanzweifel/laravel-backup-restore/tree/v1.4.1"
             },
             "funding": [
                 {
@@ -7099,7 +7100,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-08T10:00:00+00:00"
+            "time": "2024-08-20T18:44:03+00:00"
         }
     ],
     "packages-dev": [

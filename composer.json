@@ -7,8 +7,8 @@
     "require": {
         "php": "^8.2",
         "cviebrock/eloquent-sluggable": "^11.0",
-        "laravel/fortify": "^1.24",
-        "laravel/framework": "^11.21",
+        "laravel/fortify": "^1.24.1",
+        "laravel/framework": "^11.23.5",
         "laravel/sanctum": "^4.0.2",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.28",
@@ -19,14 +19,15 @@
         "wnx/laravel-backup-restore": "^1.4.1"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.1",
         "fakerphp/faker": "^1.23.1",
         "larastan/larastan": "^2.9.8",
-        "laravel/pint": "^1.17.2",
-        "laravel/sail": "^1.31.1",
+        "laravel/pint": "^1.17.3",
+        "laravel/sail": "^1.32.0",
         "laravel/telescope": "^5.2.2",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.4",
-        "phpunit/phpunit": "^11.3.1"
+        "phpunit/phpunit": "^11.3.6"
     },
     "autoload": {
         "psr-4": {

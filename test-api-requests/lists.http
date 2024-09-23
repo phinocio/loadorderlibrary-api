@@ -1,0 +1,34 @@
+@base=localhost:8000/v1
+
+# @name Get Lists
+GET {{base}}/lists
+Accept: application/json
+
+###
+
+# @name Get Specific List
+GET {{base}}/lists/meow
+Accept: application/json
+
+###
+
+# @name Create List
+POST {{base}}/lists
+Accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary{{$timestamp}}
+# @file-to-variable MODLIST ../test-lists/Wildlander/modlist.txt
+
+------WebKitFormBoundary{{$timestamp}}
+Content-Disposition: form-data; name="files[]"; filename="modlist.txt"
+Content-Type: text/plain
+
+{{MODLIST}}
+
+------WebKitFormBoundary{{$timestamp}}
+Content-Disposition: form-data; name="name"
+
+meow
+------WebKitFormBoundary{{$timestamp}}
+Content-Disposition: form-data; name="game"
+
+1

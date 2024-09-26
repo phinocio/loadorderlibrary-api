@@ -1,4 +1,4 @@
-@base=localhost:8000/v1
+@base=api.testing.lol.wonderland/v1
 
 # @name Get Lists
 GET {{base}}/lists

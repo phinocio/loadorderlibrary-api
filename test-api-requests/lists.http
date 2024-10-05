@@ -1,4 +1,5 @@
 @base={{API_URL}}
+@listName=meow
 
 # @name Get Lists
 GET {{base}}/lists
@@ -7,7 +8,7 @@ Accept: application/json
 ###
 
 # @name Get Specific List
-GET {{base}}/lists/meow
+GET {{base}}/lists/{{listName}}
 Accept: application/json
 
 ###
@@ -27,8 +28,14 @@ Content-Type: text/plain
 ------WebKitFormBoundary{{$timestamp}}
 Content-Disposition: form-data; name="name"
 
-meow
+{{listName}}
 ------WebKitFormBoundary{{$timestamp}}
 Content-Disposition: form-data; name="game"
 
 1
+
+###
+
+# @name Delete List
+DELETE {{base}}/lists/{{listName}}
+Accept: application/json

@@ -21,3 +21,4 @@ yarn-error.log
 /.vscode
 .ideavimrc
 test-api-requests/http-client.env.json
+test-api-requests/http-client.private.env.json

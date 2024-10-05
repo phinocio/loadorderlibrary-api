@@ -17,6 +17,7 @@ Accept: application/json
 POST {{base}}/lists
 Accept: application/json
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary{{$timestamp}}
+Authorization: Bearer {{BEARER_TOKEN}}
 # @file-to-variable MODLIST ../test-lists/Wildlander/modlist.txt
 
 ------WebKitFormBoundary{{$timestamp}}
@@ -39,3 +40,4 @@ Content-Disposition: form-data; name="game"
 # @name Delete List
 DELETE {{base}}/lists/{{listName}}
 Accept: application/json
+Authorization: Bearer {{BEARER_TOKEN}}

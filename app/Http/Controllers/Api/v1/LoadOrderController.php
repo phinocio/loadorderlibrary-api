@@ -76,7 +76,7 @@ class LoadOrderController extends ApiController
         // not accidentally uploaded anonymously if the token was typo'd.
         if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
             Auth::setUser($user);
-            if (! $user->tokenCan('create')) {
+            if (! request()->user()->tokenCan('create')) {
                 return response()->json(
                     ['message' => "This action is forbidden. (Token doesn't have permission for this action.)"],
                     403
@@ -88,11 +88,12 @@ class LoadOrderController extends ApiController
 
         $validated = $request->validated();
         $fileNames = UploadService::uploadFiles($validated['files']);
+        $isAuthed = Auth::check();
 
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
         if (! array_key_exists('expires', $validated)) {
-            auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
+            $isAuthed ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
         if (! array_key_exists('private', $validated)) {
@@ -104,22 +105,22 @@ class LoadOrderController extends ApiController
             '3d' => Carbon::now()->addDays(3),
             '1w' => Carbon::now()->addWeek(),
             'perm' => null,
-            default => auth()->check() ? null : Carbon::now()->addHours(24),
+            default => $isAuthed ? null : Carbon::now()->addHours(24),
         };
 
         $loadOrder = new LoadOrder();
 
         // Since multiple DB actions need to be taken, use a transaction.
-        DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
+        DB::transaction(function () use ($loadOrder, $fileNames, $validated, $isAuthed) {
             // Persist the file entries to the database.
             $fileIds = [];
             foreach ($fileNames as $file) {
                 $file['clean_name'] = explode('-', $file['name'])[1];
                 $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
-                $fileIds[] = File::firstOrCreate($file)->id;
+                $fileIds[] = File::query()->firstOrCreate($file)->id;
             }
 
-            $loadOrder->user_id = auth()->check() ? auth()->user()->id : null;
+            $loadOrder->user_id = $isAuthed ? Auth::user()->id : null;
             $loadOrder->game_id = (int) $validated['game'];
             //            $loadOrder->slug        = CreateSlug::new($validated['name']);
             $loadOrder->name = $validated['name'];
@@ -160,6 +161,7 @@ class LoadOrderController extends ApiController
         // Unlike the store() method, auth is done on the route level
 
         $validated = $request->validated();
+        $isAuthed = Auth::check();
 
         $fileNames = [];
         if (isset($validated['files'])) {
@@ -169,7 +171,7 @@ class LoadOrderController extends ApiController
         // Determine the expiration of the list. Logged-in users default to
         // perm, guests default to 24h. If the expires field was not sent, check that.
         if (! array_key_exists('expires', $validated)) {
-            auth()->check() ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
+            $isAuthed ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
         }
 
         if (! array_key_exists('private', $validated)) {
@@ -181,7 +183,7 @@ class LoadOrderController extends ApiController
             '3d' => Carbon::now()->addDays(3),
             '1w' => Carbon::now()->addWeek(),
             'perm' => null,
-            default => auth()->check() ? null : Carbon::now()->addHours(24),
+            default => $isAuthed ? null : Carbon::now()->addHours(24),
         };
 
         // Since multiple DB actions need to be taken, use a transaction.
@@ -192,7 +194,7 @@ class LoadOrderController extends ApiController
                 foreach ($fileNames as $file) {
                     $file['clean_name'] = explode('-', $file['name'])[1];
                     $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
-                    $fileIds[] = File::firstOrCreate($file)->id;
+                    $fileIds[] = File::query()->firstOrCreate($file)->id;
                 }
             }
 

@@ -13,12 +13,11 @@ class LoadOrderSeeder extends Seeder
      */
     public function run(): void
     {
-        LoadOrder::factory(3000)->create();
-        $lists = LoadOrder::all();
+        $lists = LoadOrder::factory(3000)->create();
 
         foreach ($lists as $list) {
             $num = rand(1, 5);
-            $files = File::get()->random($num)->unique('clean_name');
+            $files = File::query()->get()->random($num)->unique('clean_name');
             $list->files()->attach($files->pluck('id')->toArray());
         }
     }

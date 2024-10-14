@@ -297,7 +297,7 @@ return [
             /*
              * The number of days for which backups must be kept.
              */
-            'keep_all_backups_for_days' => 30,
+            'keep_all_backups_for_days' => env("KEEP_ALL_BACKUPS_FOR_DAYS", 30),
 
             /*
              * After the "keep_all_backups_for_days" period is over, the most recent backup

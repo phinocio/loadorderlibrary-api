@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
+use App\Helpers\CacheKey;
 use App\Http\Requests\v1\StoreLoadOrderRequest;
 use App\Http\Requests\v1\UpdateLoadOrderRequest;
 use App\Http\Resources\v1\LoadOrderResource;
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -37,31 +39,38 @@ class LoadOrderController extends ApiController
     {
         Gate::authorize('viewAny', LoadOrder::class);
 
-        $lists = QueryBuilder::for(LoadOrder::class)
-            ->allowedFilters([
-                AllowedFilter::custom('author', new FiltersAuthorName()),
-                AllowedFilter::custom('game', new FiltersGameName()),
-            ])
-            ->defaultSort('-created_at')
-            ->allowedSorts([
-                AllowedSort::field('created', 'created_at'),
-                AllowedSort::field('updated', 'updated_at'),
-            ])
-            ->where('is_private', '=', false)
-            ->when(request('query'), function ($query) {
-                $query->where(function ($query) {
-                    $query->orWhere('name', 'like', '%'.request('query').'%')
-                        ->orWhere('description', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
-                        ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+        $cacheKey = CacheKey::create(request()->path(), request()->query());
+
+        $lists = Cache::flexible($cacheKey, [30, 60], function () {
+            $lists = QueryBuilder::for(LoadOrder::class)
+                ->allowedFilters([
+                    AllowedFilter::custom('author', new FiltersAuthorName()),
+                    AllowedFilter::custom('game', new FiltersGameName()),
+                ])
+                ->defaultSort('-created_at')
+                ->allowedSorts([
+                    AllowedSort::field('created', 'created_at'),
+                    AllowedSort::field('updated', 'updated_at'),
+                ])
+                ->where('is_private', '=', false)
+                ->when(request('query'), function ($query) {
+                    $query->where(function ($query) {
+                        $query->orWhere('name', 'like', '%'.request('query').'%')
+                            ->orWhere('description', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
+                            ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+                    });
                 });
-            });
 
-        if (request('page') && isset(request('page')['size']) && request('page')['size'] === 'all') {
-            return LoadOrderResource::collection($lists->clone()->get());
-        }
+            if (request('page') && isset(request('page')['size']) && request('page')['size'] === 'all') {
+                return $lists->clone()->get();
+            } else {
+                return $lists->clone()->jsonPaginate(900, 30);
+            }
+        });
 
-        return LoadOrderResource::collection($lists->clone()->jsonPaginate(900, 30));
+
+        return LoadOrderResource::collection($lists);
     }
 
     /**

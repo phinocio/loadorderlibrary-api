@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -157,7 +158,13 @@ class LoadOrderController extends ApiController
     {
         Gate::authorize('view', $loadOrder);
 
-        return new LoadOrderResource($loadOrder->load('files'));
+        $cacheKey = CacheKey::create(request()->path(), [], false);
+
+        $list = Cache::flexible($cacheKey, [30, 60], function () use ($loadOrder) {
+            return $loadOrder->load('files');
+        });
+
+        return new LoadOrderResource($list);
     }
 
     /**
@@ -224,6 +231,10 @@ class LoadOrderController extends ApiController
                 $loadOrder->files()->sync($fileIds);
             }
         });
+
+
+        // The cache key for a specific route should just be the path in kebab case
+        Cache::forget(Str::replace('/', '-', $request->path()));
 
         // We load the game relation again to get the updated game,
         // otherwise it returns with the old game.

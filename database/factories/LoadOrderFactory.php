@@ -20,7 +20,6 @@ class LoadOrderFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(rand(1, 7)),
-            'slug' => $this->faker->slug(),
             'description' => rand(1, 100) <= 5 ? $this->faker->paragraph() : null,
             'is_private' => rand(1, 3) === 1,
             'discord' => rand(1, 3) === 1 ? str_replace(['https://', 'http://'], '', 'http://example.com/discord') : null,

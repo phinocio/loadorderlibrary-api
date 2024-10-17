@@ -40,6 +40,7 @@ class CacheKeyTest extends TestCase
     public function test_it_generates_non_hashed_keys_correctly(): void
     {
         $this->assertEquals(CacheKey::create($this->path, $this->query, false), CacheKey::create($this->path, $this->query2, false));
+        $this->assertEquals(CacheKey::create($this->path2, [], false), 'v1-lists-my-awesome-list');
         $this->assertNotEquals(CacheKey::create($this->path, $this->query, false), CacheKey::create($this->path2, $this->query, false));
         $this->assertFalse(Str::endsWith(CacheKey::create($this->path, [], false), '-'));
     }

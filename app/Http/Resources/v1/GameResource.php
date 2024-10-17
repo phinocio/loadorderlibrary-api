@@ -20,7 +20,7 @@ class GameResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'lists' => LoadOrderResource::collection($this->whenLoaded('loadOrders')),
-            'lists_count' => $this->whenNotNull($this->load_orders_count),
+            'lists_count' => $this->whenNotNull($this->load_orders_count ?? null),
         ];
     }
 }

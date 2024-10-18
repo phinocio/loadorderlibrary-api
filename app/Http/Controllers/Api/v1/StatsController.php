@@ -22,19 +22,15 @@ class StatsController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $stats = Cache::get('stats', null);
-
-        if (! $stats) {
-            $stats = json_encode(new StatsResource([
+        $stats = Cache::flexible('stats', [600, 900], function () {
+            return json_encode(new StatsResource([
                 'users' => User::query()->select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
                 'files' => File::with('lists:id')->get(),
                 'lists' => LoadOrder::query()->select(['id', 'is_private', 'user_id', 'created_at'])->latest()->get(),
             ]));
+        });
 
-            Cache::set('stats', $stats, 900);
-        }
-
-        return response()->json(json_decode($stats));
+        return response()->json(json_decode((string) $stats));
     }
 
     /*

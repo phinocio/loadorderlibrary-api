@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Resources\v1\LoadOrderResource;
 use App\Models\LoadOrder;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
@@ -15,17 +16,17 @@ class ComparisonController extends ApiController
     // We need a separate route to GET lists from than just /lists
     public function index()
     {
-        $lists = LoadOrder::where('is_private', '=', 'false')->when(auth()->check(), function (Builder $query) {
-            $query->orWhere('user_id', '=', auth()->user()->id);
-        })->latest()->get();
+        $lists = LoadOrder::query()->where('is_private', '=', 'false')->when(Auth::check(), function (Builder $query) {
+            $query->orWhere('user_id', '=', Auth::user()->id);
+        })->with('game', 'files', 'author')->latest()->get();
 
         return LoadOrderResource::collection($lists);
     }
 
     public function show($loadOrder1, $loadOrder2)
     {
-        $loadOrder1 = LoadOrder::where('slug', $loadOrder1)->with('files')->first();
-        $loadOrder2 = LoadOrder::where('slug', $loadOrder2)->with('files')->first();
+        $loadOrder1 = LoadOrder::query()->where('slug', $loadOrder1)->with(['game', 'files', 'author'])->first();
+        $loadOrder2 = LoadOrder::query()->where('slug', $loadOrder2)->with(['game', 'files', 'author'])->first();
 
         if (! $loadOrder1 || ! $loadOrder2) {
             return response()->json(['message' => 'Load order not found.'], 404);

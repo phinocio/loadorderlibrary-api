@@ -13,8 +13,6 @@ class LoadOrder extends Model
     use HasFactory;
     use Sluggable;
 
-    protected $with = ['game', 'author'];
-
     protected $hidden = ['id'];
 
     protected $casts = [

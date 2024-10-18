@@ -61,7 +61,8 @@ class LoadOrderController extends ApiController
                             ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
                             ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
                     });
-                });
+                })
+                ->with(['game', 'author']);
 
             if (request('page') && isset(request('page')['size']) && request('page')['size'] === 'all') {
                 return $lists->clone()->get();
@@ -147,8 +148,7 @@ class LoadOrderController extends ApiController
             $loadOrder->files()->attach($fileIds);
         });
 
-        // return
-        return new LoadOrderResource($loadOrder->load('author'));
+        return new LoadOrderResource($loadOrder->load(['game', 'author']));
     }
 
     /**
@@ -161,7 +161,7 @@ class LoadOrderController extends ApiController
         $cacheKey = CacheKey::create(request()->path(), [], false);
 
         $list = Cache::flexible($cacheKey, [30, 60], function () use ($loadOrder) {
-            return $loadOrder->load('files');
+            return $loadOrder->load(['game', 'author', 'files']);
         });
 
         return new LoadOrderResource($list);

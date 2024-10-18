@@ -28,7 +28,7 @@ class UserController extends ApiController
     public function lists(): AnonymousResourceCollection
     {
         Gate::authorize('view', User::class);
-        $lists = LoadOrder::whereUserId(Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        $lists = LoadOrder::whereUserId(Auth::user()->id)->orderBy('created_at', 'desc')->with(['game', 'author'])->get();
 
         return LoadOrderResource::collection($lists);
     }

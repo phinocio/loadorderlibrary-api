@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
 
@@ -20,14 +21,14 @@ class UserController extends ApiController
     {
         Gate::authorize('view', User::class);
 
-        return new UserResource(auth()->user());
+        return new UserResource(Auth::user());
     }
 
     /** @mixin User */
     public function lists(): AnonymousResourceCollection
     {
         Gate::authorize('view', User::class);
-        $lists = LoadOrder::whereUserId(auth()->user()->id)->orderBy('created_at', 'desc')->get();
+        $lists = LoadOrder::whereUserId(Auth::user()->id)->orderBy('created_at', 'desc')->get();
 
         return LoadOrderResource::collection($lists);
     }

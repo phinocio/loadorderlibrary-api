@@ -21,7 +21,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             //            'name' => ['required', 'string', 'max:255'],
 
             'email' => [
-                'required',
+                'nullable',
                 'string',
                 'email',
                 'max:255',

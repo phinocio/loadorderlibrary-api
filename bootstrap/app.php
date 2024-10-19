@@ -60,7 +60,7 @@ return Application::configure(basePath: dirname(__DIR__))
             })
             ->appendOutputTo(storage_path('logs/scheduled.log'));
 
-        $schedule->command('backup:run')
+        $schedule->command('backup:run --only-files')
             ->daily()->at('01:00')
             ->environments(['production', 'testing'])
             ->onSuccess(function () {

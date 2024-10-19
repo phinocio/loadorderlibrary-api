@@ -92,9 +92,6 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSL_MODE', 'prefer'),
-            'dump' => [
-                'add_extra_option' => '-a'
-            ]
         ],
 
         'sqlsrv' => [

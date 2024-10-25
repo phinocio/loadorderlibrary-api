@@ -53,7 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('delete:expired')
             ->everyMinute()
             ->onSuccess(function () {
-                Log::channel('cleanup')->info('✅ Delete Expired Lists');
+                // Log::channel('cleanup')->info('✅ Delete Expired Lists');
             })
             ->onFailure(function () {
                 Log::channel('cleanup')->error('❌ Delete Expired Lists');

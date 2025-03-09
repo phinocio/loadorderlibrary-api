@@ -56,10 +56,10 @@ class LoadOrderController extends ApiController
                 ->where('is_private', '=', false)
                 ->when(request('query'), function ($query) {
                     $query->where(function ($query) {
-                        $query->orWhere('name', 'like', '%'.request('query').'%')
-                            ->orWhere('description', 'like', '%'.request('query').'%')
-                            ->orWhereRelation('author', 'name', 'like', '%'.request('query').'%')
-                            ->orWhereRelation('game', 'name', 'like', '%'.request('query').'%');
+                        $query->orWhere('name', 'ILIKE', '%'.request('query').'%')
+                            ->orWhere('description', 'ILIKE', '%'.request('query').'%')
+                            ->orWhereRelation('author', 'name', 'ILIKE', '%'.request('query').'%')
+                            ->orWhereRelation('game', 'name', 'ILIKE', '%'.request('query').'%');
                     });
                 })
                 ->with(['game', 'author']);

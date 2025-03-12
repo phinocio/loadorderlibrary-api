@@ -25,7 +25,7 @@ class LoadOrderStatsResource extends JsonResource
         return [
             'total' => $this->count(),
             'private_lists' => count($this->resource->filter(function ($value) {
-                return $value->is_private === 1;
+                return $value->is_private;
             })),
             'anonymous_lists' => count($this->resource->filter(function ($value) {
                 return $value->user_id === null;

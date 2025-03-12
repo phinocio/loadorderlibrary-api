@@ -25,7 +25,7 @@ class UserStatsResource extends JsonResource
                 return $value->email === null;
             })),
             'verified_authors' => count($this->resource->filter(function ($value) {
-                return $value->is_verified === 1;
+                return $value->is_verified;
             })),
             'with_lists' => count($this->resource->filter(function ($value) {
                 return count($value->lists);

@@ -47,33 +47,36 @@ return [
         ],
 
         'uploads' => [
-            'driver' => 's3',
+            'driver' => env('FILESYSTEM_DRIVER', 's3'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'root' => storage_path('app/uploads'),
         ],
 
         'backups' => [
-            'driver' => 's3',
+            'driver' => env('FILESYSTEM_DRIVER', 's3'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'root' => storage_path('app/backups'),
         ],
 
         'tmp' => [
-            'driver' => 's3',
+            'driver' => env('FILESYSTEM_DRIVER', 's3'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'root' => storage_path('app/tmp'),
         ],
 
         's3' => [

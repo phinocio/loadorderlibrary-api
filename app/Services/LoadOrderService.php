@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\CacheTag;
 use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
 use App\Helpers\CacheKey;
@@ -22,14 +23,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class LoadOrderService
 {
-    /**
-     * Get load orders with filtering and pagination
-     */
     public function getLoadOrders(Request $request): Collection|LengthAwarePaginator
     {
         $cacheKey = CacheKey::create($request->getPathInfo(), $request->query());
 
-        return Cache::flexible($cacheKey, [30, 60], function () use ($request) {
+        return Cache::tags([CacheTag::LOAD_ORDERS->value])->flexible($cacheKey, [600, 900], function () use ($request) {
             $lists = QueryBuilder::for(LoadOrder::class)
                 ->allowedFilters([
                     AllowedFilter::custom('author', new FiltersAuthorName()),
@@ -66,7 +64,7 @@ class LoadOrderService
     {
         $cacheKey = CacheKey::create($request->getPathInfo(), [], false);
 
-        return Cache::flexible($cacheKey, [30, 60], function () use ($loadOrder) {
+        return Cache::tags([CacheTag::LOAD_ORDERS->value, CacheTag::LOAD_ORDER_ITEM->withSuffix($loadOrder->id)])->flexible($cacheKey, [600, 900], function () use ($loadOrder) {
             return $loadOrder->load(['game', 'author', 'files']);
         });
     }
@@ -76,15 +74,14 @@ class LoadOrderService
      */
     public function createLoadOrder(array $validated, array $fileNames): LoadOrder
     {
-        $isAuthed = Auth::check();
-        $validated = $this->processValidatedData($validated, $isAuthed);
+        $validated = $this->processValidatedData($validated);
 
         $loadOrder = new LoadOrder();
 
-        DB::transaction(function () use ($loadOrder, $fileNames, $validated, $isAuthed) {
+        DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
             $fileIds = $this->processFiles($fileNames);
 
-            $loadOrder->user_id = $isAuthed ? Auth::user()->id : null;
+            $loadOrder->user_id = Auth::check() ? Auth::user()->id : null;
             $loadOrder->game_id = (int) $validated['game'];
             $this->setLoadOrderAttributes($loadOrder, $validated);
             $loadOrder->save();
@@ -116,7 +113,6 @@ class LoadOrderService
             }
         });
 
-        // Clear the cache for this specific load order
         $this->clearLoadOrderCache($request);
 
         return $loadOrder->load(['author', 'game']);
@@ -130,11 +126,10 @@ class LoadOrderService
         return $loadOrder->delete();
     }
 
-    /**
-     * Process validated data and set default values
-     */
-    private function processValidatedData(array $validated, bool $isAuthed): array
+    private function processValidatedData(array $validated): array
     {
+        $isAuthed = Auth::check();
+
         // Set default expiration
         if (! array_key_exists('expires', $validated)) {
             $isAuthed ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
@@ -157,9 +152,6 @@ class LoadOrderService
         return $validated;
     }
 
-    /**
-     * Process uploaded files and return file IDs
-     */
     private function processFiles(array $fileNames): array
     {
         $fileIds = [];
@@ -171,9 +163,6 @@ class LoadOrderService
         return $fileIds;
     }
 
-    /**
-     * Set load order attributes from validated data
-     */
     private function setLoadOrderAttributes(LoadOrder $loadOrder, array $validated): void
     {
         $loadOrder->game_id = (int) $validated['game'];
@@ -190,9 +179,6 @@ class LoadOrderService
         $loadOrder->expires_at = $validated['expires'];
     }
 
-    /**
-     * Clear the cache for a specific load order
-     */
     public function clearLoadOrderCache(Request $request): void
     {
         Cache::forget(Str::replace('/', '-', $request->getPathInfo()));

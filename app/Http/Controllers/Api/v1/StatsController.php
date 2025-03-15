@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Enums\CacheTag;
 use App\Http\Resources\v1\FileStatsResource;
 use App\Http\Resources\v1\LoadOrderStatsResource;
 use App\Http\Resources\v1\StatsResource;
@@ -22,7 +23,7 @@ class StatsController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $stats = Cache::flexible('stats', [600, 900], function () {
+        $stats = Cache::tags([CacheTag::STATS->value])->flexible('stats', [600, 900], function () {
             return json_encode(new StatsResource([
                 'users' => User::query()->select(['id', 'is_verified', 'is_admin', 'email', 'created_at'])->with('lists:id,user_id')->latest()->get(),
                 'files' => File::with('lists:id')->get(),

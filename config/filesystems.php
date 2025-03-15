@@ -47,7 +47,7 @@ return [
         ],
 
         'uploads' => [
-            'driver' => env('FILESYSTEM_DRIVER', 's3'),
+            'driver' => env('FILESYSTEM_DRIVER', 'local'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),
@@ -58,7 +58,7 @@ return [
         ],
 
         'backups' => [
-            'driver' => env('FILESYSTEM_DRIVER', 's3'),
+            'driver' => env('FILESYSTEM_DRIVER', 'local'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),
@@ -69,7 +69,7 @@ return [
         ],
 
         'tmp' => [
-            'driver' => env('FILESYSTEM_DRIVER', 's3'),
+            'driver' => env('FILESYSTEM_DRIVER', 'local'),
             'bucket' => env('AWS_BUCKET'),
             'region' => env('AWS_DEFAULT_REGION'),
             'endpoint' => env('AWS_ENDPOINT'),

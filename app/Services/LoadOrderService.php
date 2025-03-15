@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -27,10 +28,11 @@ class LoadOrderService
     {
         $cacheKey = CacheKey::create($request->getPathInfo(), $request->query());
 
-        return Cache::tags([CacheTag::LOAD_ORDERS->value])->flexible($cacheKey, [600, 900], function () use ($request) {
-            $lists = QueryBuilder::for(LoadOrder::class)
-                ->allowedFilters([
-                    AllowedFilter::custom('author', new FiltersAuthorName()),
+        try {
+            return Cache::tags([CacheTag::LOAD_ORDERS->value])->flexible($cacheKey, [3600, 7200], function () use ($request) {
+                $lists = QueryBuilder::for(LoadOrder::class)
+                    ->allowedFilters([
+                        AllowedFilter::custom('author', new FiltersAuthorName()),
                     AllowedFilter::custom('game', new FiltersGameName()),
                 ])
                 ->defaultSort('-created_at')
@@ -49,12 +51,16 @@ class LoadOrderService
                 })
                 ->with(['game', 'author']);
 
-            if ($request->query('page') && isset($request->query('page')['size']) && $request->query('page')['size'] === 'all') {
-                return $lists->clone()->get();
-            } else {
-                return $lists->clone()->jsonPaginate(900, 30);
-            }
-        });
+                if ($request->query('page') && isset($request->query('page')['size']) && $request->query('page')['size'] === 'all') {
+                    return $lists->clone()->get();
+                } else {
+                    return $lists->clone()->jsonPaginate(900, 30);
+                }
+            });
+        } catch (\Exception $e) {
+            Log::error('Cache error in getLoadOrders: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
@@ -64,9 +70,14 @@ class LoadOrderService
     {
         $cacheKey = CacheKey::create($request->getPathInfo(), [], false);
 
-        return Cache::tags([CacheTag::LOAD_ORDERS->value, CacheTag::LOAD_ORDER_ITEM->withSuffix($loadOrder->id)])->flexible($cacheKey, [600, 900], function () use ($loadOrder) {
+        try {
+            return Cache::tags([CacheTag::LOAD_ORDERS->value, CacheTag::LOAD_ORDER_ITEM->withSuffix($loadOrder->id)])->flexible($cacheKey, [3600, 7200], function () use ($loadOrder) {
+                return $loadOrder->load(['game', 'author', 'files']);
+            });
+        } catch (\Exception $e) {
+            Log::error('Cache error in getLoadOrder: ' . $e->getMessage());
             return $loadOrder->load(['game', 'author', 'files']);
-        });
+        }
     }
 
     /**

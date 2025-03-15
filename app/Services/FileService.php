@@ -21,7 +21,7 @@ class FileService
         $cacheKey = CacheKey::create($request->getPathInfo(), $request->query());
 
         try {
-            return Cache::tags([CacheTag::FILES->value])->flexible($cacheKey, [600, 900], function () use ($loadOrder) {
+            return Cache::tags([CacheTag::FILES->value])->flexible($cacheKey, [3600, 7200], function () use ($loadOrder) {
                 return $loadOrder->load('files')->files;
             });
         } catch (\Exception $e) {
@@ -36,7 +36,7 @@ class FileService
         $cacheKey = CacheKey::create($request->getPathInfo(), $request->query());
 
         try {
-            return Cache::tags([CacheTag::FILES->value])->flexible($cacheKey, [600, 900], function () use ($loadOrder, $fileName) {
+            return Cache::tags([CacheTag::FILES->withSuffix($loadOrder->id . '-' . $fileName)])->flexible($cacheKey, [3600, 7200], function () use ($loadOrder, $fileName) {
                 return $loadOrder->files()->where('clean_name', $fileName)->first();
             });
         } catch (\Exception $e) {

@@ -65,43 +65,19 @@ class LoadOrderObserver
             Cache::tags([CacheTag::GAMES->value])->flush();
             Cache::tags([CacheTag::GAME_ITEM->withSuffix($loadOrder->game_id)])->flush();
 
+            // Clear files cache
+            Cache::tags([CacheTag::FILES->value])->flush();
+            foreach ($loadOrder->files as $file) {
+                Cache::tags([CacheTag::FILES->withSuffix($loadOrder->id . '-' . $file->clean_name)])->flush();
+            }
+
             // Clear stats cache
             Cache::tags([CacheTag::STATS->value])->flush();
 
-            // Clear files cache
-            Cache::tags([CacheTag::FILES->value])->flush();
 
             Log::info('Cache cleared for load order: ' . $loadOrder->id);
         } catch (\Exception $e) {
             Log::error('Failed to clear cache with tags: ' . $e->getMessage());
-            $this->clearCacheWithoutTags();
-        }
-    }
-
-    /**
-     * Fallback method to clear cache without tags
-     * This is used when the cache driver doesn't support tags
-     */
-    private function clearCacheWithoutTags(): void
-    {
-        try {
-            // Clear general caches
-            Cache::forget('stats');
-
-            // Clear route caches
-            $routes = [
-                '/api/v1/lists',
-                '/api/v1/games',
-                '/api/v1/stats',
-            ];
-
-            foreach ($routes as $route) {
-                Cache::forget($route);
-            }
-
-            Log::info('Cache cleared without tags');
-        } catch (\Exception $e) {
-            Log::error('Failed to clear cache without tags: ' . $e->getMessage());
         }
     }
 }

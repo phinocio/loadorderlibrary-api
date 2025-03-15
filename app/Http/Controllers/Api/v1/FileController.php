@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Resources\v1\FileResource;
 use App\Models\LoadOrder;
+use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use ZipArchive;
 
 // TODO: The index/show methods should be the ones that return just the model representation (name, clean_name, etc)
 // and the actual downloading of the files should be moved to either a dedicated DownloadController, or different
@@ -15,41 +15,75 @@ use ZipArchive;
 
 class FileController extends ApiController
 {
-    public function index(LoadOrder $loadOrder)
+    protected FileService $fileService;
+
+    public function __construct(FileService $fileService)
     {
-        $listFiles = [];
-
-        foreach ($loadOrder->files as $file) {
-            $listFiles[] = strtolower($file->name);
-        }
-
-        $zip = new ZipArchive();
-        $zipFile = $loadOrder->name.'.zip';
-        if ($zip->open(storage_path('app/tmp/'.$zipFile), ZipArchive::CREATE)) {
-            foreach ($listFiles as $file) {
-                $zip->addFile(storage_path('app/uploads/'.$file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
-            }
-            $zip->close();
-
-            return Storage::download('tmp/'.$zipFile);
-        }
+        $this->fileService = $fileService;
     }
 
-    public function show(LoadOrder $loadOrder, string $fileName): StreamedResponse
+    /**
+     * Get all files for a load order
+     */
+    public function index(LoadOrder $loadOrder): AnonymousResourceCollection
     {
-        $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
-
-        return Storage::download('uploads/'.$file->name, $fileName);
+        $files = $this->fileService->getFiles($loadOrder, request());
+        return FileResource::collection(collect($files));
     }
 
-    public function embed(LoadOrder $loadOrder, string $fileName): FileResource|JsonResponse
+    /**
+     * Get a specific file by name
+     */
+    public function show(LoadOrder $loadOrder, string $fileName): FileResource|JsonResponse
     {
-        $file = $loadOrder->load('files')->files()->whereCleanName($fileName)->first();
+        $file = $this->fileService->getFile($loadOrder, $fileName, request());
 
-        if (! $file) {
+        if (!$file) {
             return response()->json(['message' => 'File not found'], 404);
         }
 
-        return new FileResource($loadOrder->load('files')->files()->whereCleanName($fileName)->first());
+        return new FileResource($file);
+    }
+
+    /**
+     * Download all files as a zip archive
+     */
+    public function downloadAll(LoadOrder $loadOrder): StreamedResponse|JsonResponse
+    {
+        $response = $this->fileService->downloadAllFiles($loadOrder);
+
+        if (!$response) {
+            return response()->json(['message' => 'No files to download'], 404);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Download a specific file
+     */
+    public function download(LoadOrder $loadOrder, string $fileName): StreamedResponse|JsonResponse
+    {
+        $response = $this->fileService->downloadFile($loadOrder, $fileName, request());
+
+        if (!$response) {
+            return response()->json(['message' => 'File not found'], 404);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Embed a file (used for displaying file content in the UI)
+     */
+    public function embed(LoadOrder $loadOrder, string $fileName): FileResource|JsonResponse
+    {
+        $file = $this->fileService->getFile($loadOrder, $fileName, request());
+
+        if (!$file) {
+            return response()->json(['message' => 'File not found'], 404);
+        }
+
+        return new FileResource($file);
     }
 }

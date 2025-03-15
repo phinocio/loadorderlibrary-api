@@ -68,6 +68,9 @@ class LoadOrderObserver
             // Clear stats cache
             Cache::tags([CacheTag::STATS->value])->flush();
 
+            // Clear files cache
+            Cache::tags([CacheTag::FILES->value])->flush();
+
             Log::info('Cache cleared for load order: ' . $loadOrder->id);
         } catch (\Exception $e) {
             Log::error('Failed to clear cache with tags: ' . $e->getMessage());

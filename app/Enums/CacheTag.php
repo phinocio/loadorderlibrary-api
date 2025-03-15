@@ -9,12 +9,11 @@ enum CacheTag: string
     case GAMES = 'games';
     case GAME_ITEM = 'game-';
     case STATS = 'stats';
+    case FILES = 'files';
+    case FILE_ITEM = 'file-';
 
-    /**
-     * Get the tag with an optional suffix
-     */
-    public function withSuffix(string|int $suffix = null): string
+    public function withSuffix(string|int $suffix): string
     {
-        return $suffix !== null ? $this->value . $suffix : $this->value;
+        return $this->value . $suffix;
     }
 }

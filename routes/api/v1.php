@@ -97,8 +97,10 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::controller(FileController::class)->group(function () {
-        Route::get('/lists/{load_order:slug}/download', 'index')->name('files.index');
-        Route::get('/lists/{load_order:slug}/download/{file:name}', 'show')->name('files.show');
+        Route::get('/lists/{load_order:slug}/files', 'index')->name('files.index');
+        Route::get('/lists/{load_order:slug}/files/{file:name}', 'show')->name('files.show');
+        Route::get('/lists/{load_order:slug}/download', 'downloadAll')->name('files.download_all');
+        Route::get('/lists/{load_order:slug}/download/{file:name}', 'download')->name('files.download');
         Route::get('/lists/{load_order:slug}/embed/{file:name}', 'embed')->name('files.embed');
     });
 

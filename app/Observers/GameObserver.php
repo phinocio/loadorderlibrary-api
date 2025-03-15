@@ -67,6 +67,9 @@ class GameObserver
             // Clear stats cache
             Cache::tags([CacheTag::STATS->value])->flush();
 
+            // Clear files cache
+            Cache::tags([CacheTag::FILES->value])->flush();
+
             Log::info('Cache cleared for game: ' . $game->id);
         } catch (\Exception $e) {
             Log::error('Failed to clear cache with tags: ' . $e->getMessage());

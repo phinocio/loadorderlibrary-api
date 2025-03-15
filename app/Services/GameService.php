@@ -20,7 +20,7 @@ class GameService
         $cacheKey = CacheKey::create($request->getPathInfo(), $request->query());
 
         try {
-            return Cache::tags([CacheTag::GAMES->value])->flexible($cacheKey, [30, 60], function () {
+            return Cache::tags([CacheTag::GAMES->value])->flexible($cacheKey, [3600, 7200], function () {
                 return Game::orderBy('name', 'asc')->withCount('loadOrders')->get();
             });
         } catch (\Exception $e) {
@@ -42,9 +42,9 @@ class GameService
             return Cache::tags([
                 CacheTag::GAMES->value,
                 CacheTag::GAME_ITEM->withSuffix($game->id)
-            ])->flexible($cacheKey, [30, 60], function () use ($game) {
-                return $game->load('loadOrders');
-            });
+                ])->flexible($cacheKey, [3600, 7200], function () use ($game) {
+                    return $game->load('loadOrders');
+                });
         } catch (\Exception $e) {
             Log::error('Cache error in getGame: ' . $e->getMessage());
 

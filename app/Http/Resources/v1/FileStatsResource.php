@@ -5,7 +5,7 @@ namespace App\Http\Resources\v1;
 use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /** @mixin(File) */
 class FileStatsResource extends JsonResource

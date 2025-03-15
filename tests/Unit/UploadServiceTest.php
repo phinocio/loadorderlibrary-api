@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Services\UploadService;
 use Illuminate\Http\UploadedFile;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UploadServiceTest extends TestCase

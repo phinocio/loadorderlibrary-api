@@ -7,6 +7,7 @@ use App\Models\LoadOrder;
 use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 // TODO: The index/show methods should be the ones that return just the model representation (name, clean_name, etc)
@@ -62,7 +63,7 @@ class FileController extends ApiController
     /**
      * Download a specific file
      */
-    public function download(LoadOrder $loadOrder, string $fileName): StreamedResponse|JsonResponse
+    public function download(LoadOrder $loadOrder, string $fileName): RedirectResponse|StreamedResponse|JsonResponse
     {
         $response = $this->fileService->downloadFile($loadOrder, $fileName, request());
 

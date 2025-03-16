@@ -126,22 +126,6 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-
-        'scheduled' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/scheduled.log'),
-        ],
-
-        'backups' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/backups.log'),
-        ],
-
-        'cleanup' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/cleanup.log'),
-        ],
-
     ],
 
 ];

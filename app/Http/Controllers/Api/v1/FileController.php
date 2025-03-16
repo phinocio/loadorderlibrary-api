@@ -7,6 +7,7 @@ use App\Models\LoadOrder;
 use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use STS\ZipStream\Builder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -49,7 +50,7 @@ class FileController extends ApiController
     /**
      * Download all files as a zip archive
      */
-    public function downloadAll(LoadOrder $loadOrder): StreamedResponse|JsonResponse
+    public function downloadAll(LoadOrder $loadOrder): JsonResponse|Builder
     {
         $response = $this->fileService->downloadAllFiles($loadOrder);
 

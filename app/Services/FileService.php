@@ -7,12 +7,13 @@ use App\Models\LoadOrder;
 use App\Models\File;
 use App\Helpers\CacheKey;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use ZipArchive;
+use STS\ZipStream\Builder;
+use STS\ZipStream\Facades\Zip;
 
 class FileService
 {
@@ -49,33 +50,32 @@ class FileService
         }
     }
 
-    public function downloadAllFiles(LoadOrder $loadOrder): StreamedResponse|null
+    public function downloadAllFiles(LoadOrder $loadOrder): Builder|null
     {
         $listFiles = [];
 
         foreach ($loadOrder->files as $file) {
-            $listFiles[] = strtolower($file->name);
+            $listFiles[] = [
+                'name' => $file->name,
+                'clean_name' => $file->clean_name
+            ];
         }
 
         if (empty($listFiles)) {
             return null;
         }
 
-        $zip = new ZipArchive();
-        $zipFile = $loadOrder->name.'.zip';
-        if ($zip->open(storage_path('app/tmp/'.$zipFile), ZipArchive::CREATE)) {
-            foreach ($listFiles as $file) {
-                $zip->addFile(storage_path('app/uploads/'.$file), preg_replace('/[a-zA-Z0-9_]*-/i', '', $file));
-            }
-            $zip->close();
-
-            return Storage::download('tmp/'.$zipFile);
+        $zip = Zip::create($loadOrder->name.'.zip');
+        foreach ($listFiles as $file) {
+            $tmpFile = Storage::disk('uploads')->temporaryUrl($file['name'], now()->addMinutes(self::TEMP_URL_EXPIRATION));
+            $zip->add($tmpFile, $file['clean_name']);
         }
+        $zip->saveToDisk('tmp', $loadOrder->name.'.zip');
 
-        return null;
+        return $zip;
     }
 
-    public function downloadFile(LoadOrder $loadOrder, string $fileName, Request $request): StreamedResponse|null
+    public function downloadFile(LoadOrder $loadOrder, string $fileName, Request $request): RedirectResponse|null
     {
         $file = $this->getFile($loadOrder, $fileName, $request);
 
@@ -83,6 +83,10 @@ class FileService
             return null;
         }
 
-        return Storage::download('uploads/'.$file->name, $fileName);
+        $url = Storage::disk('uploads')->temporaryUrl($file->name, now()->addMinutes(self::TEMP_URL_EXPIRATION), [
+            'ResponseContentType' => 'application/octet-stream',
+            'ResponseContentDisposition' => 'attachment; filename="'.$file->name.'"'
+        ]);
+        return redirect($url);
     }
 }

@@ -32,7 +32,7 @@ class LoadOrderStatsResource extends JsonResource
             })),
             'last_created' => Carbon::createFromDate($this->resource[0]->created_at)->diffForHumans(),
             'links' => [
-                'self' => route('stats.show', 'lists'),
+                'self' => route('stats.show', 'lists.index'),
             ],
         ];
     }

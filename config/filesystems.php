@@ -48,14 +48,13 @@ return [
         ],
 
         'uploads' => [
-            'driver' => env('FILESYSTEM_DRIVER', 'local'),
+            'driver' => 's3',
             'key' => env('R2_ACCESS_KEY_ID'),
             'secret' => env('R2_SECRET_ACCESS_KEY'),
             'region' => env('R2_REGION'),
             'bucket' => env('R2_BUCKET_UPLOADS'),
             'endpoint' => env('R2_ENDPOINT'),
             'use_path_style_endpoint' => env('R2_USE_PATH_STYLE_ENDPOINT', false),
-            'root' => storage_path('app/uploads'),
             'throw' => false,
             'report' => false,
         ],

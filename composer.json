@@ -15,7 +15,8 @@
         "sebastian/diff": "^6.0.2",
         "spatie/laravel-backup": "^9.2.9",
         "spatie/laravel-json-api-paginate": "^1.16.3",
-        "spatie/laravel-query-builder": "^6.3.1"
+        "spatie/laravel-query-builder": "^6.3.1",
+        "stechstudio/laravel-zipstream": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",

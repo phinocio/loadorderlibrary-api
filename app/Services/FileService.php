@@ -70,7 +70,6 @@ class FileService
             $tmpFile = Storage::disk('uploads')->temporaryUrl($file['name'], now()->addMinutes(self::TEMP_URL_EXPIRATION));
             $zip->add($tmpFile, $file['clean_name']);
         }
-        $zip->saveToDisk('tmp', $loadOrder->name.'.zip');
 
         return $zip;
     }

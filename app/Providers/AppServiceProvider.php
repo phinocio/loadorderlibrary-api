@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             // Hopefully means no limit for requests from frontend server itself.
             $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? ''; //If key isn't set, for example in tests, just use empty string.
-            if (IpUtils::checkIp($remoteAddr, '167.99.191.221')) {
+            if (IpUtils::checkIp($remoteAddr, '178.128.235.79')) {
                 return Limit::none();
             }
 

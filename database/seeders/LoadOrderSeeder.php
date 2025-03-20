@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\File;
 use App\Models\LoadOrder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class LoadOrderSeeder extends Seeder

@@ -12,9 +12,14 @@ class RegisterController
 {
     public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $user = User::create($request->validated());
+        $validated = $request->validated();
+
+        $user = User::create($validated);
+        $user = $user->refresh();
 
         Auth::login($user);
+
+        session()->regenerate();
 
         return response()->json([
             'message' => 'User created successfully',

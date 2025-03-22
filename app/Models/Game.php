@@ -12,28 +12,16 @@ class Game extends Model
 {
     use Sluggable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
+    /** @var list<string> */
     protected $fillable = ['name', 'slug'];
 
-    /**
-     * Get the load orders for the game.
-     *
-     * @return HasMany<LoadOrder>
-     */
+    /** @return HasMany<LoadOrder, Game> */
     public function lists(): HasMany
     {
         return $this->hasMany(LoadOrder::class);
     }
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array<string, array<string, string>>
-     */
+    /** @return array<string, array<string, string>> */
     public function sluggable(): array
     {
         return [

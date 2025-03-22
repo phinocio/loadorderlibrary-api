@@ -10,9 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->group(function () {
-    Route::post('/register', RegisterController::class)->name('auth.register');
-    Route::post('/login', LoginController::class)->name('auth.login');
-    Route::post('/logout', LogoutController::class)->name('auth.logout');
+    Route::middleware('deny.authenticated')->group(function () {
+        Route::post('/register', RegisterController::class)->name('auth.register');
+        Route::post('/login', LoginController::class)->name('auth.login');
+    });
+
+    Route::middleware('auth')->group(function () {
+        Route::post('/logout', LogoutController::class)->name('auth.logout');
+    });
 });
 
 // test

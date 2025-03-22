@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -17,7 +19,7 @@ class LoadOrder extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -34,7 +36,7 @@ class LoadOrder extends Model
     /**
      * Get the user that created the load order.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     * @return BelongsTo<User, LoadOrder>
      */
     public function author(): BelongsTo
     {
@@ -44,7 +46,7 @@ class LoadOrder extends Model
     /**
      * Get the game that the load order belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Game>
+     * @return BelongsTo<Game, LoadOrder>
      */
     public function game(): BelongsTo
     {
@@ -54,7 +56,7 @@ class LoadOrder extends Model
     /**
      * Get the files that are part of the load order.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<File>
+     * @return BelongsToMany<File, LoadOrder>
      */
     public function files(): BelongsToMany
     {

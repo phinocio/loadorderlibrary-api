@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +23,7 @@ class File extends Model
     /**
      * Get the load orders that the file is part of.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<LoadOrder>
+     * @return BelongsToMany<LoadOrder>
      */
     public function lists(): BelongsToMany
     {

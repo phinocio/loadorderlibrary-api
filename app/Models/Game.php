@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -20,7 +22,7 @@ class Game extends Model
     /**
      * Get the load orders for the game.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<LoadOrder>
+     * @return HasMany<LoadOrder>
      */
     public function lists(): HasMany
     {

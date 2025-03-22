@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\v1\Auth;
 
 use App\Http\Requests\v1\LoginRequest;
@@ -8,17 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController
 {
-    /**
-     * Create a new class instance.
-     */
+    /** Create a new class instance. */
     public function __construct()
     {
         //
     }
 
-    /**
-     * Invoke the class instance.
-     */
+    /** Invoke the class instance. */
     public function __invoke(LoginRequest $request): JsonResponse
     {
         $validated = $request->validated();

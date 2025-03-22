@@ -83,8 +83,7 @@ class LoadOrderService
      */
     public function updateLoadOrder(LoadOrder $loadOrder, array $validated, array $fileNames, Request $request): LoadOrder
     {
-        $isAuthed = Auth::check();
-        $validated = $this->processValidatedData($validated, $isAuthed);
+        $validated = $this->processValidatedData($validated);
 
         DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
             $fileIds = [];

@@ -6,7 +6,7 @@ use App\Filters\FiltersAuthorName;
 use App\Filters\FiltersGameName;
 use App\Models\File;
 use App\Models\LoadOrder;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -143,7 +143,7 @@ class LoadOrderService
         return str_replace(['https://', 'http://'], '', $url) ?: null;
     }
 
-    private function calculateexpiration(?string $expires): ?\Illuminate\Support\Carbon
+    private function calculateexpiration(?string $expires): ?Carbon
     {
         if (!$expires) {
             return Auth::check() ? null : Carbon::now()->addHours(24);

@@ -16,11 +16,7 @@ class LoadOrder extends Model
     /** @use HasFactory<\Database\Factories\LoadOrderFactory> */
     use HasFactory, Sluggable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'slug',
@@ -33,41 +29,25 @@ class LoadOrder extends Model
         'expires_at',
     ];
 
-    /**
-     * Get the user that created the load order.
-     *
-     * @return BelongsTo<User, LoadOrder>
-     */
+    /** @return BelongsTo<User, LoadOrder> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the game that the load order belongs to.
-     *
-     * @return BelongsTo<Game, LoadOrder>
-     */
+    /** @return BelongsTo<Game, LoadOrder> */
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
     }
 
-    /**
-     * Get the files that are part of the load order.
-     *
-     * @return BelongsToMany<File, LoadOrder>
-     */
+    /** @return BelongsToMany<File, LoadOrder> */
     public function files(): BelongsToMany
     {
         return $this->belongsToMany(File::class)->withTimestamps();
     }
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array<string, array<string, string>>
-     */
+    /** @return array<string, array<string, string>> */
     public function sluggable(): array
     {
         return [

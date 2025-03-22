@@ -9,22 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class File extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'clean_name',
         'size_in_bytes',
     ];
 
-    /**
-     * Get the load orders that the file is part of.
-     *
-     * @return BelongsToMany<LoadOrder>
-     */
+    /** @return BelongsToMany<LoadOrder, File> */
     public function lists(): BelongsToMany
     {
         return $this->belongsToMany(LoadOrder::class)->withTimestamps();

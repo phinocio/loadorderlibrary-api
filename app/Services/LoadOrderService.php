@@ -41,7 +41,7 @@ class LoadOrderService
             })
             ->with(['game', 'author']);
 
-        if ($request->query('page') && isset($request->query('page')['size']) && $request->query('page')['size'] === 'all') {
+        if (isset($request->query('page')['size']) && $request->query('page')['size'] === 'all') {
             return $lists->clone()->get()->all();
         } else {
             return $lists->clone()->jsonPaginate(900, 30);
@@ -51,7 +51,7 @@ class LoadOrderService
     /**
      * Get a single load order with its relationships
      */
-    public function getLoadOrder(LoadOrder $loadOrder, Request $request): LoadOrder
+    public function getLoadOrder(LoadOrder $loadOrder): LoadOrder
     {
         return $loadOrder->load(['game', 'author', 'files']);
     }
@@ -59,20 +59,34 @@ class LoadOrderService
     /**
      * Create a new load order
      */
-    public function createLoadOrder(array $validated, array $fileNames): LoadOrder
+    public function createLoadOrder(array $data, array $files): LoadOrder
     {
-        $validated = $this->processValidatedData($validated);
-
         $loadOrder = new LoadOrder();
+        $loadOrder->game_id = (int) $data['game'];
+        $loadOrder->user_id = Auth::id();
+        $loadOrder->name = $data['name'];
+        $loadOrder->description = $data['description'] ?? null;
+        $loadOrder->version = $data['version'] ?? null;
+        $loadOrder->website = $this->cleanUrl($data['website'] ?? null);
+        $loadOrder->discord = $this->cleanUrl($data['discord'] ?? null);
+        $loadOrder->readme = $this->cleanUrl($data['readme'] ?? null);
+        $loadOrder->is_private = $data['private'] ?? false;
+        $loadOrder->expires_at = $this->calculateExpiration($data['expires'] ?? null);
 
-        DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
-            $fileIds = $this->processFiles($fileNames);
-
-            $loadOrder->user_id = Auth::check() ? Auth::user()->id : null;
-            $loadOrder->game_id = (int) $validated['game'];
-            $this->setLoadOrderAttributes($loadOrder, $validated);
+        DB::transaction(function () use ($loadOrder, $files) {
             $loadOrder->save();
-            $loadOrder->files()->attach($fileIds);
+
+            if (!empty($files)) {
+                $fileIds = array_map(function ($file) {
+                    return File::firstOrCreate([
+                        'name' => $file['name'],
+                        'clean_name' => explode('-', $file['name'])[1],
+                        'size_in_bytes' => Storage::disk('uploads')->size($file['name'])
+                    ])->id;
+                }, $files);
+
+                $loadOrder->files()->attach($fileIds);
+            }
         });
 
         return $loadOrder->load(['game', 'author']);
@@ -81,20 +95,31 @@ class LoadOrderService
     /**
      * Update an existing load order
      */
-    public function updateLoadOrder(LoadOrder $loadOrder, array $validated, array $fileNames, Request $request): LoadOrder
+    public function updateLoadOrder(LoadOrder $loadOrder, array $data, array $files): LoadOrder
     {
-        $validated = $this->processValidatedData($validated);
+        DB::transaction(function () use ($loadOrder, $data, $files) {
+            $loadOrder->game_id = (int) $data['game'];
+            $loadOrder->name = $data['name'];
+            $loadOrder->description = $data['description'] ?? null;
+            $loadOrder->version = $data['version'] ?? null;
+            $loadOrder->website = $this->cleanUrl($data['website'] ?? null);
+            $loadOrder->discord = $this->cleanUrl($data['discord'] ?? null);
+            $loadOrder->readme = $this->cleanUrl($data['readme'] ?? null);
+            $loadOrder->is_private = $data['private'] ?? false;
+            $loadOrder->expires_at = $this->calculateExpiration($data['expires'] ?? null);
 
-        DB::transaction(function () use ($loadOrder, $fileNames, $validated) {
-            $fileIds = [];
-            if (count($fileNames) > 0) {
-                $fileIds = $this->processFiles($fileNames);
-            }
-
-            $this->setLoadOrderAttributes($loadOrder, $validated);
+            $loadOrder->touch(); // Force update the updated_at timestamp
             $loadOrder->save();
 
-            if (count($fileIds) > 0) {
+            if (!empty($files)) {
+                $fileIds = array_map(function ($file) {
+                    return File::firstOrCreate([
+                        'name' => $file['name'],
+                        'clean_name' => explode('-', $file['name'])[1],
+                        'size_in_bytes' => Storage::disk('uploads')->size($file['name'])
+                    ])->id;
+                }, $files);
+
                 $loadOrder->files()->sync($fileIds);
             }
         });
@@ -110,56 +135,26 @@ class LoadOrderService
         return $loadOrder->delete();
     }
 
-    private function processValidatedData(array $validated): array
+    private function cleanUrl(?string $url): ?string
     {
-        $isAuthed = Auth::check();
+        if (!$url) {
+            return null;
+        }
+        return str_replace(['https://', 'http://'], '', $url) ?: null;
+    }
 
-        // Set default expiration
-        if (! array_key_exists('expires', $validated)) {
-            $isAuthed ? $validated['expires'] = 'perm' : $validated['expires'] = '24h';
+    private function calculateexpiration(?string $expires): ?\Illuminate\Support\Carbon
+    {
+        if (!$expires) {
+            return Auth::check() ? null : Carbon::now()->addHours(24);
         }
 
-        // Set default privacy
-        if (! array_key_exists('private', $validated)) {
-            $validated['private'] = false;
-        }
-
-        // Calculate expiration date
-        $validated['expires'] = match ($validated['expires']) {
+        return match ($expires) {
             '3h' => Carbon::now()->addHours(3),
             '3d' => Carbon::now()->addDays(3),
             '1w' => Carbon::now()->addWeek(),
             'perm' => null,
-            default => $isAuthed ? null : Carbon::now()->addHours(24),
+            default => Auth::check() ? null : Carbon::now()->addHours(24),
         };
-
-        return $validated;
-    }
-
-    private function processFiles(array $fileNames): array
-    {
-        $fileIds = [];
-        foreach ($fileNames as $file) {
-            $file['clean_name'] = explode('-', $file['name'])[1];
-            $file['size_in_bytes'] = Storage::disk('uploads')->size($file['name']);
-            $fileIds[] = File::query()->firstOrCreate($file)->id;
-        }
-        return $fileIds;
-    }
-
-    private function setLoadOrderAttributes(LoadOrder $loadOrder, array $validated): void
-    {
-        $loadOrder->game_id = (int) $validated['game'];
-        $loadOrder->name = $validated['name'];
-        $loadOrder->description = $validated['description'] ?? null;
-        $loadOrder->version = $validated['version'] ?? null;
-
-        // Clean URLs by removing http/https prefixes
-        $loadOrder->website = str_replace(['https://', 'http://'], '', $validated['website'] ?? null) ?: null;
-        $loadOrder->discord = str_replace(['https://', 'http://'], '', $validated['discord'] ?? null) ?: null;
-        $loadOrder->readme = str_replace(['https://', 'http://'], '', $validated['readme'] ?? null) ?: null;
-
-        $loadOrder->is_private = (bool) $validated['private'];
-        $loadOrder->expires_at = $validated['expires'];
     }
 }

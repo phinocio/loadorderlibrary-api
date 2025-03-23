@@ -35,6 +35,16 @@ class User extends Authenticatable
         return $this->hasMany(LoadOrder::class);
     }
 
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('name', 'ilike', $value)->firstOrFail();
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {
@@ -42,7 +52,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_verified' => 'boolean',
-            'is_admin' => 'boolean',
+            'is_admin' => 'bool',
         ];
     }
 }

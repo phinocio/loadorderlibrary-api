@@ -16,12 +16,12 @@ beforeEach(function () {
 });
 
 it('logs in a user with valid credentials', function () {
-    $this->post('/v1/login', [
+    $this->postJson('/v1/login', [
         'name' => $this->name,
         'password' => $this->password,
-    ])->assertOk()->assertJsonStructure([
-        'message',
-        'user' => [
+    ])
+        ->assertOk()
+        ->assertJsonStructure([
             'id',
             'name',
             'email',
@@ -29,12 +29,13 @@ it('logs in a user with valid credentials', function () {
             'verified',
             'created',
             'updated',
-        ],
-    ]);
+        ]);
+
+    $this->assertAuthenticatedAs($this->user);
 });
 
 it('returns a 401 when invalid credentials are provided', function () {
-    $this->post('/v1/login', [
+    $this->postJson('/v1/login', [
         'name' => $this->name,
         'password' => 'invalid',
     ])->assertUnauthorized()->assertJson([
@@ -42,11 +43,11 @@ it('returns a 401 when invalid credentials are provided', function () {
     ]);
 });
 
-it('returns a 401 status code when the user is already logged in', function () {
-    login($this->user)->post('/v1/login', [
+it('returns a 403 status code when the user is already logged in', function () {
+    login($this->user)->postJson('/v1/login', [
         'name' => $this->name,
         'password' => $this->password,
     ])->assertForbidden()->assertJson([
-        'message' => 'You cannot access this route while logged in',
+        'message' => 'You cannot access this route while logged in.',
     ]);
 });

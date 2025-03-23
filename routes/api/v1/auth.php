@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\v1\Auth\CurrentUserController;
 use App\Http\Controllers\v1\Auth\LoginController;
 use App\Http\Controllers\v1\Auth\LogoutController;
 use App\Http\Controllers\v1\Auth\RegisterController;
@@ -16,6 +17,7 @@ Route::middleware(['web'])->group(function () {
     });
 
     Route::middleware('auth')->group(function () {
+        Route::get('/me', CurrentUserController::class)->name('auth.me');
         Route::post('/logout', LogoutController::class)->name('auth.logout');
     });
 });

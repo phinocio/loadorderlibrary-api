@@ -8,16 +8,9 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 
 class AuthenticatedException extends Exception
 {
-    /** Report the exception. */
-    public function report(): void
-    {
-        Log::error('AuthenticatedException: '.$this->getMessage());
-    }
-
     /** Render the exception as an HTTP response. */
     public function render(Request $request): JsonResponse
     {

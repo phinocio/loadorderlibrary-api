@@ -7,7 +7,7 @@ namespace App\Actions\v1\User;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class CreateUserAction
+class CreateUser
 {
     /**
      * Create a new user.
@@ -16,6 +16,7 @@ class CreateUserAction
      */
     public function execute(array $data): User
     {
+        // Refresh is needed otherwise default db values not passed show null
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'] ?? null,

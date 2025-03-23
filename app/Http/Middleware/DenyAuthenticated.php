@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware\v1;
+namespace App\Http\Middleware;
 
-use App\Exceptions\v1\AuthenticatedException;
+use App\Exceptions\AuthenticatedException;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

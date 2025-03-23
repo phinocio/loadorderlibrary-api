@@ -15,11 +15,13 @@ it('registers a user', function () {
     ])
         ->assertCreated()
         ->assertJsonStructure([
-            'id',
             'name',
             'email',
             'admin',
             'verified',
+        ])
+        ->assertJson([
+            'name' => $this->name,
         ]);
 
     $this->assertDatabaseHas('users', [

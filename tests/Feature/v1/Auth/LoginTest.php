@@ -22,13 +22,18 @@ it('logs in a user with valid credentials', function () {
     ])
         ->assertOk()
         ->assertJsonStructure([
-            'id',
             'name',
             'email',
             'admin',
             'verified',
             'created',
             'updated',
+        ])
+        ->assertJson([
+            'name' => $this->user->name,
+            'email' => $this->user->email,
+            'admin' => $this->user->is_admin,
+            'verified' => $this->user->is_verified,
         ]);
 
     $this->assertAuthenticatedAs($this->user);

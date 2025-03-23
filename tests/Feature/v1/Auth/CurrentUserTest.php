@@ -11,7 +11,6 @@ it('returns the current authenticated user', function () {
         ->getJson('/v1/me')
         ->assertOk()
         ->assertJsonStructure([
-            'id',
             'name',
             'email',
             'admin',
@@ -20,7 +19,6 @@ it('returns the current authenticated user', function () {
             'updated',
         ])
         ->assertJson([
-            'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
             'admin' => $user->is_admin,

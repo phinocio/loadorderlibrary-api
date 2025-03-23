@@ -7,6 +7,7 @@ namespace App\Exceptions\v1;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class AuthenticatedException extends Exception
@@ -20,6 +21,6 @@ class AuthenticatedException extends Exception
     /** Render the exception as an HTTP response. */
     public function render(Request $request): JsonResponse
     {
-        return response()->json(['message' => 'You cannot access this route while logged in'], 403);
+        return response()->json(['message' => 'You cannot access this route while logged in.'], Response::HTTP_FORBIDDEN);
     }
 }

@@ -40,11 +40,6 @@ class User extends Authenticatable
         return (bool) $this->is_admin;
     }
 
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return $this->where('name', 'ilike', $value)->firstOrFail();
-    }
-
     /** @return array<string, string> */
     protected function casts(): array
     {

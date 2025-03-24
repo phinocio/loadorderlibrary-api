@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-class UserController extends ApiController
+final class UserController extends ApiController
 {
     protected string $policyClass = UserPolicy::class;
 
@@ -36,8 +36,6 @@ class UserController extends ApiController
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         Gate::authorize('update', $user);
-
-        dd($request);
 
         $user->update($request->validated());
 

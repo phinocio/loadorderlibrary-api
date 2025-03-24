@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 
 it('returns the current authenticated user', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create()->refresh();
 
     login($user)
         ->getJson('/v1/me')

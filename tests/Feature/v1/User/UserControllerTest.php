@@ -34,8 +34,9 @@ it('only allows admin or user themselves to view show', function () {
 });
 
 it('only allows admin or user themselves to update', function () {
-    login($this->admin)->putJson("/v1/users/{$this->user->name}", [
-        'email' => 'test@test.com',
+    // Admin can update user
+    login($this->admin)->patchJson("/v1/users/{$this->user->name}", [
+        'email' => 'test@example.com',
     ])->assertOk();
 
     $this->assertDatabaseHas('users', [
@@ -43,7 +44,8 @@ it('only allows admin or user themselves to update', function () {
         'email' => 'test@example.com',
     ]);
 
-    login($this->user)->putJson("/v1/users/{$this->user->name}", [
+    // User can update themselves
+    login($this->user)->patchJson("/v1/users/{$this->user->name}", [
         'email' => 'test2@example.com',
     ])->assertOk();
 
@@ -52,5 +54,8 @@ it('only allows admin or user themselves to update', function () {
         'email' => 'test2@example.com',
     ]);
 
-    login($this->otherUser)->putJson("/v1/users/{$this->user->name}")->assertForbidden();
+    // Other user cannot update user
+    login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", [
+        'email' => 'test3@example.com',
+    ])->assertForbidden();
 });

@@ -14,6 +14,6 @@ final class AuthenticatedException extends Exception
     /** Render the exception as an HTTP response. */
     public function render(Request $request): JsonResponse
     {
-        return response()->json(['message' => 'You cannot access this route while logged in.'], Response::HTTP_FORBIDDEN);
+        return response()->json(['message' => $this->getMessage()], Response::HTTP_FORBIDDEN);
     }
 }

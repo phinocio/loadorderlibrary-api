@@ -20,7 +20,7 @@ final class DenyAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            throw new AuthenticatedException;
+            throw new AuthenticatedException('You cannot access this route while logged in.');
         }
 
         return $next($request);

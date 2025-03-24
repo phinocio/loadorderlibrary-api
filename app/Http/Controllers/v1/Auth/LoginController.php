@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController
+final class LoginController
 {
     public function __invoke(LoginRequest $request): JsonResponse
     {

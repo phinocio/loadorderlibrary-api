@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LoadOrder extends Model
+final class LoadOrder extends Model
 {
     /** @use HasFactory<\Database\Factories\LoadOrderFactory> */
     use HasFactory, Sluggable, SoftDeletes;

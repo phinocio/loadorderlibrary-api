@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class LogoutController
+final class LogoutController
 {
     public function __invoke(Request $request): JsonResponse
     {

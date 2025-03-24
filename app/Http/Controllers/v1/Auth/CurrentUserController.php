@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class CurrentUserController
+final class CurrentUserController
 {
     public function __invoke(): JsonResponse
     {

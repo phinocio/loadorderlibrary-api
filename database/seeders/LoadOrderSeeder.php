@@ -8,7 +8,7 @@ use App\Models\File;
 use App\Models\LoadOrder;
 use Illuminate\Database\Seeder;
 
-class LoadOrderSeeder extends Seeder
+final class LoadOrderSeeder extends Seeder
 {
     /** Run the database seeds. */
     public function run(): void

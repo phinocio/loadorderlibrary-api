@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class DenyAuthenticated
+final class DenyAuthenticated
 {
     /**
      * Handle an incoming request.

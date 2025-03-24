@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class File extends Model
+final class File extends Model
 {
     /** @var list<string> */
     protected $fillable = [

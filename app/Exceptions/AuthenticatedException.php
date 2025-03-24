@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class AuthenticatedException extends Exception
+final class AuthenticatedException extends Exception
 {
     /** Render the exception as an HTTP response. */
     public function render(Request $request): JsonResponse

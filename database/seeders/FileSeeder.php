@@ -7,7 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class FileSeeder extends Seeder
+final class FileSeeder extends Seeder
 {
     /** Run the database seeds. */
     public function run(): void

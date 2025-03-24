@@ -25,8 +25,8 @@
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.7",
         "pestphp/pest": "^3.7.4",
-        "pestphp/pest-plugin-watch": "^3.0",
-        "phpstan/phpstan": "^2.1.11"
+        "pestphp/pest-plugin-type-coverage": "^3.4",
+        "pestphp/pest-plugin-watch": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -67,6 +67,21 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "lint": [
+            "pint --test"
+        ],
+        "lint:fix": [
+            "pint"
+        ],
+        "refactor": "rector",
+        "test": "pest --parallel --coverage --exactly=100",
+        "test:type-coverage": "pest --type-coverage --min=100",
+        "test:types": "phpstan",
+        "test:all": [
+            "@test:type-coverage",
+            "@test:unit",
+            "@test:lint"
         ]
     },
     "extra": {

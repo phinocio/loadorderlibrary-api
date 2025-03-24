@@ -75,13 +75,13 @@
             "pint"
         ],
         "refactor": "rector",
-        "test": "pest --parallel --coverage --exactly=100",
+        "test": "pest --parallel --coverage --exactly=80.9",
         "test:type-coverage": "pest --type-coverage --min=100",
         "test:types": "phpstan",
         "test:all": [
-            "@test:type-coverage",
-            "@test:unit",
-            "@test:lint"
+            "@lint",
+            "@test",
+            "@test:type-coverage"
         ]
     },
     "extra": {

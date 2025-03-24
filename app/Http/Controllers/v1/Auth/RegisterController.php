@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class RegisterController
+final class RegisterController
 {
     public function __construct(
         private readonly CreateUser $createUser

@@ -19,9 +19,7 @@ final class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
+    /** Bootstrap any application services. */
     public function boot(): void
     {
         $this->configureCommands();
@@ -30,9 +28,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrls();
     }
 
-    /**
-     * Configure the application's commands.
-     */
+    /** Configure the application's commands. */
     private function configureCommands(): void
     {
         DB::prohibitDestructiveCommands(
@@ -40,25 +36,19 @@ final class AppServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Configure the application's dates.
-     */
+    /** Configure the application's dates. */
     private function configureDates(): void
     {
         Date::use(CarbonImmutable::class);
     }
 
-    /**
-     * Configure the application's models.
-     */
+    /** Configure the application's models. */
     private function configureModels(): void
     {
         Model::shouldBeStrict();
     }
 
-    /**
-     * Configure the application's URLs.
-     */
+    /** Configure the application's URLs. */
     private function configureUrls(): void
     {
         URL::forceScheme('https');

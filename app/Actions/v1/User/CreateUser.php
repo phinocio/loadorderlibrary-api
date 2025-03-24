@@ -7,7 +7,7 @@ namespace App\Actions\v1\User;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class CreateUser
+final class CreateUser
 {
     /**
      * Create a new user.

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\v1;
+namespace App\Http\Controllers\v1\User;
 
+use App\Actions\v1\User\DeleteUser;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\v1\UpdateUserRequest;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
@@ -33,18 +33,11 @@ final class UserController extends ApiController
         return response()->json(new UserResource($user), Response::HTTP_OK);
     }
 
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
+    public function destroy(User $user, DeleteUser $deleteUser): JsonResponse
     {
-        Gate::authorize('update', $user);
+        Gate::authorize('delete', $user);
 
-        $user->update($request->validated());
-
-        return response()->json(new UserResource($user), Response::HTTP_OK);
-    }
-
-    public function destroy(User $user): JsonResponse
-    {
-        $user->delete();
+        $deleteUser->execute($user);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

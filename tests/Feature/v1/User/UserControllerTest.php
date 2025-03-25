@@ -10,52 +10,51 @@ beforeEach(function () {
     $this->otherUser = User::factory()->create(['is_admin' => false]);
 });
 
-it('only allows admin to view index', function () {
-    login($this->admin)->getJson('/v1/users')->assertOk()->assertJsonStructure([
-        'data' => [
-            '*' => [
-                'name',
-                'email',
-                'admin',
-                'verified',
-                'created',
-                'updated',
+describe('index', function () {
+    it('only allows admin to view index', function () {
+        login($this->admin)->getJson('/v1/users')->assertOk()->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'name',
+                    'email',
+                    'admin',
+                    'verified',
+                    'created',
+                    'updated',
+                ],
             ],
-        ],
-    ]);
+        ]);
 
-    login($this->user)->getJson('/v1/users')->assertForbidden();
+        login($this->user)->getJson('/v1/users')->assertForbidden();
+    });
 });
 
-it('only allows admin or user themselves to view show', function () {
-    login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk();
-    login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk();
-    login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
+describe('show', function () {
+    it('only allows admin or user themselves to view show', function () {
+        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk();
+        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk();
+        login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
+    });
 });
 
-it('only allows admin or user themselves to update', function () {
-    // Admin can update user
-    login($this->admin)->patchJson("/v1/users/{$this->user->name}", [
-        'email' => 'test@example.com',
-    ])->assertOk();
+describe('destroy', function () {
+    it('allows admin to delete anyone', function () {
+        login($this->admin)->deleteJson("/v1/users/{$this->user->name}")->assertNoContent();
 
-    $this->assertDatabaseHas('users', [
-        'name' => $this->user->name,
-        'email' => 'test@example.com',
-    ]);
+        $this->assertDatabaseMissing('users', [
+            'name' => $this->user->name,
+        ]);
+    });
 
-    // User can update themselves
-    login($this->user)->patchJson("/v1/users/{$this->user->name}", [
-        'email' => 'test2@example.com',
-    ])->assertOk();
+    it('allows user to delete themselves', function () {
+        login($this->user)->deleteJson("/v1/users/{$this->user->name}")->assertNoContent();
 
-    $this->assertDatabaseHas('users', [
-        'name' => $this->user->name,
-        'email' => 'test2@example.com',
-    ]);
+        $this->assertDatabaseMissing('users', [
+            'name' => $this->user->name,
+        ]);
+    });
 
-    // Other user cannot update user
-    login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", [
-        'email' => 'test3@example.com',
-    ])->assertForbidden();
+    it('prevents a user from deleting another user', function () {
+        login($this->otherUser)->deleteJson("/v1/users/{$this->user->name}")->assertForbidden();
+    });
 });

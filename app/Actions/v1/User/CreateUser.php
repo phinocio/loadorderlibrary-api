@@ -9,14 +9,9 @@ use Illuminate\Support\Facades\Hash;
 
 final class CreateUser
 {
-    /**
-     * Create a new user.
-     *
-     * @param  array<string, mixed>  $data
-     */
+    /** @param  array<string, mixed>  $data */
     public function execute(array $data): User
     {
-        // Refresh is needed otherwise default db values not passed show null
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'] ?? null,

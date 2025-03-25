@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\v1;
+namespace App\Http\Requests\v1\User;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /** @mixin \App\Models\User */
-final class UpdateUserRequest extends FormRequest
+final class UpdateUserEmailRequest extends FormRequest
 {
     /** Determine if the user is authorized to make this request. */
     public function authorize(): bool
@@ -24,7 +25,12 @@ final class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'sometimes|nullable|email|max:255|unique:users,email,'.$this->user()?->id,
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($this->user()?->id),
+            ],
         ];
     }
 }

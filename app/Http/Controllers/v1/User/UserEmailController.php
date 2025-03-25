@@ -31,8 +31,8 @@ final class UserEmailController extends ApiController
     {
         Gate::authorize('update', $user);
 
-        $user = $updateUser->execute($user, ['email' => null]);
+        $updateUser->execute($user, ['email' => null]);
 
-        return response()->json(new UserResource($user), Response::HTTP_OK);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

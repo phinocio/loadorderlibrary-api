@@ -10,7 +10,7 @@ beforeEach(function () {
     $this->otherUser = User::factory()->create(['is_admin' => false]);
 });
 
-describe('update', function () {
+describe('update:email', function () {
     it('allows admin to update anyones email', function () {
         login($this->admin)->patchJson("/v1/users/{$this->user->name}/email", [
             'email' => 'test@example.com',
@@ -37,5 +37,19 @@ describe('update', function () {
         login($this->otherUser)->patchJson("/v1/users/{$this->user->name}/email", [
             'email' => 'test3@example.com',
         ])->assertForbidden();
+    });
+});
+
+describe('destroy:email', function () {
+    it('allows admin to delete anyones email', function () {
+        login($this->admin)->deleteJson("/v1/users/{$this->user->name}/email")->assertNoContent();
+    });
+
+    it('allows user to delete their own email', function () {
+        login($this->user)->deleteJson("/v1/users/{$this->user->name}/email")->assertNoContent();
+    });
+
+    it('prevents a user from deleting another users email', function () {
+        login($this->otherUser)->deleteJson("/v1/users/{$this->user->name}/email")->assertForbidden();
     });
 });

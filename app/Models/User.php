@@ -34,12 +34,6 @@ final class User extends Authenticatable
         'remember_token',
     ];
 
-    /** @return HasMany<LoadOrder, User> */
-    public function lists(): HasMany
-    {
-        return $this->hasMany(LoadOrder::class);
-    }
-
     public function isAdmin(): bool
     {
         return (bool) $this->is_admin;

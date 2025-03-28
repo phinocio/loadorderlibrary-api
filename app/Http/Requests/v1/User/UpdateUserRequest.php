@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /** @mixin \App\Models\User */
-final class UpdateUserEmailRequest extends FormRequest
+final class UpdateUserRequest extends FormRequest
 {
     /** Determine if the user is authorized to make this request. */
     public function authorize(): bool
@@ -25,12 +25,19 @@ final class UpdateUserEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'bio' => ['sometimes', 'present', 'nullable', 'string'],
+            'discord' => ['sometimes', 'present', 'nullable', 'string'],
             'email' => [
-                'required',
+                'sometimes',
+                'present',
+                'nullable',
                 'email',
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user()?->id),
             ],
+            'kofi' => ['sometimes', 'present', 'nullable', 'string'],
+            'patreon' => ['sometimes', 'present', 'nullable', 'string'],
+            'website' => ['sometimes', 'present', 'nullable', 'string'],
         ];
     }
 }

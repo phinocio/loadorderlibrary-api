@@ -19,6 +19,11 @@ describe('index', function () {
                     'email',
                     'admin',
                     'verified',
+                    'bio',
+                    'discord',
+                    'kofi',
+                    'patreon',
+                    'website',
                     'created',
                     'updated',
                 ],
@@ -31,9 +36,79 @@ describe('index', function () {
 
 describe('show', function () {
     it('only allows admin or user themselves to view show', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk();
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk();
+        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJsonStructure([
+            'name',
+            'email',
+            'admin',
+            'verified',
+            'bio',
+            'discord',
+            'kofi',
+            'patreon',
+            'website',
+            'created',
+            'updated',
+        ]);
+
+        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJsonStructure([
+            'name',
+            'email',
+            'admin',
+            'verified',
+            'bio',
+            'discord',
+            'kofi',
+            'patreon',
+            'website',
+            'created',
+            'updated',
+        ]);
+
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
+    });
+});
+
+describe('update', function () {
+    it('only allows admin or user themselves to update', function () {
+        login($this->admin)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio', 'discord' => 'new discord'])->assertOk()->assertJsonStructure([
+            'name',
+            'email',
+            'admin',
+            'verified',
+            'bio',
+            'discord',
+            'kofi',
+            'patreon',
+            'website',
+            'created',
+            'updated',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'bio' => 'new bio',
+            'discord' => 'new discord',
+        ]);
+
+        login($this->user)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio', 'discord' => 'new discord'])->assertOk()->assertJsonStructure([
+            'name',
+            'email',
+            'admin',
+            'verified',
+            'bio',
+            'discord',
+            'kofi',
+            'patreon',
+            'website',
+            'created',
+            'updated',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'bio' => 'new bio',
+            'discord' => 'new discord',
+        ]);
+
+        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio', 'discord' => 'new discord'])->assertForbidden();
     });
 });
 

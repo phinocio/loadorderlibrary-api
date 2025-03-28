@@ -21,6 +21,11 @@ final class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
+        'discord',
+        'patreon',
+        'kofi',
+        'website',
     ];
 
     /** @var list<string> */
@@ -47,7 +52,7 @@ final class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_verified' => 'boolean',
-            'is_admin' => 'bool',
+            'is_admin' => 'boolean',
         ];
     }
 }

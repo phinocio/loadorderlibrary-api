@@ -44,9 +44,9 @@ describe('show', function () {
     });
 
     it('only shows email to the user themself', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['email' => true]);
+        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['data' => ['email' => true]]);
 
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['email' => $this->user->email]);
+        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['data' => ['email' => $this->user->email]]);
     });
 });
 

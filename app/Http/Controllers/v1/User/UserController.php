@@ -23,24 +23,23 @@ final class UserController extends ApiController
     {
         Gate::authorize('viewAny', User::class);
 
-        return UserResource::collection(User::all())->response();
+        return UserResource::collection(User::all())->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function show(User $user): JsonResponse
     {
         Gate::authorize('view', $user);
 
-        return response()->json(new UserResource($user), Response::HTTP_OK);
+        return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
     }
 
-    /** Update the specified resource in storage. */
     public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): JsonResponse
     {
         Gate::authorize('update', $user);
 
         $user = $updateUser->execute($user, $request->validated());
 
-        return response()->json(new UserResource($user), Response::HTTP_OK);
+        return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse
@@ -49,6 +48,6 @@ final class UserController extends ApiController
 
         $deleteUser->execute($user);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return new UserResource($user)->response()->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 }

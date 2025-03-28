@@ -12,7 +12,7 @@ beforeEach(function () {
     $this->user = User::factory()->create([
         'name' => $this->name,
         'password' => Hash::make($this->password),
-    ])->refresh();
+    ])->fresh();
 });
 
 it('logs in a user with valid credentials', function () {
@@ -21,20 +21,11 @@ it('logs in a user with valid credentials', function () {
         'password' => $this->password,
     ])
         ->assertOk()
-        ->assertJsonStructure([
-            'name',
-            'email',
-            'admin',
-            'verified',
-            'created',
-            'updated',
-        ])
-        ->assertJson([
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-            'admin' => $this->user->is_admin,
-            'verified' => $this->user->is_verified,
-        ]);
+        ->assertExactJsonStructure(['data' => getUserJsonStructure()])
+        ->assertJsonPath('data.name', $this->user->name)
+        ->assertJsonPath('data.email', $this->user->email)
+        ->assertJsonPath('data.admin', $this->user->is_admin)
+        ->assertJsonPath('data.verified', $this->user->is_verified);
 
     $this->assertAuthenticatedAs($this->user);
 });

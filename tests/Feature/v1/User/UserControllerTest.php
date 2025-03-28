@@ -12,21 +12,9 @@ beforeEach(function () {
 
 describe('index', function () {
     it('only allows admin to view index', function () {
-        login($this->admin)->getJson('/v1/users')->assertOk()->assertJsonStructure([
+        login($this->admin)->getJson('/v1/users')->assertOk()->assertExactJsonStructure([
             'data' => [
-                '*' => [
-                    'name',
-                    'email',
-                    'admin',
-                    'verified',
-                    'bio',
-                    'discord',
-                    'kofi',
-                    'patreon',
-                    'website',
-                    'created',
-                    'updated',
-                ],
+                '*' => getUserJsonStructure(),
             ],
         ]);
 
@@ -36,9 +24,9 @@ describe('index', function () {
 
 describe('show', function () {
     it('only allows admin or user themselves to view show', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk();
+        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserJsonStructure()]);
 
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk();
+        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserJsonStructure()]);
 
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
     });
@@ -79,7 +67,6 @@ describe('destroy', function () {
 
     it('allows user to delete themselves', function () {
         login($this->user)->deleteJson("/v1/users/{$this->user->name}")->assertNoContent();
-
         $this->assertDatabaseMissing('users', [
             'name' => $this->user->name,
         ]);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 
 it('logs out a user', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create()->fresh();
 
     login($user)->postJson('/v1/logout')->assertNoContent();
 

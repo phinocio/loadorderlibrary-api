@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 
 test('to array', function () {
@@ -13,6 +14,11 @@ test('to array', function () {
         'id',
         'name',
         'email',
+        'bio',
+        'discord',
+        'kofi',
+        'patreon',
+        'website',
         'is_verified',
         'is_admin',
         'created_at',

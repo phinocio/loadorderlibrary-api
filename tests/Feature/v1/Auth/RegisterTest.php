@@ -14,15 +14,11 @@ it('registers a user', function () {
         'password_confirmation' => $this->password,
     ])
         ->assertCreated()
-        ->assertJsonStructure([
-            'name',
-            'email',
-            'admin',
-            'verified',
-        ])
-        ->assertJson([
-            'name' => $this->name,
-        ]);
+        ->assertExactJsonStructure(['data' => getUserJsonStructure()])
+        ->assertJsonPath('data.name', $this->name)
+        ->assertJsonPath('data.email', null)
+        ->assertJsonPath('data.admin', false)
+        ->assertJsonPath('data.verified', false);
 
     $this->assertDatabaseHas('users', [
         'name' => $this->name,

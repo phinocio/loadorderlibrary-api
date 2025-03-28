@@ -32,6 +32,10 @@ final class UserResource extends JsonResource
             'website' => $this->website,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
+            'links' => [
+                'url' => route('users.show', $this->name, false),
+                'self' => route('users.show', $this->name),
+            ],
         ];
     }
 }

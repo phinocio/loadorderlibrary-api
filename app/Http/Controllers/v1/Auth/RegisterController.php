@@ -25,9 +25,6 @@ final class RegisterController
 
         session()->regenerate();
 
-        return response()->json(
-            new UserResource($user),
-            Response::HTTP_CREATED
-        );
+        return new UserResource($user)->response()->setStatusCode(Response::HTTP_CREATED);
     }
 }

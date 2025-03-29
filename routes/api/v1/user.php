@@ -15,7 +15,6 @@ Route::prefix('users')->middleware('auth:sanctum')->group(function () {
     });
 
     Route::controller(UserProfileController::class)->group(function () {
-        Route::get('/{user:name}/profile', 'show')->name('users.profile.show');
         Route::patch('/{user:name}/profile', 'update')->name('users.profile.update');
     });
 });

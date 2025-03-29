@@ -16,6 +16,7 @@ final class LogoutController
         Auth::logout();
 
         $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Logout successful'], Response::HTTP_NO_CONTENT);
     }

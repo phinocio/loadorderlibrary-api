@@ -23,11 +23,11 @@ class UpdateUserProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio' => 'nullable|string',
-            'discord' => 'nullable|string',
-            'kofi' => 'nullable|string',
-            'patreon' => 'nullable|string',
-            'website' => 'nullable|string',
+            'bio' => ['sometimes', 'present', 'nullable', 'string', 'max:2048'],
+            'discord' => ['sometimes', 'present', 'nullable', 'string', 'max:255'],
+            'kofi' => ['sometimes', 'present', 'nullable', 'string', 'max:255'],
+            'patreon' => ['sometimes', 'present', 'nullable', 'string', 'max:255'],
+            'website' => ['sometimes', 'present', 'nullable', 'string', 'max:255'],
         ];
     }
 }

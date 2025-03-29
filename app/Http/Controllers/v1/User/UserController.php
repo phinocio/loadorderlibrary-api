@@ -8,7 +8,7 @@ use App\Actions\v1\User\DeleteUser;
 use App\Actions\v1\User\UpdateUser;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\User\UpdateUserRequest;
-use App\Http\Resources\v1\UserResource;
+use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;

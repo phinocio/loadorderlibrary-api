@@ -26,11 +26,10 @@ final class UserController extends ApiController
         return UserResource::collection(User::all())->response()->setStatusCode(Response::HTTP_OK);
     }
 
-    public function show(User $user): JsonResponse
+    public function show(string $userName): JsonResponse
     {
+        $user = User::where('name', $userName)->with('profile')->firstOrFail();
         Gate::authorize('view', $user);
-
-        $user->load('profile');
 
         return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
     }

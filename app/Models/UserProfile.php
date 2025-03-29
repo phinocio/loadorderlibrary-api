@@ -13,6 +13,7 @@ class UserProfile extends Model
 
     /** @var list<string> */
     protected $fillable = [
+        'user_id',
         'bio',
         'discord',
         'kofi',

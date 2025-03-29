@@ -9,11 +9,19 @@ use App\Models\User;
 
 class UpdateUserProfile
 {
+    /**
+     * @param array{
+     *     bio?: string, 
+     *     discord?: string, 
+     *     kofi?: string, 
+     *     patreon?: string, 
+     *     website?: string} $data
+     */
     public function execute(User $user, array $data): User
     {
-        $user->profile()->update($data);
+        $user->profile()->updateOrCreate(['user_id' => $user->id], $data);
 
-        return $user;
+        return $user->load('profile');
     }
 }
 

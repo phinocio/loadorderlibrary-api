@@ -25,8 +25,6 @@ final class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio' => ['sometimes', 'present', 'nullable', 'string'],
-            'discord' => ['sometimes', 'present', 'nullable', 'string'],
             'email' => [
                 'sometimes',
                 'present',
@@ -35,9 +33,6 @@ final class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user()?->id),
             ],
-            'kofi' => ['sometimes', 'present', 'nullable', 'string'],
-            'patreon' => ['sometimes', 'present', 'nullable', 'string'],
-            'website' => ['sometimes', 'present', 'nullable', 'string'],
         ];
     }
 }

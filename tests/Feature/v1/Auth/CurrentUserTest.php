@@ -10,7 +10,7 @@ it('returns the current authenticated user', function () {
     login($user)
         ->getJson('/v1/me')
         ->assertOk()
-        ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+        ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 });
 
 it('returns a 401 when the user is not authenticated', function () {

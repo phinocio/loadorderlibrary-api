@@ -12,10 +12,16 @@ final class CreateUser
     /** @param  array<string, mixed>  $data */
     public function execute(array $data): User
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'] ?? null,
             'password' => Hash::make($data['password']),
-        ])->refresh();
+        ]);
+
+        $user->profile()->create([
+            'user_id' => $user->id,
+        ]);
+
+        return $user->refresh();
     }
 }

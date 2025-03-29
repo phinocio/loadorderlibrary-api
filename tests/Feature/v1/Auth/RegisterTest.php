@@ -14,7 +14,7 @@ it('registers a user', function () {
         'password_confirmation' => $this->password,
     ])
         ->assertCreated()
-        ->assertExactJsonStructure(['data' => getUserJsonStructure()])
+        ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()])
         ->assertJsonPath('data.name', $this->name)
         ->assertJsonPath('data.email', null)
         ->assertJsonPath('data.admin', false)

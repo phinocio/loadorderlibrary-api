@@ -18,7 +18,8 @@ it('registers a user', function () {
         ->assertJsonPath('data.name', $this->name)
         ->assertJsonPath('data.email', null)
         ->assertJsonPath('data.admin', false)
-        ->assertJsonPath('data.verified', false);
+        ->assertJsonPath('data.verified', false)
+        ->assertJsonPath('data.profile', ['bio' => null, 'discord' => null, 'kofi' => null, 'patreon' => null, 'website' => null]);
 
     $this->assertDatabaseHas('users', [
         'name' => $this->name,

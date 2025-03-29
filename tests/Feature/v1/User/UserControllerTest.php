@@ -14,7 +14,7 @@ describe('index', function () {
     it('only allows admin to view index', function () {
         login($this->admin)->getJson('/v1/users')->assertOk()->assertExactJsonStructure([
             'data' => [
-                '*' => getUserJsonStructure(),
+                '*' => getUserJsonStructure(), // no profile for list of users
             ],
         ]);
 

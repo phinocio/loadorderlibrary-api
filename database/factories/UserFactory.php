@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -38,5 +39,23 @@ final class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->profile()->create([
+                'bio' => $this->faker->paragraph(),
+                'discord' => $this->faker->url(),
+                'patreon' => $this->faker->url(),
+                'kofi' => $this->faker->url(),
+                'website' => $this->faker->url(),
+            ]);
+        });
     }
 }

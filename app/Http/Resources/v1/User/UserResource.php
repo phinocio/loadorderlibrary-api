@@ -25,11 +25,7 @@ final class UserResource extends JsonResource
             'email' => $email,
             'verified' => $this->is_verified,
             'admin' => $this->is_admin,
-            'bio' => $this->bio,
-            'discord' => $this->discord,
-            'kofi' => $this->kofi,
-            'patreon' => $this->patreon,
-            'website' => $this->website,
+            'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
             'links' => [

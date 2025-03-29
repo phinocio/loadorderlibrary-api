@@ -30,6 +30,8 @@ final class UserController extends ApiController
     {
         Gate::authorize('view', $user);
 
+        $user->load('profile');
+
         return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
     }
 

@@ -24,9 +24,9 @@ describe('index', function () {
 
 describe('show', function () {
     it('only allows admin or user themselves to view show', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
     });
@@ -39,20 +39,18 @@ describe('show', function () {
 });
 
 describe('update', function () {
-    it('only allows admin or user themselves to update', function () {
-        login($this->admin)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio', 'discord' => 'new discord'])->assertOk();
+    it('only allows admin or user themselves to update email', function () {
+        login($this->admin)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail@example.com'])->assertOk();
         $this->assertDatabaseHas('users', [
-            'bio' => 'new bio',
-            'discord' => 'new discord',
+            'email' => 'newemail@example.com',
         ]);
 
-        login($this->user)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio 2', 'discord' => 'new discord 2'])->assertOk();
+        login($this->user)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail2@example.com'])->assertOk();
         $this->assertDatabaseHas('users', [
-            'bio' => 'new bio 2',
-            'discord' => 'new discord 2',
+            'email' => 'newemail2@example.com',
         ]);
 
-        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['bio' => 'new bio', 'discord' => 'new discord'])->assertForbidden();
+        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])->assertForbidden();
     });
 });
 

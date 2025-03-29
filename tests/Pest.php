@@ -52,6 +52,9 @@ function login($user = null)
     return test()->actingAs($user ?? User::factory()->create());
 }
 
+/**
+ * @return array<string, mixed>
+ */
 function getUserJsonStructure(): array
 {
     return [
@@ -59,11 +62,32 @@ function getUserJsonStructure(): array
         'email',
         'verified',
         'admin',
-        'bio',
-        'discord',
-        'kofi',
-        'patreon',
-        'website',
+        'created',
+        'updated',
+        'links' => [
+            'url',
+            'self',
+        ],
+    ];
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function getUserWithProfileJsonStructure(): array
+{
+    return [
+        'name',
+        'email',
+        'verified',
+        'admin',
+        'profile' => [
+            'bio',
+            'discord',
+            'kofi',
+            'patreon',
+            'website',
+        ],
         'created',
         'updated',
         'links' => [

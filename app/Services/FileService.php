@@ -84,7 +84,7 @@ class FileService
 
         $url = Storage::disk('uploads')->temporaryUrl($file->name, now()->addMinutes(self::TEMP_URL_EXPIRATION), [
             'ResponseContentType' => 'application/octet-stream',
-            'ResponseContentDisposition' => 'attachment; filename="'.$file->name.'"'
+            'ResponseContentDisposition' => 'attachment; filename="'.$file->clean_name.'"'
         ]);
         return redirect($url);
     }

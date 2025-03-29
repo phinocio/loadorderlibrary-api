@@ -17,7 +17,7 @@ final class UserPolicy
     /** Determine whether the user can view the model. */
     public function view(User $user, User $model): bool
     {
-        return $user->isAdmin() || $user->id === $model->id;
+        return true;
     }
 
     /** Determine whether the user can update the model. */

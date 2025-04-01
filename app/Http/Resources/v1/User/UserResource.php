@@ -18,16 +18,13 @@ final class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isSelf = Auth::user()?->is($this->resource);
-        $isAdmin = Auth::user()?->is_admin;
-
-        $email = $isSelf ? $this->email : (bool) $this->email;
+        $email = Auth::user()?->is($this->resource) ? $this->email : (bool) $this->email;
 
         return [
             'name' => $this->name,
-            'email' => $this->when($isSelf || $isAdmin, $email),
+            'email' => $email,
             'verified' => $this->is_verified,
-            'admin' => $this->is_admin,
+            'admin' => $this->isAdmin(),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,

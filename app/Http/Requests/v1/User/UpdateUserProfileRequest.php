@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\v1\User;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
 
 /** @mixin \App\Models\User */
-class UpdateUserProfileRequest extends FormRequest
+final class UpdateUserProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {

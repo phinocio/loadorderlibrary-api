@@ -6,6 +6,7 @@ namespace App\Http\Controllers\v1\User;
 
 use App\Actions\v1\User\DeleteUser;
 use App\Actions\v1\User\UpdateUser;
+use App\Enums\v1\CacheKey;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\User\UpdateUserRequest;
 use App\Http\Resources\v1\User\UserResource;
@@ -13,6 +14,7 @@ use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 final class UserController extends ApiController
@@ -23,12 +25,18 @@ final class UserController extends ApiController
     {
         Gate::authorize('viewAny', User::class);
 
-        return UserResource::collection(User::all())->response()->setStatusCode(Response::HTTP_OK);
+        return UserResource::collection(Cache::rememberForever(
+            CacheKey::USERS->value,
+            fn () => User::all()
+        ))->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function show(string $userName): JsonResponse
     {
-        $user = User::where('name', $userName)->with('profile')->firstOrFail();
+        $user = Cache::rememberForever(
+            CacheKey::USER->with($userName),
+            fn () => User::where('name', $userName)->with('profile')->firstOrFail());
+
         Gate::authorize('view', $user);
 
         return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);

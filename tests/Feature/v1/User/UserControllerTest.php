@@ -11,53 +11,44 @@ beforeEach(function () {
 });
 
 describe('update', function () {
-    it('allows admin to update anyone', function () {
-        login($this->admin)
-            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail@example.com'])
-            ->assertOk()
-            ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
-
-        $this->assertDatabaseHas('users', [
-            'email' => 'newemail@example.com',
-        ]);
-
-        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail2@example.com'])->assertForbidden();
-    });
-
     it('allows user to update themselves', function () {
         login($this->user)
-            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail2@example.com'])
             ->assertOk()
             ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'newemail3@example.com',
+            'email' => 'newemail2@example.com',
         ]);
+    });
+
+    // Admin must use Admin routes
+    it('prevents admin from updating a user', function () {
+        login($this->admin)
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail@example.com'])
+            ->assertForbidden();
     });
 
     it('prevents a user from updating another user', function () {
-        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail4@example.com'])->assertForbidden();
+        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])->assertForbidden();
     });
 
     it('prevents a guest from updating a user', function () {
-        guest()->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail4@example.com'])->assertUnauthorized();
+        guest()->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])->assertUnauthorized();
     });
 });
 
 describe('destroy', function () {
-    it('allows admin to delete anyone', function () {
-        login($this->admin)->deleteJson("/v1/users/{$this->user->name}")->assertNoContent();
-
-        $this->assertDatabaseMissing('users', [
-            'name' => $this->user->name,
-        ]);
-    });
-
     it('allows user to delete themselves', function () {
         login($this->user)->deleteJson("/v1/users/{$this->user->name}")->assertNoContent();
         $this->assertDatabaseMissing('users', [
             'name' => $this->user->name,
         ]);
+    });
+
+    // Admin must use Admin routes
+    it('prevents admin from deleting a user', function () {
+        login($this->admin)->deleteJson("/v1/users/{$this->user->name}")->assertForbidden();
     });
 
     it('prevents a user from deleting another user', function () {

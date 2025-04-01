@@ -10,11 +10,11 @@ final class UserPolicy
 {
     public function update(User $user, User $model): bool
     {
-        return $user->isAdmin() || $user->is($model);
+        return $user->is($model);
     }
 
     public function delete(User $user, User $model): bool
     {
-        return $user->isAdmin() || $user->is($model);
+        return $user->is($model);
     }
 }

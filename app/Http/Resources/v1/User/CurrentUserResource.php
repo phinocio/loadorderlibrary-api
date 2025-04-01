@@ -6,6 +6,7 @@ namespace App\Http\Resources\v1\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 /** @mixin \App\Models\User */
 final class CurrentUserResource extends JsonResource
@@ -17,9 +18,11 @@ final class CurrentUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $email = Auth::user()->is($this->resource) ? $this->email : (bool) $this->email;
+
         return [
             'name' => $this->name,
-            'email' => $this->email,
+            'email' => $email,
             'verified' => $this->is_verified,
             'admin' => $this->isAdmin(),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),

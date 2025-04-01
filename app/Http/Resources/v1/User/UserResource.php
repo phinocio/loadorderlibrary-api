@@ -20,6 +20,7 @@ final class UserResource extends JsonResource
         return [
             'name' => $this->name,
             'verified' => $this->is_verified,
+            'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
             'links' => [

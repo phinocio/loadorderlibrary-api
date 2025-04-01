@@ -19,10 +19,12 @@ final class AdminUserController extends ApiController
 {
     public function index(): JsonResponse
     {
-        return UserResource::collection(Cache::rememberForever(
+        $users = Cache::rememberForever(
             CacheKey::USERS->value,
             fn () => User::all()
-        ))->response()->setStatusCode(Response::HTTP_OK);
+        );
+
+        return UserResource::collection($users)->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): JsonResponse

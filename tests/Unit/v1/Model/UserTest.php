@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Models\UserProfile;
 

@@ -1,20 +1,19 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace App\Actions\v1\User;
 
 use App\Models\User;
 
-class UpdateUserProfile
+final class UpdateUserProfile
 {
     /**
      * @param array{
-     *     bio?: string, 
-     *     discord?: string, 
-     *     kofi?: string, 
-     *     patreon?: string, 
+     *     bio?: string,
+     *     discord?: string,
+     *     kofi?: string,
+     *     patreon?: string,
      *     website?: string} $data
      */
     public function execute(User $user, array $data): User
@@ -24,4 +23,3 @@ class UpdateUserProfile
         return $user->load('profile');
     }
 }
-

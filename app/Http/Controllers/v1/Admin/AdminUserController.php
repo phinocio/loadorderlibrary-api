@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Cache;
 
 final class AdminUserController extends ApiController
 {
+    // No policy because this entire controller is protected by middleware
+
     public function index(): JsonResponse
     {
         $users = Cache::rememberForever(

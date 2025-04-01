@@ -10,6 +10,25 @@ beforeEach(function () {
     $this->otherUser = User::factory()->create()->fresh();
 });
 
+describe('show', function () {
+    it('allows anyone to view a user profile', function () {
+        // Unauthenticated user can view profile
+        $this->getJson("/v1/users/{$this->user->name}/profile")
+            ->assertOk()
+            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+
+        // Admin can view profile
+        login($this->admin)->getJson("/v1/users/{$this->user->name}/profile")
+            ->assertOk()
+            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+
+        // Other user can view profile
+        login($this->otherUser)->getJson("/v1/users/{$this->user->name}/profile")
+            ->assertOk()
+            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+    });
+});
+
 describe('update', function () {
     it('does not allow admin to update', function () {
         login($this->admin)->patchJson("/v1/users/{$this->user->name}/profile", [
@@ -23,8 +42,7 @@ describe('update', function () {
             'bio' => 'Test bio',
         ])
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()])
-            ->assertJsonPath('data.profile.bio', 'Test bio');
+            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Test bio',

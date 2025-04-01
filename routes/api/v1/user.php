@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('users')->group(function () {
     Route::controller(UserController::class)->middleware('auth:sanctum')->group(function () {
-        Route::get('/', 'index')->name('users.index');
-        Route::get('/{user:name}', 'show')->name('users.show');
         Route::patch('/{user:name}', 'update')->name('users.update');
         Route::delete('/{user:name}', 'destroy')->name('users.destroy');
     });

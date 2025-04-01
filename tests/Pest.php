@@ -59,9 +59,7 @@ function getUserJsonStructure(): array
 {
     return [
         'name',
-        'email',
         'verified',
-        'admin',
         'created',
         'updated',
         'links' => [
@@ -74,7 +72,7 @@ function getUserJsonStructure(): array
 /**
  * @return array<string, mixed>
  */
-function getUserWithProfileJsonStructure(): array
+function getCurrentUserJsonStructure(): array
 {
     return [
         'name',

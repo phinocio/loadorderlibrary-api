@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin \App\Models\User */
-final class UserResource extends JsonResource
+final class CurrentUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,10 @@ final class UserResource extends JsonResource
     {
         return [
             'name' => $this->name,
+            'email' => $this->email,
             'verified' => $this->is_verified,
+            'admin' => $this->isAdmin(),
+            'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
             'links' => [

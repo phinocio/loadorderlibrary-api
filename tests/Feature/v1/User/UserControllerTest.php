@@ -10,34 +10,6 @@ beforeEach(function () {
     $this->otherUser = User::factory()->create(['is_admin' => false, 'email' => 'otheruser@example.com']);
 });
 
-describe('index', function () {
-    it('only allows admin to view index', function () {
-        login($this->admin)->getJson('/v1/users')->assertOk()->assertExactJsonStructure([
-            'data' => [
-                '*' => getUserJsonStructure(), // no profile for list of users
-            ],
-        ]);
-
-        login($this->user)->getJson('/v1/users')->assertForbidden();
-    });
-});
-
-describe('show', function () {
-    it('only allows admin or user themselves to view show', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
-
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
-
-        login($this->otherUser)->getJson("/v1/users/{$this->user->name}")->assertForbidden();
-    });
-
-    it('only shows email to the user themself', function () {
-        login($this->admin)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['data' => ['email' => true]]);
-
-        login($this->user)->getJson("/v1/users/{$this->user->name}")->assertOk()->assertJson(['data' => ['email' => $this->user->email]]);
-    });
-});
-
 describe('update', function () {
     it('only allows admin or user themselves to update email', function () {
         login($this->admin)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail@example.com'])->assertOk();

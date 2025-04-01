@@ -21,7 +21,7 @@ it('logs in a user with valid credentials', function () {
         'password' => $this->password,
     ])
         ->assertOk()
-        ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()])
+        ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()])
         ->assertJsonPath('data.name', $this->user->name)
         ->assertJsonPath('data.email', $this->user->email)
         ->assertJsonPath('data.admin', $this->user->is_admin)

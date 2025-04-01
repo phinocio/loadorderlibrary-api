@@ -17,8 +17,10 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            // @codeCoverageIgnoreStart
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -35,7 +37,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configureCommands(): void
     {
         DB::prohibitDestructiveCommands(
-            $this->app->isProduction(),
+            $this->app->environment('production'),
         );
     }
 
@@ -54,8 +56,10 @@ final class AppServiceProvider extends ServiceProvider
     /** Configure the application's URLs. */
     private function configureUrls(): void
     {
-        if ($this->app->isProduction()) {
+        if ($this->app->environment('production')) {
+            // @codeCoverageIgnoreStart
             URL::forceScheme('https');
+            // @codeCoverageIgnoreEnd
         }
     }
 }

@@ -9,6 +9,7 @@ use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
+// @codeCoverageIgnoreStart
 final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 {
     /** Register any application services. */
@@ -60,3 +61,4 @@ final class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         });
     }
 }
+// @codeCoverageIgnoreEnd

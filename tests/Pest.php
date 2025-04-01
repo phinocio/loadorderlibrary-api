@@ -52,6 +52,11 @@ function login($user = null)
     return test()->actingAs($user ?? User::factory()->create());
 }
 
+function guest()
+{
+    return test()->assertGuest();
+}
+
 /**
  * @return array<string, mixed>
  */
@@ -72,6 +77,24 @@ function getUserJsonStructure(): array
 /**
  * @return array<string, mixed>
  */
+function getUserWithProfileJsonStructure(): array
+{
+    return [
+        'name',
+        'verified',
+        'profile' => getUserProfileJsonStructure(),
+        'created',
+        'updated',
+        'links' => [
+            'url',
+            'self',
+        ],
+    ];
+}
+
+/**
+ * @return array<string, mixed>
+ */
 function getCurrentUserJsonStructure(): array
 {
     return [
@@ -79,18 +102,26 @@ function getCurrentUserJsonStructure(): array
         'email',
         'verified',
         'admin',
-        'profile' => [
-            'bio',
-            'discord',
-            'kofi',
-            'patreon',
-            'website',
-        ],
+        'profile' => getUserProfileJsonStructure(),
         'created',
         'updated',
         'links' => [
             'url',
             'self',
         ],
+    ];
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function getUserProfileJsonStructure(): array
+{
+    return [
+        'bio',
+        'discord',
+        'kofi',
+        'patreon',
+        'website',
     ];
 }

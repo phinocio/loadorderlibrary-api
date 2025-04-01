@@ -13,19 +13,19 @@ beforeEach(function () {
 describe('show', function () {
     it('allows anyone to view a user profile', function () {
         // Unauthenticated user can view profile
-        $this->getJson("/v1/users/{$this->user->name}/profile")
+        guest()->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 
         // Admin can view profile
         login($this->admin)->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 
         // Other user can view profile
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
     });
 });
 
@@ -42,7 +42,7 @@ describe('update', function () {
             'bio' => 'Test bio',
         ])
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Test bio',

@@ -6,7 +6,6 @@ namespace App\Http\Requests\v1\User;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /** @mixin \App\Models\User */
 final class UpdateUserRequest extends FormRequest
@@ -31,7 +30,7 @@ final class UpdateUserRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
-                Rule::unique('users', 'email')->ignore($this->user()?->id),
+                'unique:users,email,',
             ],
         ];
     }

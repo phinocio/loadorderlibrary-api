@@ -8,7 +8,7 @@ use App\Actions\v1\User\DeleteUser;
 use App\Actions\v1\User\UpdateUser;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\User\UpdateUserRequest;
-use App\Http\Resources\v1\User\UserResource;
+use App\Http\Resources\v1\User\CurrentUserResource;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +25,7 @@ final class UserController extends ApiController
 
         $user = $updateUser->execute($user, $request->validated());
 
-        return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
+        return new CurrentUserResource($user->load('profile'))->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse
@@ -34,6 +34,6 @@ final class UserController extends ApiController
 
         $deleteUser->execute($user);
 
-        return new UserResource($user)->response()->setStatusCode(Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

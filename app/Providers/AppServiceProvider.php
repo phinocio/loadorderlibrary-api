@@ -37,7 +37,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configureCommands(): void
     {
         DB::prohibitDestructiveCommands(
-            $this->app->environment('production'),
+            (bool) $this->app->environment('production')
         );
     }
 

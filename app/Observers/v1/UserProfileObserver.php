@@ -20,6 +20,9 @@ final class UserProfileObserver
     public function updated(UserProfile $userProfile): void
     {
         Cache::forget(CacheKey::USERS->value);
+        if (! $userProfile->user) {
+            return;
+        }
         Cache::forget(CacheKey::USER->with($userProfile->user->name));
     }
 
@@ -27,6 +30,9 @@ final class UserProfileObserver
     public function deleted(UserProfile $userProfile): void
     {
         Cache::forget(CacheKey::USERS->value);
+        if (! $userProfile->user) {
+            return;
+        }
         Cache::forget(CacheKey::USER->with($userProfile->user->name));
     }
 }

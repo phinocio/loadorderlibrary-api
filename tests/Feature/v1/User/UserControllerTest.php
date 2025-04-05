@@ -28,6 +28,18 @@ describe('update', function () {
         $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
     });
 
+    it('allows user to remove their email', function () {
+        login($this->user)
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => null])
+            ->assertOk()
+            ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => $this->user->name,
+            'email' => null,
+        ]);
+    });
+
     // Admin must use Admin routes
     it('prevents admin from updating a user', function () {
         login($this->admin)

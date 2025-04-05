@@ -35,13 +35,13 @@ final class AdminUserController extends ApiController
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 
-        return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
+        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse
     {
         $deleteUser->execute($user);
 
-        return new UserResource($user)->response()->setStatusCode(Response::HTTP_NO_CONTENT);
+        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 }

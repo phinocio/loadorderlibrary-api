@@ -27,7 +27,7 @@ final class UserController extends ApiController
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 
-        return new CurrentUserResource($user->load('profile'))->response()->setStatusCode(Response::HTTP_OK);
+        return (new CurrentUserResource($user->load('profile')))->response()->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse

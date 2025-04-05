@@ -17,7 +17,7 @@ final class LoginController
         if (Auth::attempt($request->validated())) {
             session()->regenerate();
 
-            return new CurrentUserResource(Auth::user()?->load('profile'))->response()->setStatusCode(Response::HTTP_OK);
+            return (new CurrentUserResource(Auth::user()?->load('profile')))->response()->setStatusCode(Response::HTTP_OK);
         }
 
         return response()->json(['message' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);

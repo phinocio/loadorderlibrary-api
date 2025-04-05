@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read string|null $kofi
  * @property-read string|null $patreon
  * @property-read string|null $website
- * @property-read CarbonInterface|null $created_at
- * @property-read CarbonInterface|null $updated_at
+ * @property-read CarbonInterface $created_at
+ * @property-read CarbonInterface $updated_at
  * @property-read User $user
  */
 #[ObservedBy(UserProfileObserver::class)]

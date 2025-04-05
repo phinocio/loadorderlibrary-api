@@ -22,11 +22,4 @@ final class UserProfileObserver
         Cache::forget(CacheKey::USERS->value);
         Cache::forget(CacheKey::USER->with($userProfile->user->name));
     }
-
-    /** Handle the UserProfile "deleted" event. */
-    public function deleted(UserProfile $userProfile): void
-    {
-        Cache::forget(CacheKey::USERS->value);
-        Cache::forget(CacheKey::USER->with($userProfile->user->name));
-    }
 }

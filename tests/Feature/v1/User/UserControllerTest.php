@@ -13,13 +13,19 @@ beforeEach(function () {
 describe('update', function () {
     it('allows user to update themselves', function () {
         login($this->user)
-            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail2@example.com'])
+            ->patchJson("/v1/users/{$this->user->name}", [
+                'email' => 'newemail2@example.com',
+                'password' => 'newpassword',
+                'password_confirmation' => 'newpassword',
+            ])
             ->assertOk()
             ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
 
         $this->assertDatabaseHas('users', [
             'email' => 'newemail2@example.com',
         ]);
+
+        $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
     });
 
     // Admin must use Admin routes
@@ -30,11 +36,33 @@ describe('update', function () {
     });
 
     it('prevents a user from updating another user', function () {
-        login($this->otherUser)->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])->assertForbidden();
+        login($this->otherUser)
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])
+            ->assertForbidden();
     });
 
     it('prevents a guest from updating a user', function () {
-        guest()->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])->assertUnauthorized();
+        guest()
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'newemail3@example.com'])
+            ->assertUnauthorized();
+    });
+
+    it('validates password confirmation when updating password', function () {
+        login($this->user)
+            ->patchJson("/v1/users/{$this->user->name}", [
+                'email' => 'newemail4@example.com',
+                'password' => 'newpassword',
+                'password_confirmation' => 'wrongconfirmation',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['password']);
+    });
+
+    it('prevents updating with invalid email format', function () {
+        login($this->user)
+            ->patchJson("/v1/users/{$this->user->name}", ['email' => 'invalid-email'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email']);
     });
 });
 

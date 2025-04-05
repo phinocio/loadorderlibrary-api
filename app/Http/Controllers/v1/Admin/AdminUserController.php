@@ -31,7 +31,9 @@ final class AdminUserController extends ApiController
 
     public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): JsonResponse
     {
-        $user = $updateUser->execute($user, $request->validated());
+        /** @var array<int, array{email?: string|null, password?: string}> $data */
+        $data = $request->validated();
+        $user = $updateUser->execute($user, $data);
 
         return new UserResource($user)->response()->setStatusCode(Response::HTTP_OK);
     }

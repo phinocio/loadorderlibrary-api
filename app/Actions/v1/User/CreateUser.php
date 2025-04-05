@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Hash;
 
 final class CreateUser
 {
-    /** @param  array<string, mixed>  $data */
+    /** @param  array{
+     * name: string,
+     * password: string
+     * }  $data
+     */
     public function execute(array $data): User
     {
-        $user = User::create([
+        $user = User::query()->create([
             'name' => $data['name'],
-            'email' => $data['email'] ?? null,
             'password' => Hash::make($data['password']),
         ]);
 

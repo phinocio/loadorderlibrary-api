@@ -19,7 +19,9 @@ final class RegisterController
 
     public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $user = $this->createUser->execute($request->validated());
+        /** @var array{name: string, password: string} $data */
+        $data = $request->validated();
+        $user = $this->createUser->execute($data);
 
         Auth::login($user);
 

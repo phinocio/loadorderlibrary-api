@@ -29,19 +29,19 @@ final class LoadOrder extends Model
         'expires_at',
     ];
 
-    /** @return BelongsTo<User, LoadOrder> */
+    /** @return BelongsTo<User, $this> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /** @return BelongsTo<Game, LoadOrder> */
+    /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
     }
 
-    /** @return BelongsToMany<File, LoadOrder> */
+    /** @return BelongsToMany<File, $this> */
     public function files(): BelongsToMany
     {
         return $this->belongsToMany(File::class)->withTimestamps();

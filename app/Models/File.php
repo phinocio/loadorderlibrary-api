@@ -16,7 +16,7 @@ final class File extends Model
         'size_in_bytes',
     ];
 
-    /** @return BelongsToMany<LoadOrder, File> */
+    /** @return BelongsToMany<LoadOrder, $this> */
     public function lists(): BelongsToMany
     {
         return $this->belongsToMany(LoadOrder::class)->withTimestamps();

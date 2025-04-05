@@ -15,7 +15,7 @@ final class Game extends Model
     /** @var list<string> */
     protected $fillable = ['name', 'slug'];
 
-    /** @return HasMany<LoadOrder, Game> */
+    /** @return HasMany<LoadOrder, $this> */
     public function lists(): HasMany
     {
         return $this->hasMany(LoadOrder::class);

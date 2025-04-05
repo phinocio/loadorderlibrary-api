@@ -32,6 +32,12 @@ final class UpdateUserRequest extends FormRequest
                 'max:255',
                 'unique:users,email,',
             ],
+            'password' => [
+                'sometimes',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ];
     }
 }

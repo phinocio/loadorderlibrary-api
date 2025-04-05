@@ -18,7 +18,7 @@ final class CurrentUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $email = Auth::user()->is($this->resource) ? $this->email : (bool) $this->email;
+        $email = Auth::user()?->is($this->resource) ? $this->email : (bool) $this->email;
 
         return [
             'name' => $this->name,

@@ -13,6 +13,6 @@ final class CurrentUserController
 {
     public function __invoke(): JsonResponse
     {
-        return new CurrentUserResource(Auth::user()?->load('profile'))->response()->setStatusCode(Response::HTTP_OK);
+        return (new CurrentUserResource(Auth::user()?->load('profile')))->response()->setStatusCode(Response::HTTP_OK);
     }
 }

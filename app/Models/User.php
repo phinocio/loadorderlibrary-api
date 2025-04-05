@@ -36,7 +36,7 @@ final class User extends Authenticatable
         return (bool) $this->is_admin;
     }
 
-    /** @return HasOne<UserProfile, User> */
+    /** @return HasOne<UserProfile, $this> */
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);

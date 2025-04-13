@@ -56,10 +56,6 @@ final class AppServiceProvider extends ServiceProvider
     /** Configure the application's URLs. */
     private function configureUrls(): void
     {
-        if ($this->app->environment('production')) {
-            // @codeCoverageIgnoreStart
-            URL::forceScheme('https');
-            // @codeCoverageIgnoreEnd
-        }
+        URL::forceScheme('https');
     }
 }

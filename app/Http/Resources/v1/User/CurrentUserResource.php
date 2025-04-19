@@ -32,10 +32,6 @@ final class CurrentUserResource extends JsonResource
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
-            'links' => [
-                'url' => route('users.profile.show', $this->name, false),
-                'self' => route('users.profile.show', $this->name),
-            ],
         ];
     }
 }

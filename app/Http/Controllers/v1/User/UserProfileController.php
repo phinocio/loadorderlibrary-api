@@ -8,6 +8,7 @@ use App\Actions\v1\User\UpdateUserProfile;
 use App\Enums\v1\CacheKey;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\User\UpdateUserProfileRequest;
+use App\Http\Resources\v1\User\CurrentUserResource;
 use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use App\Policies\v1\UserProfilePolicy;
@@ -40,6 +41,6 @@ final class UserProfileController extends ApiController
         $data = $request->validated();
         $updateUserProfile->execute($user, $data);
 
-        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_OK);
+        return (new CurrentUserResource($user))->response()->setStatusCode(Response::HTTP_OK);
     }
 }

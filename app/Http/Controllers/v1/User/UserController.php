@@ -35,6 +35,8 @@ final class UserController extends ApiController
         Gate::authorize('delete', $user);
 
         $deleteUser->execute($user);
+        session()->invalidate();
+        session()->regenerateToken();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }

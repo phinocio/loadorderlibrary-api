@@ -6,6 +6,7 @@ namespace App\Http\Requests\v1\User;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /** @mixin \App\Models\User */
 final class UpdateUserRequest extends FormRequest
@@ -30,7 +31,8 @@ final class UpdateUserRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
-                'unique:users,email,',
+                // @phpstan-ignore property.nonObject
+                Rule::unique('users')->ignore($this->user()->id),
             ],
             'password' => [
                 'sometimes',

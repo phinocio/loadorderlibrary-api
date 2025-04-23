@@ -105,10 +105,6 @@ function getCurrentUserJsonStructure(): array
         'profile' => getUserProfileJsonStructure(),
         'created',
         'updated',
-        'links' => [
-            'url',
-            'self',
-        ],
     ];
 }
 

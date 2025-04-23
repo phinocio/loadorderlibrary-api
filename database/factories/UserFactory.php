@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,9 +26,9 @@ final class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->unique()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'email_verified_at' => null,
             'is_verified' => fake()->boolean(10),
             'is_admin' => false,
             'password' => self::$password ??= Hash::make('password'),
@@ -36,10 +37,10 @@ final class UserFactory extends Factory
     }
 
     /** Indicate that the model's email address should be unverified. */
-    public function unverified(): static
+    public function emailVerified(): static
     {
         return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
+            'email_verified_at' => now(),
         ]);
     }
 
@@ -51,13 +52,10 @@ final class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->profile()->create([
-                'bio' => $this->faker->paragraph(),
-                'discord' => $this->faker->url(),
-                'patreon' => $this->faker->url(),
-                'kofi' => $this->faker->url(),
-                'website' => $this->faker->url(),
-            ]);
+            UserProfile::factory()
+                ->create([
+                    'user_id' => $user->id,
+                ]);
         });
     }
 }

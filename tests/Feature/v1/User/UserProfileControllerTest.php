@@ -42,7 +42,7 @@ describe('update', function () {
             'bio' => 'Test bio',
         ])
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Test bio',

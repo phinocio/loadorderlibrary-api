@@ -18,8 +18,8 @@ final class DatabaseSeeder extends Seeder
         if (! app()->isProduction() && ! app()->environment('testing')) {
             $this->call([
                 UserSeeder::class,
-                FileSeeder::class,
-                LoadOrderSeeder::class,
+                // FileSeeder::class,
+                // LoadOrderSeeder::class,
             ]);
         }
     }

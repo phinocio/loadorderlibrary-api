@@ -15,11 +15,11 @@ final class UserProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'bio' => $this->faker->text(100),
-            'discord' => $this->faker->text(100),
-            'kofi' => $this->faker->text(100),
-            'patreon' => $this->faker->text(100),
-            'website' => $this->faker->text(100),
+            'bio' => fake()->optional()->text(),
+            'discord' => fake()->optional()->url(),
+            'kofi' => fake()->optional()->url(),
+            'patreon' => fake()->optional()->url(),
+            'website' => fake()->optional()->url(),
         ];
     }
 }

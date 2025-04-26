@@ -6,9 +6,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 beforeEach(function () {
-    $this->admin = User::factory()->create(['is_admin' => true]);
-    $this->user = User::factory()->create(['is_admin' => false, 'email' => 'user@example.com']);
-    $this->otherUser = User::factory()->create(['is_admin' => false, 'email' => 'otheruser@example.com']);
+    $this->password = 'password';
+
+    $this->admin = User::factory()->create(['is_admin' => true, 'password' => Hash::make($this->password)]);
+    $this->user = User::factory()->create(['is_admin' => false, 'email' => 'user@example.com', 'password' => Hash::make($this->password)]);
+    $this->otherUser = User::factory()->create(['is_admin' => false, 'email' => 'otheruser@example.com', 'password' => Hash::make($this->password)]);
 });
 
 describe('update', function () {
@@ -16,8 +18,6 @@ describe('update', function () {
         login($this->user)
             ->patchJson("/v1/users/{$this->user->name}", [
                 'email' => 'newemail2@example.com',
-                'password' => 'newpassword',
-                'password_confirmation' => 'newpassword',
             ])
             ->assertOk()
             ->assertExactJsonStructure(['data' => getCurrentUserJsonStructure()]);
@@ -25,8 +25,6 @@ describe('update', function () {
         $this->assertDatabaseHas('users', [
             'email' => 'newemail2@example.com',
         ]);
-
-        $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
     });
 
     it('allows user to remove their email', function () {
@@ -60,10 +58,21 @@ describe('update', function () {
             ->assertUnauthorized();
     });
 
+    it('allows user to update their password', function () {
+        login($this->user)
+            ->patchJson("/v1/users/{$this->user->name}/password", [
+                'current_password' => $this->password,
+                'password' => 'newpassword',
+                'password_confirmation' => 'newpassword',
+            ])
+            ->assertNoContent();
+
+        $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
+    });
+
     it('validates password confirmation when updating password', function () {
         login($this->user)
-            ->patchJson("/v1/users/{$this->user->name}", [
-                'email' => 'newemail4@example.com',
+            ->patchJson("/v1/users/{$this->user->name}/password", [
                 'password' => 'newpassword',
                 'password_confirmation' => 'wrongconfirmation',
             ])

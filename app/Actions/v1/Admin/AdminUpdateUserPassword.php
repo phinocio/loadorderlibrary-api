@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\v1\User;
+namespace App\Actions\v1\Admin;
 
 use App\Models\User;
 
-final class UpdateUser
+final class AdminUpdateUserPassword
 {
     /**
      * @param array{
-     *     email?: string|null,
-     *     password?: string,
+     *     password: string,
      * } $data
      */
     public function execute(User $user, array $data): User

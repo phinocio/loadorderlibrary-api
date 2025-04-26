@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 final class LoginController
 {
-    public function __invoke(LoginRequest $request): JsonResponse
+    public function __invoke(LoginRequest $request): CurrentUserResource|JsonResponse
     {
         if (Auth::attempt($request->validated())) {
             session()->regenerate();
 
-            return (new CurrentUserResource(Auth::user()?->load('profile')))->response()->setStatusCode(Response::HTTP_OK);
+            return new CurrentUserResource(Auth::user()?->load('profile'));
         }
 
         return response()->json(['message' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);

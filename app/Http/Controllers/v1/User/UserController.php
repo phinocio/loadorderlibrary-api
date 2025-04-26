@@ -23,11 +23,8 @@ final class UserController extends ApiController
     {
         Gate::authorize('update', $user);
 
-        /** @var array{email?: string|null, current_password?: string, password?: string} $data */
+        /** @var array{email?: string|null} $data */
         $data = $request->validated();
-        if (isset($data['current_password'])) {
-            unset($data['current_password']);
-        }
         $user = $updateUser->execute($user, $data);
 
         return (new CurrentUserResource($user->load('profile')))->response()->setStatusCode(Response::HTTP_OK);

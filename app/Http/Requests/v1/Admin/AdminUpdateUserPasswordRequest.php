@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\v1\User;
+namespace App\Http\Requests\v1\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-/** @mixin \App\Models\User */
-final class UpdateUserRequest extends FormRequest
+final class AdminUpdateUserPasswordRequest extends FormRequest
 {
     /** Determine if the user is authorized to make this request. */
     public function authorize(): bool
@@ -25,14 +23,11 @@ final class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => [
-                'sometimes',
-                'present',
-                'nullable',
-                'email',
-                'max:255',
-                // @phpstan-ignore property.nonObject
-                Rule::unique('users')->ignore($this->user()->id),
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
             ],
         ];
     }

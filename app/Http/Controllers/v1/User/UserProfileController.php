@@ -12,8 +12,6 @@ use App\Http\Resources\v1\User\CurrentUserResource;
 use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use App\Policies\v1\UserProfilePolicy;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
@@ -21,7 +19,7 @@ final class UserProfileController extends ApiController
 {
     protected string $policyClass = UserProfilePolicy::class;
 
-    public function show(string $userName): JsonResponse
+    public function show(string $userName): UserResource
     {
         $user = Cache::rememberForever(
             CacheKey::USER->with($userName),
@@ -30,10 +28,10 @@ final class UserProfileController extends ApiController
 
         Gate::authorize('view', $user);
 
-        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_OK);
+        return new UserResource($user);
     }
 
-    public function update(UpdateUserProfileRequest $request, User $user, UpdateUserProfile $updateUserProfile): JsonResponse
+    public function update(UpdateUserProfileRequest $request, User $user, UpdateUserProfile $updateUserProfile): CurrentUserResource
     {
         Gate::authorize('update', $user);
 
@@ -41,6 +39,6 @@ final class UserProfileController extends ApiController
         $data = $request->validated();
         $updateUserProfile->execute($user, $data);
 
-        return (new CurrentUserResource($user))->response()->setStatusCode(Response::HTTP_OK);
+        return new CurrentUserResource($user);
     }
 }

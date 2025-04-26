@@ -12,6 +12,7 @@ use App\Http\Requests\v1\User\UpdateUserRequest;
 use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,29 +20,29 @@ final class AdminUserController extends ApiController
 {
     // No policy because this entire controller is protected by middleware
 
-    public function index(): JsonResponse
+    public function index(): AnonymousResourceCollection
     {
         $users = Cache::rememberForever(
             CacheKey::USERS->value,
             fn () => User::all()
         );
 
-        return UserResource::collection($users)->response()->setStatusCode(Response::HTTP_OK);
+        return UserResource::collection($users);
     }
 
-    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): JsonResponse
+    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): UserResource
     {
         /** @var array<int, array{email?: string|null, password?: string}> $data */
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 
-        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_OK);
+        return new UserResource($user);
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse
     {
         $deleteUser->execute($user);
 
-        return (new UserResource($user))->response()->setStatusCode(Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

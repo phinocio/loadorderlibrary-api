@@ -29,7 +29,7 @@ describe('index', function () {
 });
 
 describe('update', function () {
-    it('allows admin to update user email', function () {
+    it('allows admin to update user basic info', function () {
         login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}", ['email' => 'newemail@example.com'])->assertOk();
         $this->assertDatabaseHas('users', [
             'email' => 'newemail@example.com',
@@ -37,10 +37,10 @@ describe('update', function () {
     });
 
     it('allows admin to update user password', function () {
-        login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}", [
+        login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}/password", [
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',
-        ])->assertOk();
+        ])->assertNoContent();
 
         $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
     });

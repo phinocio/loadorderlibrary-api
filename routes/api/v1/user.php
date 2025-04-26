@@ -7,7 +7,7 @@ use App\Http\Controllers\v1\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('users')->group(function () {
-    Route::controller(UserController::class)->middleware('auth:sanctum')->group(function () {
+    Route::controller(UserController::class)->middleware('auth')->group(function () {
         Route::patch('/{user:name}', 'update')->name('users.update');
         Route::delete('/{user:name}', 'destroy')->name('users.destroy');
     });
@@ -15,7 +15,7 @@ Route::prefix('users')->group(function () {
     Route::controller(UserProfileController::class)->group(function () {
         Route::get('/{user:name}/profile', 'show')->name('users.profile.show');
 
-        Route::middleware('auth:sanctum')->group(function () {
+        Route::middleware('auth')->group(function () {
             Route::patch('/{user:name}/profile', 'update')->name('users.profile.update');
         });
     });

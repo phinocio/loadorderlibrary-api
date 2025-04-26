@@ -11,6 +11,9 @@ enum CacheKey: string
 
     public function with(string ...$keys): string
     {
-        return implode(':', array_merge([$this->value], $keys));
+        return implode(':', array_map(
+            fn (string $key) => mb_strtolower($key),
+            array_merge([$this->value], $keys)
+        ));
     }
 }

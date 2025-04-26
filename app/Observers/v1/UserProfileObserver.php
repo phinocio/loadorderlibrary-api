@@ -14,10 +14,18 @@ final class UserProfileObserver
     public function created(UserProfile $userProfile): void
     {
         Cache::forget(CacheKey::USERS->value);
+        Cache::forget(CacheKey::USER->with($userProfile->user->name));
     }
 
     /** Handle the UserProfile "updated" event. */
     public function updated(UserProfile $userProfile): void
+    {
+        Cache::forget(CacheKey::USERS->value);
+        Cache::forget(CacheKey::USER->with($userProfile->user->name));
+    }
+
+    /** Handle the UserProfile "deleted" event. */
+    public function deleted(UserProfile $userProfile): void
     {
         Cache::forget(CacheKey::USERS->value);
         Cache::forget(CacheKey::USER->with($userProfile->user->name));

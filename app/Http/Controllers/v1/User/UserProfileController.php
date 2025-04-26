@@ -19,11 +19,11 @@ final class UserProfileController extends ApiController
 {
     protected string $policyClass = UserProfilePolicy::class;
 
-    public function show(string $userName): UserResource
+    public function show(string $name): UserResource
     {
         $user = Cache::rememberForever(
-            CacheKey::USER->with($userName),
-            fn () => User::query()->where('name', $userName)->with('profile')->firstOrFail()
+            CacheKey::USER->with($name),
+            fn () => User::query()->where('name', $name)->with('profile')->firstOrFail()
         );
 
         Gate::authorize('view', $user);

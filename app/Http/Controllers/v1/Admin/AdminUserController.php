@@ -30,6 +30,16 @@ final class AdminUserController extends ApiController
         return UserResource::collection($users);
     }
 
+    public function show(string $username): UserResource
+    {
+        $user = Cache::rememberForever(
+            CacheKey::USER->with($username),
+            fn () => User::query()->where('name', $username)->with('profile')->firstOrFail()
+        );
+
+        return new UserResource($user);
+    }
+
     public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): UserResource
     {
         /** @var array<int, array{email?: string|null, password?: string}> $data */

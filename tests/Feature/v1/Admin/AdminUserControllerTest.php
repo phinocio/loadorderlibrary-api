@@ -30,9 +30,10 @@ describe('index', function () {
 
 describe('update', function () {
     it('allows admin to update user basic info', function () {
-        login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}", ['email' => 'newemail@example.com'])->assertOk();
+        login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}", ['email' => 'newemail@example.com', 'is_verified' => true])->assertOk();
         $this->assertDatabaseHas('users', [
             'email' => 'newemail@example.com',
+            'is_verified' => true,
         ]);
     });
 

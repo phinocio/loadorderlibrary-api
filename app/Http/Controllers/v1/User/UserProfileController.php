@@ -38,6 +38,7 @@ final class UserProfileController extends ApiController
         /** @var array<int, array{bio?: string, discord?: string, kofi?: string, patreon?: string, website?: string}> $data */
         $data = $request->validated();
         $updateUserProfile->execute($user, $data);
+        $user->touch('updated_at');
 
         return new CurrentUserResource($user);
     }

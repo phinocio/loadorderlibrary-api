@@ -8,7 +8,7 @@ use App\Actions\v1\User\DeleteUser;
 use App\Actions\v1\User\UpdateUser;
 use App\Enums\v1\CacheKey;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\v1\User\UpdateUserRequest;
+use App\Http\Requests\v1\Admin\AdminUpdateUserRequest;
 use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -40,9 +40,9 @@ final class AdminUserController extends ApiController
         return new UserResource($user);
     }
 
-    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): UserResource
+    public function update(AdminUpdateUserRequest $request, User $user, UpdateUser $updateUser): UserResource
     {
-        /** @var array<int, array{email?: string|null, password?: string}> $data */
+        /** @var array<int, array{email?: string|null, verified?: bool}> $data */
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 

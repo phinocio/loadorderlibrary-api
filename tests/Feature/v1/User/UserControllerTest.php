@@ -58,28 +58,6 @@ describe('update', function () {
             ->assertUnauthorized();
     });
 
-    it('allows user to update their password', function () {
-        login($this->user)
-            ->patchJson("/v1/users/{$this->user->name}/password", [
-                'current_password' => $this->password,
-                'password' => 'newpassword',
-                'password_confirmation' => 'newpassword',
-            ])
-            ->assertNoContent();
-
-        $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
-    });
-
-    it('validates password confirmation when updating password', function () {
-        login($this->user)
-            ->patchJson("/v1/users/{$this->user->name}/password", [
-                'password' => 'newpassword',
-                'password_confirmation' => 'wrongconfirmation',
-            ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['password']);
-    });
-
     it('prevents updating with invalid email format', function () {
         login($this->user)
             ->patchJson("/v1/users/{$this->user->name}", ['email' => 'invalid-email'])

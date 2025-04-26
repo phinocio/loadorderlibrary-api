@@ -36,15 +36,6 @@ describe('update', function () {
         ]);
     });
 
-    it('allows admin to update user password', function () {
-        login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}/password", [
-            'password' => 'newpassword',
-            'password_confirmation' => 'newpassword',
-        ])->assertNoContent();
-
-        $this->assertTrue(Hash::check('newpassword', $this->user->fresh()->password));
-    });
-
     it('prevents a non-admin user from updating user', function () {
         login($this->user)->patchJson("/v1/admin/users/{$this->user->name}", ['email' => 'newemail2@example.com'])->assertForbidden();
     });

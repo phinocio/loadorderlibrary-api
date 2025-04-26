@@ -34,6 +34,11 @@ final class UpdateUserRequest extends FormRequest
                 // @phpstan-ignore property.nonObject
                 Rule::unique('users')->ignore($this->user()->id),
             ],
+            'current_password' => [
+                'required_with:password',
+                'string',
+                'current_password:web',
+            ],
             'password' => [
                 'sometimes',
                 'string',

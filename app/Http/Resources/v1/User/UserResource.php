@@ -17,9 +17,12 @@ final class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $isAdminRoute = $request->routeIs('admin.*');
+
         return [
             'name' => $this->name,
             'verified' => $this->is_verified,
+            'admin' => $this->when($isAdminRoute, fn () => $this->isAdmin()),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,

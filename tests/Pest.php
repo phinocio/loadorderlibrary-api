@@ -67,10 +67,6 @@ function getUserJsonStructure(): array
         'verified',
         'created',
         'updated',
-        'links' => [
-            'url',
-            'self',
-        ],
     ];
 }
 
@@ -85,10 +81,6 @@ function getUserWithProfileJsonStructure(): array
         'profile' => getUserProfileJsonStructure(),
         'created',
         'updated',
-        'links' => [
-            'url',
-            'self',
-        ],
     ];
 }
 

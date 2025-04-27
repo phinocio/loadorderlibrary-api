@@ -32,7 +32,7 @@ final class AdminUpdateUserRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
-                // @phpstan-ignore property.nonObject
+                // @phpstan-ignore property.notFound
                 Rule::unique('users')->ignore($this->route('user')->id),
             ],
             'is_verified' => [

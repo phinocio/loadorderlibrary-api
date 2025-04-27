@@ -6,7 +6,9 @@ namespace App\Http\Requests\v1\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
+/** @mixin \App\Models\User */
 final class AdminUpdateUserRequest extends FormRequest
 {
     /** Determine if the user is authorized to make this request. */
@@ -30,6 +32,8 @@ final class AdminUpdateUserRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
+                // @phpstan-ignore property.nonObject
+                Rule::unique('users')->ignore($this->route('user')->id),
             ],
             'is_verified' => [
                 'sometimes',

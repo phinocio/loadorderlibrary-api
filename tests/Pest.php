@@ -65,6 +65,7 @@ function getUserJsonStructure(): array
     return [
         'name',
         'verified',
+        'admin',
         'created',
         'updated',
     ];

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\v1\Auth;
 
 use App\Http\Requests\v1\Auth\ForgotPasswordRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Password;
 

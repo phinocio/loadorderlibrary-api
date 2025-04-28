@@ -28,6 +28,35 @@ describe('index', function () {
     });
 });
 
+describe('show', function () {
+    it('allows admin to view user details', function () {
+        login($this->admin)
+            ->getJson("/v1/admin/users/{$this->user->name}")
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => getUserWithProfileJsonStructure(),
+            ]);
+    });
+
+    it('prevents a non-admin user from viewing user details', function () {
+        login($this->user)
+            ->getJson("/v1/admin/users/{$this->otherUser->name}")
+            ->assertForbidden();
+    });
+
+    it('prevents a guest from viewing user details', function () {
+        guest()
+            ->getJson("/v1/admin/users/{$this->user->name}")
+            ->assertUnauthorized();
+    });
+
+    it('returns 404 when user does not exist', function () {
+        login($this->admin)
+            ->getJson('/v1/admin/users/nonexistent')
+            ->assertNotFound();
+    });
+});
+
 describe('update', function () {
     it('allows admin to update user basic info', function () {
         login($this->admin)->patchJson("/v1/admin/users/{$this->user->name}", ['email' => 'newemail@example.com', 'is_verified' => true])->assertOk();

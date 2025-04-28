@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Middleware\DenyAuthenticated;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -32,4 +33,6 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
+    })->withSchedule(function (Schedule $schedule) {
+        $schedule->command('auth:clear-resets')->everyFifteenMinutes();
     })->create();

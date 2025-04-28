@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -57,5 +59,17 @@ final class AppServiceProvider extends ServiceProvider
     private function configureUrls(): void
     {
         URL::forceScheme('https');
+
+        ResetPassword::createUrlUsing(
+            function (mixed $user, string $token): string {
+                /**
+                 * @var User $user
+                 * @var string $frontendUrl
+                 */
+                $frontendUrl = config('app.frontend_url');
+
+                return "{$frontendUrl}/reset-password?token={$token}&email={$user->getEmailForPasswordReset()}";
+            }
+        );
     }
 }

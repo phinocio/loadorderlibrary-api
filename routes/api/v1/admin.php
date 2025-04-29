@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\v1\Admin\AdminGameController;
 use App\Http\Controllers\v1\Admin\AdminUserController;
 use App\Http\Controllers\v1\Admin\AdminUserPasswordController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
         Route::controller(AdminUserPasswordController::class)->group(function () {
             Route::patch('/{user:name}/password', 'update')->name('admin.users.password.update');
+        });
+    });
+
+    Route::prefix('games')->group(function () {
+        Route::controller(AdminGameController::class)->group(function () {
+            Route::post('/', 'store')->name('admin.games.store');
         });
     });
 });

@@ -16,7 +16,7 @@ final class GameController
     {
         $games = Cache::rememberForever(
             CacheKey::GAMES->with(),
-            fn () => Game::all()
+            fn () => Game::orderBy('name')->get()
         );
 
         return GameResource::collection($games);

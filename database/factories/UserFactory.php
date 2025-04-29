@@ -49,13 +49,13 @@ final class UserFactory extends Factory
      *
      * @return $this
      */
-    // public function configure(): static
-    // {
-    //     return $this->afterCreating(function (User $user) {
-    //         UserProfile::factory()
-    //             ->create([
-    //                 'user_id' => $user->id,
-    //             ]);
-    //     });
-    // }
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            UserProfile::factory()
+                ->create([
+                    'user_id' => $user->id,
+                ]);
+        });
+    }
 }

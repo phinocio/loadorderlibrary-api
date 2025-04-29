@@ -8,6 +8,8 @@ enum CacheKey: string
 {
     case USER = 'user';
     case USERS = 'users';
+    case GAME = 'game';
+    case GAMES = 'games';
 
     public function with(string ...$keys): string
     {

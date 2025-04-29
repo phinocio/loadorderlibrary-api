@@ -10,7 +10,9 @@ use App\Models\UserProfile;
 use Illuminate\Support\Facades\Cache;
 
 beforeEach(function () {
-    $this->user = User::factory()->create();
+    $this->user = User::factory()->create([
+        'name' => 'TestUser',
+    ]);
     $this->profile = UserProfile::factory()->create([
         'user_id' => $this->user->id,
     ]);
@@ -59,11 +61,6 @@ it('clears cache when profile is deleted', function () {
 });
 
 it('clears cache when profile is updated regardless of case sensitivity', function () {
-    // Create a user with mixed-case name
-    $user = User::factory()->create(['name' => 'TestUser']);
-    $profile = UserProfile::factory()->create([
-        'user_id' => $user->id,
-    ]);
 
     // Set up cache values with different cases
     Cache::put(CacheKey::USER->with('testuser'), 'test-user-lower');
@@ -71,8 +68,8 @@ it('clears cache when profile is updated regardless of case sensitivity', functi
     Cache::put(CacheKey::USER->with('TestUser'), 'test-user-mixed');
 
     // Update the profile
-    $profile->bio = 'Updated bio';
-    $profile->save();
+    $this->profile->bio = 'Updated bio';
+    $this->profile->save();
 
     // Assert cache was cleared for all case variations
     expect(Cache::has(CacheKey::USER->with('testuser')))->toBeFalse()

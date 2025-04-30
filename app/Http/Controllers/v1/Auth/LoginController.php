@@ -14,7 +14,11 @@ final class LoginController
 {
     public function __invoke(LoginRequest $request): CurrentUserResource|JsonResponse
     {
-        if (Auth::attempt($request->validated())) {
+        $data = $request->validated();
+        if (Auth::attempt([
+            'name' => $data['name'],
+            'password' => $data['password'],
+        ], (bool) ($data['remember'] ?? false))) {
             session()->regenerate();
 
             return new CurrentUserResource(Auth::user()?->load('profile'));

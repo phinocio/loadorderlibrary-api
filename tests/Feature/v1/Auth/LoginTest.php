@@ -47,3 +47,17 @@ it('returns a 403 status code when the user is already logged in', function () {
         'message' => 'You cannot access this route while logged in.',
     ]);
 });
+
+it('remembers the user when remember me is enabled', function () {
+    $response = $this->postJson('/v1/login', [
+        'name' => $this->name,
+        'password' => $this->password,
+        'remember' => true,
+    ])->assertOk();
+
+    $this->assertAuthenticatedAs($this->user);
+
+    // Check that the remember me cookie starts with remember_web_
+    $cookies = $response->headers->getCookies();
+    $this->assertTrue(collect($cookies)->contains(fn ($cookie) => str_starts_with($cookie->getName(), 'remember_web_')));
+});

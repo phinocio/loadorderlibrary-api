@@ -11,8 +11,8 @@
     "require": {
         "php": "^8.2",
         "cviebrock/eloquent-sluggable": "^12.0",
-        "laravel/framework": "^12.10.2",
-        "laravel/sanctum": "^4.1.0",
+        "laravel/framework": "^12.11.0",
+        "laravel/sanctum": "^4.1.1",
         "laravel/tinker": "^2.10.1",
         "resend/resend-laravel": "^0.17.0"
     },
@@ -22,7 +22,7 @@
         "larastan/larastan": "^3.4.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.22.0",
-        "laravel/sail": "^1.41.1",
+        "laravel/sail": "^1.42.0",
         "laravel/telescope": "^5.7",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.8",

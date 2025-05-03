@@ -15,7 +15,7 @@ final class GameController
     public function index(): AnonymousResourceCollection
     {
         $games = Cache::rememberForever(
-            CacheKey::GAMES->with(),
+            CacheKey::GAMES->value,
             fn () => Game::orderBy('name')->get()
         );
 

@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.2",
         "cviebrock/eloquent-sluggable": "^12.0",
-        "laravel/framework": "^12.11.0",
+        "laravel/framework": "^12.12.0",
         "laravel/sanctum": "^4.1.1",
         "laravel/tinker": "^2.10.1",
         "resend/resend-laravel": "^0.17.0"

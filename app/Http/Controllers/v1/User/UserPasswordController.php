@@ -9,10 +9,10 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\User\UpdateUserPasswordRequest;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
-use Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 final class UserPasswordController extends ApiController
 {
@@ -27,7 +27,7 @@ final class UserPasswordController extends ApiController
         $user = $updateUser->execute($user, $data);
 
         // Re-authenticate the user after password change
-        Auth::login($user);
+        Auth::login($user, Auth::viaRemember());
         session()->regenerateToken();
         session()->regenerate();
 

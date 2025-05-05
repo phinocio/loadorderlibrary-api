@@ -30,7 +30,7 @@ final class ResetPasswordController extends ApiController
                 ])->setRememberToken(Str::random(60));
                 $user->save();
 
-                Auth::login($user);
+                Auth::login($user, Auth::viaRemember());
                 session()->regenerate();
                 session()->regenerateToken();
             }

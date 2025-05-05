@@ -14,6 +14,7 @@
         "laravel/framework": "^12.12.0",
         "laravel/sanctum": "^4.1.1",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "resend/resend-laravel": "^0.17.0"
     },
     "require-dev": {

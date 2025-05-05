@@ -22,12 +22,14 @@ final class UserPasswordController extends ApiController
     {
         Gate::authorize('update', $user);
 
+        $wasRemembered = Auth::viaRemember();
+
         /** @var array{password: string} $data */
         $data = ['password' => $request->validated('password')];
         $user = $updateUser->execute($user, $data);
 
         // Re-authenticate the user after password change
-        Auth::login($user, Auth::viaRemember());
+        Auth::login($user, $wasRemembered);
         session()->regenerateToken();
         session()->regenerate();
 

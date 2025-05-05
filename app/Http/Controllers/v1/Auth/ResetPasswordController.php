@@ -25,12 +25,13 @@ final class ResetPasswordController extends ApiController
         $status = Password::reset(
             $credentials,
             function (User $user, string $password) {
+                $wasRemembered = Auth::viaRemember();
                 $user->forceFill([
                     'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
                 $user->save();
 
-                Auth::login($user, Auth::viaRemember());
+                Auth::login($user, $wasRemembered);
                 session()->regenerate();
                 session()->regenerateToken();
             }

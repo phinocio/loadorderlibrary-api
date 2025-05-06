@@ -24,9 +24,11 @@ final class UploadFile
         }
 
         $contents = preg_replace('/[\r\n]+/', "\n", $contents);
+        // @codeCoverageIgnoreStart
         if ($contents === null) {
             throw new RuntimeException('Failed to normalize line endings');
         }
+        // @codeCoverageIgnoreEnd
 
         file_put_contents($file->path(), $contents);
         $fileName = mb_strtolower(md5($file->getClientOriginalName().$contents).'-'.$file->getClientOriginalName());

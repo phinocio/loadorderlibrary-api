@@ -22,9 +22,11 @@ final class GetFileContent
     {
         $content = Storage::disk('uploads')->get($file->name);
 
+        // @codeCoverageIgnoreStart
         if (! $content) {
             throw new RuntimeException('Failed to read file contents');
         }
+        // @codeCoverageIgnoreEnd
 
         return explode("\n", $content);
     }

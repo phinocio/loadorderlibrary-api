@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\File;
 
+use App\Actions\v1\File\DeleteFile;
 use App\Actions\v1\File\GetFileContent;
 use App\Enums\v1\CacheKey;
 use App\Http\Resources\v1\File\FileResource;
@@ -30,5 +31,10 @@ final class FileController
             $file,
             $content
         );
+    }
+
+    public function destroy(File $file, DeleteFile $deleteFile): void
+    {
+        $deleteFile->execute($file);
     }
 }

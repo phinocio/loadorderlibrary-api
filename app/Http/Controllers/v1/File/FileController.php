@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\File;
 
-use App\Actions\v1\File\DeleteFile;
 use App\Actions\v1\File\GetFileContent;
 use App\Enums\v1\CacheKey;
 use App\Http\Resources\v1\File\FileResource;
 use App\Models\File;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
 final class FileController
@@ -32,12 +30,5 @@ final class FileController
             $file,
             $content
         );
-    }
-
-    public function destroy(File $file, DeleteFile $deleteFile): JsonResponse
-    {
-        $deleteFile->execute($file);
-
-        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

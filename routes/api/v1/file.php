@@ -14,6 +14,5 @@ Route::prefix('/files')->group(function () {
 
     Route::controller(FileController::class)->group(function () {
         Route::get('/{file:name}', 'show')->name('files.show');
-        Route::delete('/{file:name}', 'destroy')->name('files.destroy');
     });
 });

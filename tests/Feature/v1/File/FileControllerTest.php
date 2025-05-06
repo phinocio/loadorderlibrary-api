@@ -35,3 +35,16 @@ describe('show', function () {
         $this->getJson('/v1/files/nonexistent.txt')->assertNotFound();
     });
 });
+
+describe('destroy', function () {
+    it('deletes the file', function () {
+        $response = $this->deleteJson("/v1/files/{$this->file->name}");
+
+        $response->assertNoContent();
+        Storage::disk('uploads')->assertMissing($this->file->name);
+    });
+
+    it('returns 404 when file does not exist', function () {
+        $this->deleteJson('/v1/files/nonexistent.txt')->assertNotFound();
+    });
+});

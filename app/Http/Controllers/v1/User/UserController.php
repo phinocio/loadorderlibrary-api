@@ -19,7 +19,7 @@ final class UserController extends ApiController
 {
     protected string $policyClass = UserPolicy::class;
 
-    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): JsonResponse
+    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser): CurrentUserResource
     {
         Gate::authorize('update', $user);
 
@@ -27,7 +27,7 @@ final class UserController extends ApiController
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 
-        return (new CurrentUserResource($user->load('profile')))->response()->setStatusCode(Response::HTTP_OK);
+        return new CurrentUserResource($user->load('profile'));
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse

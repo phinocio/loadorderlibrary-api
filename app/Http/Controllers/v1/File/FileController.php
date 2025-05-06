@@ -17,7 +17,7 @@ final class FileController
         /** @var File $file */
         $file = Cache::rememberForever(
             CacheKey::FILE->with($name),
-            fn () => File::where('name', $name)->firstOrFail()
+            fn () => File::query()->where('name', $name)->firstOrFail()
         );
 
         /** @var array<int, string> $content */

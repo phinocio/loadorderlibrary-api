@@ -11,11 +11,12 @@
     "require": {
         "php": "^8.2",
         "cviebrock/eloquent-sluggable": "^12.0",
-        "laravel/framework": "^12.12.0",
+        "laravel/framework": "^12.13.0",
         "laravel/sanctum": "^4.1.1",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "resend/resend-laravel": "^0.17.0"
+        "resend/resend-laravel": "^0.17.0",
+        "spatie/laravel-query-builder": "^6.3.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",

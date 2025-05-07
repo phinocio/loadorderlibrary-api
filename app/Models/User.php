@@ -8,6 +8,7 @@ use App\Observers\v1\UserObserver;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,6 +57,12 @@ final class User extends Authenticatable
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    /** @return HasMany<LoadOrder, $this> */
+    public function lists(): HasMany
+    {
+        return $this->hasMany(LoadOrder::class);
     }
 
     /** @return array<string, string> */

@@ -23,9 +23,9 @@ final class File extends Model
         'size_in_bytes',
     ];
 
-    // /** @return BelongsToMany<LoadOrder, $this> */
-    // public function lists(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(LoadOrder::class)->withTimestamps();
-    // }
+    /** @return BelongsToMany<LoadOrder, $this> */
+    public function lists(): BelongsToMany
+    {
+        return $this->belongsToMany(LoadOrder::class)->withTimestamps();
+    }
 }

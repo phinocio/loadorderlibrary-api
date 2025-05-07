@@ -28,11 +28,11 @@ final class Game extends Model
     /** @var list<string> */
     protected $fillable = ['name', 'slug'];
 
-    // /** @return HasMany<LoadOrder, $this> */
-    // public function lists(): HasMany
-    // {
-    //     return $this->hasMany(LoadOrder::class);
-    // }
+    /** @return HasMany<LoadOrder, $this> */
+    public function lists(): HasMany
+    {
+        return $this->hasMany(LoadOrder::class);
+    }
 
     /** @return array<string, array<string, string>> */
     public function sluggable(): array

@@ -9,12 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class LoadOrder extends Model
 {
     /** @use HasFactory<\Database\Factories\LoadOrderFactory> */
-    use HasFactory, Sluggable, SoftDeletes;
+    use HasFactory, Sluggable;
 
     /** @var list<string> */
     protected $fillable = [

@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('website')->nullable()->default(null);
             $table->boolean('is_private')->default(false);
             $table->timestamp('expires_at')->nullable()->default(null);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -10,5 +10,5 @@ Route::prefix('v1')->group(function () {
     require __DIR__.'/v1/user.php';
     require __DIR__.'/v1/game.php';
     require __DIR__.'/v1/file.php';
-    require __DIR__.'/v1/lists.php';
+    require __DIR__.'/v1/load-order.php';
 });

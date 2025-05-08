@@ -7,5 +7,6 @@ use App\Http\Controllers\v1\LoadOrder\LoadOrderController;
 Route::prefix('lists')->group(function () {
     Route::controller(LoadOrderController::class)->group(function () {
         Route::get('/', 'index')->name('lists.index');
+        Route::get('/{slug}', 'show')->name('lists.show');
     });
 });

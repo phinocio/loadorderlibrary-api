@@ -12,6 +12,8 @@ enum CacheKey: string
     case GAMES = 'games';
     case FILE = 'file';
     case FILES = 'files';
+    case LOAD_ORDER = 'load-order';
+    case LOAD_ORDERS = 'load-orders';
 
     public function with(string ...$keys): string
     {

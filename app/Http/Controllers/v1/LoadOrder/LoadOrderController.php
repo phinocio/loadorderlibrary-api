@@ -21,7 +21,6 @@ final class LoadOrderController extends ApiController
 
     public function index(Request $request, GetLoadOrders $getLoadOrders): AnonymousResourceCollection
     {
-        Cache::flush();
         Gate::authorize('viewAny', LoadOrder::class);
 
         $cacheKey = CacheKey::LOAD_ORDERS->value;

@@ -21,6 +21,7 @@ final class LoadOrderController extends ApiController
 
     public function index(Request $request, GetLoadOrders $getLoadOrders): AnonymousResourceCollection
     {
+        Cache::flush();
         Gate::authorize('viewAny', LoadOrder::class);
 
         $cacheKey = CacheKey::LOAD_ORDERS->value;
@@ -38,7 +39,7 @@ final class LoadOrderController extends ApiController
     {
         $loadOrder = Cache::rememberForever(
             CacheKey::LOAD_ORDER->with($slug),
-            fn () => LoadOrder::query()->where('slug', $slug)->with(['game', 'author'])->firstOrFail()
+            fn () => LoadOrder::query()->where('slug', $slug)->with(['game', 'author', 'files'])->firstOrFail()
         );
 
         Gate::authorize('view', $loadOrder);

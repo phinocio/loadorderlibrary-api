@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $slug
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
+ * @property-read LoadOrder[] $lists
  */
 #[ObservedBy(GameObserver::class)]
 final class Game extends Model

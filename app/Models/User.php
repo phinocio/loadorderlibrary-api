@@ -27,6 +27,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
  * @property-read UserProfile|null $profile
+ * @property-read LoadOrder[] $lists
  */
 #[ObservedBy(UserObserver::class)]
 final class User extends Authenticatable

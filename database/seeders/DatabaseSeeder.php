@@ -20,7 +20,7 @@ final class DatabaseSeeder extends Seeder
                 UserSeeder::class,
                 UserProfileSeeder::class,
                 FileSeeder::class,
-                // LoadOrderSeeder::class,
+                LoadOrderSeeder::class,
             ]);
         }
     }

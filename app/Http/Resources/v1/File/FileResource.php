@@ -16,10 +16,10 @@ final class FileResource extends JsonResource
      *
      * @param  array<int, string>  $content
      */
-    public function __construct(File $resource, public ?array $content = null)
-    {
-        parent::__construct($resource);
-    }
+    // public function __construct(File $resource, public ?array $content = null)
+    // {
+    //     parent::__construct($resource);
+    // }
 
     /**
      * Transform the resource into an array.
@@ -32,8 +32,7 @@ final class FileResource extends JsonResource
             'name' => $this->name,
             'clean_name' => $this->clean_name,
             'size_in_bytes' => $this->size_in_bytes,
-            'content' => $this->content,
-            // 'lists' => FileListResource::collection($this->whenLoaded('lists')),
+            // 'content' => $this->content,
         ];
     }
 }

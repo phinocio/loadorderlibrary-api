@@ -28,7 +28,7 @@ final class FileController
 
         return new FileResource(
             $file,
-            $content
+            // $content
         );
     }
 }

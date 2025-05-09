@@ -28,7 +28,7 @@ final class StoreLoadOrderRequest extends FormRequest
             'is_private' => ['boolean'],
             'expires_at' => ['nullable', 'date'],
             'game_id' => ['required', 'exists:games,id'],
-            'files' => ['required'],
+            'files' => ['required', 'array'],
             'files.*' => ['max:512', new ValidMimeType, new ValidFilename],
         ];
     }

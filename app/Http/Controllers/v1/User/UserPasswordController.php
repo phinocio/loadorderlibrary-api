@@ -10,7 +10,6 @@ use App\Http\Requests\v1\User\UpdateUserPasswordRequest;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -33,6 +32,6 @@ final class UserPasswordController extends ApiController
         session()->regenerateToken();
         session()->regenerate();
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

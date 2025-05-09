@@ -7,7 +7,6 @@ namespace App\Http\Controllers\v1\Auth;
 use App\Http\Requests\v1\Auth\LoginRequest;
 use App\Http\Resources\v1\User\CurrentUserResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 final class LoginController
@@ -24,6 +23,6 @@ final class LoginController
             return new CurrentUserResource(Auth::user()?->load('profile'));
         }
 
-        return response()->json(['message' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
+        return response()->json(['message' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);
     }
 }

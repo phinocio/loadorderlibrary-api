@@ -7,7 +7,6 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Actions\v1\User\UpdateUser;
 use App\Http\Requests\v1\Admin\AdminUpdateUserPasswordRequest;
 use App\Models\User;
-use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class AdminUserPasswordController
@@ -18,6 +17,6 @@ final class AdminUserPasswordController
         $data = ['password' => $request->validated('password')];
         $user = $updateUser->execute($user, $data);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

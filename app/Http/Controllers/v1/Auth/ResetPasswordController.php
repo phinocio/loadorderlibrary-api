@@ -8,7 +8,6 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\Auth\ResetPasswordRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -38,7 +37,7 @@ final class ResetPasswordController extends ApiController
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return response()->json(['status' => 'password_reset_success'], Response::HTTP_OK);
+            return response()->json(['status' => 'password_reset_success'], JsonResponse::HTTP_OK);
         }
 
         $message = match ($status) {
@@ -51,6 +50,6 @@ final class ResetPasswordController extends ApiController
         return response()->json([
             'status' => 'password_reset_failed',
             'message' => $message,
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

@@ -6,7 +6,6 @@ namespace App\Http\Controllers\v1\Auth;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 final class LogoutController
@@ -18,6 +17,6 @@ final class LogoutController
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

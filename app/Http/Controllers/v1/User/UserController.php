@@ -12,7 +12,6 @@ use App\Http\Resources\v1\User\CurrentUserResource;
 use App\Models\User;
 use App\Policies\v1\UserPolicy;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 final class UserController extends ApiController
@@ -38,6 +37,6 @@ final class UserController extends ApiController
         session()->invalidate();
         session()->regenerateToken();
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

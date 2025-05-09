@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\LoadOrder;
 
+use App\Actions\v1\LoadOrder\DeleteLoadOrder;
 use App\Actions\v1\LoadOrder\GetLoadOrders;
 use App\Enums\v1\CacheKey;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\v1\LoadOrder\LoadOrderResource;
 use App\Models\LoadOrder;
 use App\Policies\v1\LoadOrderPolicy;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
@@ -45,5 +47,16 @@ final class LoadOrderController extends ApiController
         Gate::authorize('view', $loadOrder);
 
         return new LoadOrderResource($loadOrder);
+    }
+
+    public function destroy(string $slug, DeleteLoadOrder $deleteLoadOrder): JsonResponse
+    {
+        $loadOrder = LoadOrder::query()->where('slug', $slug)->firstOrFail();
+
+        Gate::authorize('delete', $loadOrder);
+
+        $deleteLoadOrder->execute($loadOrder);
+
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

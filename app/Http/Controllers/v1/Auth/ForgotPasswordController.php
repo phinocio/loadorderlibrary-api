@@ -6,7 +6,6 @@ namespace App\Http\Controllers\v1\Auth;
 
 use App\Http\Requests\v1\Auth\ForgotPasswordRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Password;
 
 final class ForgotPasswordController
@@ -20,7 +19,7 @@ final class ForgotPasswordController
         $status = Password::sendResetLink($data);
 
         if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['status' => 'reset_link_sent'], Response::HTTP_OK);
+            return response()->json(['status' => 'reset_link_sent'], JsonResponse::HTTP_OK);
         }
 
         $message = match ($status) {
@@ -32,6 +31,6 @@ final class ForgotPasswordController
         return response()->json([
             'status' => 'reset_link_failed',
             'message' => $message,
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

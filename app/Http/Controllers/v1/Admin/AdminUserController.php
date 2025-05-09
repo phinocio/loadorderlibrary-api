@@ -13,7 +13,6 @@ use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
 final class AdminUserController extends ApiController
@@ -53,6 +52,6 @@ final class AdminUserController extends ApiController
     {
         $deleteUser->execute($user);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

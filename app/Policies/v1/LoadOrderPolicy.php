@@ -36,6 +36,6 @@ final class LoadOrderPolicy
     /** Determine whether the user can delete the model. */
     public function delete(User $user, LoadOrder $loadOrder): bool
     {
-        return $user->isAdmin() || $user->id === $loadOrder->user_id;
+        return $user->id === $loadOrder->user_id;
     }
 }

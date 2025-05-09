@@ -129,3 +129,49 @@ describe('show', function () {
             ]);
     });
 });
+
+describe('destroy', function () {
+    it('allows author to delete their load order', function () {
+        login($this->author)
+            ->deleteJson("/v1/lists/{$this->loadOrder->slug}")
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('load_orders', [
+            'slug' => $this->loadOrder->slug,
+        ]);
+    });
+
+    it('prevents admin from deleting load order through regular route', function () {
+        $admin = User::factory()->create(['is_admin' => true]);
+
+        login($admin)
+            ->deleteJson("/v1/lists/{$this->loadOrder->slug}")
+            ->assertForbidden();
+    });
+
+    it('prevents non-author user from deleting load order', function () {
+        $otherUser = User::factory()->create();
+
+        login($otherUser)
+            ->deleteJson("/v1/lists/{$this->loadOrder->slug}")
+            ->assertForbidden();
+        $this->assertDatabaseHas('load_orders', [
+            'slug' => $this->loadOrder->slug,
+        ]);
+    });
+
+    it('prevents guest from deleting load order', function () {
+        guest()
+            ->deleteJson("/v1/lists/{$this->loadOrder->slug}")
+            ->assertUnauthorized();
+        $this->assertDatabaseHas('load_orders', [
+            'slug' => $this->loadOrder->slug,
+        ]);
+    });
+
+    it('returns 404 when deleting non-existent load order', function () {
+        login($this->author)
+            ->deleteJson('/v1/lists/non-existent-load-order')
+            ->assertNotFound();
+    });
+});

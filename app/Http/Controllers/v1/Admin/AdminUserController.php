@@ -7,7 +7,6 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Actions\v1\User\DeleteUser;
 use App\Actions\v1\User\UpdateUser;
 use App\Enums\v1\CacheKey;
-use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\Admin\AdminUpdateUserRequest;
 use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
@@ -15,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
 
-final class AdminUserController extends ApiController
+final class AdminUserController
 {
     // No policy because this entire controller is protected by middleware
 

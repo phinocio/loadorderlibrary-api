@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Actions\v1\LoadOrder\DeleteLoadOrder;
-use App\Http\Controllers\ApiController;
 use App\Models\LoadOrder;
 use Illuminate\Http\JsonResponse;
 
-final class AdminLoadOrderController extends ApiController
+final class AdminLoadOrderController
 {
     // No policy because this entire controller is protected by middleware
 

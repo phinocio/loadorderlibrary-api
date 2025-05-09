@@ -20,11 +20,11 @@ final class FileController
             fn () => File::query()->where('name', $name)->firstOrFail()
         );
 
-        /** @var array<int, string> $content */
-        $content = Cache::rememberForever(
-            CacheKey::FILE->with($name, 'content'),
-            fn () => $getFileContent->execute($file)
-        );
+        // /** @var array<int, string> $content */
+        // $content = Cache::rememberForever(
+        //     CacheKey::FILE->with($name, 'content'),
+        //     fn () => $getFileContent->execute($file)
+        // );
 
         return new FileResource(
             $file,

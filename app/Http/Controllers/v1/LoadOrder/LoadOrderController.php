@@ -27,7 +27,8 @@ final class LoadOrderController extends ApiController
         if ($request->getQueryString()) {
             $cacheKey = CacheKey::LOAD_ORDERS->with(md5(mb_strtolower($request->getQueryString())));
         }
-        $loadOrders = Cache::rememberForever($cacheKey, fn () => $getLoadOrders->execute($request));
+
+        $loadOrders = Cache::tags([CacheKey::LOAD_ORDERS->value])->rememberForever($cacheKey, fn () => $getLoadOrders->execute($request));
 
         return LoadOrderResource::collection(
             $loadOrders,

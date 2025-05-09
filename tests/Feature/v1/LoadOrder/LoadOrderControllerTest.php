@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\v1\CacheKey;
 use App\Models\Game;
 use App\Models\LoadOrder;
 use App\Models\User;
@@ -56,6 +57,11 @@ describe('index', function () {
         $cacheKey1 = null;
         $cacheKey2 = null;
 
+        Cache::shouldReceive('tags')
+            ->with([CacheKey::LOAD_ORDERS->value])
+            ->twice()
+            ->andReturnSelf();
+
         Cache::shouldReceive('rememberForever')
             ->twice()
             ->withArgs(function ($key) use (&$cacheKey1, &$cacheKey2) {
@@ -72,7 +78,8 @@ describe('index', function () {
         $this->getJson('/v1/lists');
         $this->getJson('/v1/lists?query=test');
 
-        expect($cacheKey1)->not->toBe($cacheKey2);
+        expect($cacheKey1)->toBe(CacheKey::LOAD_ORDERS->value)
+            ->and($cacheKey2)->toBe(CacheKey::LOAD_ORDERS->with(md5('query=test')));
     });
 });
 

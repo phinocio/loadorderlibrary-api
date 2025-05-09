@@ -13,32 +13,23 @@ final class LoadOrderObserver
     /** Handle the LoadOrder "created" event. */
     public function created(LoadOrder $loadOrder): void
     {
-        Cache::forget(CacheKey::LOAD_ORDERS->value);
+        // Only need to flush the index since this is a new item
+        Cache::tags([CacheKey::LOAD_ORDERS->value])->flush();
     }
 
     /** Handle the LoadOrder "updated" event. */
     public function updated(LoadOrder $loadOrder): void
     {
-        Cache::forget(CacheKey::LOAD_ORDERS->value);
+        // Flush both the index and the specific load order
+        Cache::tags([CacheKey::LOAD_ORDERS->value])->flush();
         Cache::forget(CacheKey::LOAD_ORDER->with($loadOrder->slug));
     }
 
     /** Handle the LoadOrder "deleted" event. */
     public function deleted(LoadOrder $loadOrder): void
     {
-        Cache::forget(CacheKey::LOAD_ORDERS->value);
+        // Flush both the index and the specific load order
+        Cache::tags([CacheKey::LOAD_ORDERS->value])->flush();
         Cache::forget(CacheKey::LOAD_ORDER->with($loadOrder->slug));
-    }
-
-    /** Handle the LoadOrder "restored" event. */
-    public function restored(LoadOrder $loadOrder): void
-    {
-        //
-    }
-
-    /** Handle the LoadOrder "force deleted" event. */
-    public function forceDeleted(LoadOrder $loadOrder): void
-    {
-        //
     }
 }

@@ -47,6 +47,8 @@ final class LoadOrder extends Model
         'readme',
         'is_private',
         'expires_at',
+        'user_id',
+        'game_id',
     ];
 
     /** @return BelongsTo<User, $this> */

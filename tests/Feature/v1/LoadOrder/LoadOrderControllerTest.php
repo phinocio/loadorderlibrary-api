@@ -6,7 +6,9 @@ use App\Enums\v1\CacheKey;
 use App\Models\Game;
 use App\Models\LoadOrder;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->game = Game::factory()->create(['name' => 'Test Game']);
@@ -18,6 +20,8 @@ beforeEach(function () {
         'user_id' => $this->author->id,
         'is_private' => false,
     ])->fresh();
+
+    Storage::fake('uploads');
 });
 
 describe('index', function () {
@@ -80,6 +84,98 @@ describe('index', function () {
 
         expect($cacheKey1)->toBe(CacheKey::LOAD_ORDERS->value)
             ->and($cacheKey2)->toBe(CacheKey::LOAD_ORDERS->with(md5('query=test')));
+    });
+});
+
+describe('store', function () {
+    it('allows authenticated user to upload a load order with files', function () {
+        $user = User::factory()->create();
+        $game = Game::factory()->create();
+
+        $response = login($user)->postJson('/v1/lists', [
+            'name' => 'New Load Order',
+            'description' => 'Test description',
+            'version' => '1.0.0',
+            'game_id' => $game->id,
+            'files' => [
+                UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2\nmod3"),
+                UploadedFile::fake()->createWithContent('plugins.txt', "plugin1.esp\nplugin2.esp"),
+            ],
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonStructure([
+                'data' => [
+                    'name',
+                    'version',
+                    'slug',
+                    'url',
+                    'description',
+                    'files',
+                    'author',
+                    'game',
+                ],
+            ])
+            ->assertJsonPath('data.name', 'New Load Order')
+            ->assertJsonPath('data.version', '1.0.0')
+            ->assertJsonPath('data.description', 'Test description')
+            ->assertJsonPath('data.game.name', $game->name)
+            ->assertJsonPath('data.author.name', $user->name)
+            ->assertJsonCount(2, 'data.files');
+
+        $this->assertDatabaseHas('load_orders', [
+            'name' => 'New Load Order',
+            'version' => '1.0.0',
+            'description' => 'Test description',
+            'user_id' => $user->id,
+            'game_id' => $game->id,
+        ]);
+    });
+
+    it('allows guest to upload a load order', function () {
+        $game = Game::factory()->create();
+
+        $response = guest()->postJson('/v1/lists', [
+            'name' => 'New Load Order',
+            'game_id' => $game->id,
+            'files' => [
+                UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2"),
+            ],
+        ]);
+
+        $response->assertCreated()->assertJsonStructure([
+            'data' => [
+                'name',
+                'version',
+                'slug',
+                'url',
+                'description',
+                'files',
+                'author',
+                'game',
+            ],
+        ])
+            ->assertJsonPath('data.name', 'New Load Order')
+            ->assertJsonPath('data.game.name', $game->name)
+            ->assertJsonPath('data.author.name', null)
+            ->assertJsonCount(1, 'data.files');
+
+        $this->assertDatabaseHas('load_orders', [
+            'name' => 'New Load Order',
+            'user_id' => null,
+            'game_id' => $game->id,
+        ]);
+    });
+
+    it('validates required fields for load order upload', function () {
+        $user = User::factory()->create();
+
+        $response = login($user)->postJson('/v1/lists', [
+            'description' => 'Test description',
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['name', 'game_id', 'files']);
     });
 });
 

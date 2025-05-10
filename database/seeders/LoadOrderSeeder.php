@@ -49,7 +49,7 @@ final class LoadOrderSeeder extends Seeder
         $lists = LoadOrder::all();
 
         $pivotData = $lists->flatMap(function ($list) use ($files, $now) {
-            $randomCount = rand(1, 5);
+            $randomCount = rand(1, 3);
             $randomFiles = $files->random($randomCount);
 
             return $randomFiles->map(function ($file) use ($list, $now) {

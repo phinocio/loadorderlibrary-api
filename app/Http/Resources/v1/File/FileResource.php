@@ -16,16 +16,6 @@ use RuntimeException;
 final class FileResource extends JsonResource
 {
     /**
-     * Create a new resource instance.
-     *
-     * @param  array<int, string>  $content
-     */
-    // public function __construct(File $resource, public ?array $content = null)
-    // {
-    //     parent::__construct($resource);
-    // }
-
-    /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
@@ -36,9 +26,7 @@ final class FileResource extends JsonResource
             'name' => $this->name,
             'clean_name' => $this->clean_name,
             'size_in_bytes' => $this->size_in_bytes,
-            // 'content' => $this->formatFileContents(),
-            'created' => $this->created_at,
-            'updated' => $this->updated_at,
+            'content' => $this->formatFileContents(),
         ];
     }
 

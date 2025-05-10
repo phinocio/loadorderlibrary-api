@@ -24,9 +24,9 @@ final class UpdateLoadOrder
      *     website?: ?string,
      *     discord?: ?string,
      *     readme?: ?string,
-     *     is_private?: bool,
+     *     private?: bool,
      *     expires?: ?string,
-     *     game_id?: int,
+     *     game?: int,
      *     files?: array<UploadedFile>
      * } $data
      */
@@ -47,6 +47,16 @@ final class UpdateLoadOrder
             if (isset($data['expires'])) {
                 $data['expires_at'] = $this->calculateExpiration($data['expires']);
                 unset($data['expires']);
+            }
+
+            if (isset($data['private'])) {
+                $data['is_private'] = $data['private'];
+                unset($data['private']);
+            }
+
+            if (isset($data['game'])) {
+                $data['game_id'] = $data['game'];
+                unset($data['game']);
             }
 
             $loadOrder->update($data);

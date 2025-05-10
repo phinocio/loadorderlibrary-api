@@ -6,6 +6,7 @@ namespace App\Actions\v1\LoadOrder;
 
 use App\Actions\v1\File\UploadFile;
 use App\Models\LoadOrder;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,9 +24,9 @@ final class CreateLoadOrder
      *     website?: ?string,
      *     discord?: ?string,
      *     readme?: ?string,
-     *     is_private?: bool,
-     *     expires_at?: ?string,
-     *     game_id: int,
+     *     private?: bool,
+     *     expires?: ?string,
+     *     game: int,
      *     files: array<UploadedFile>
      * } $data
      */
@@ -39,10 +40,10 @@ final class CreateLoadOrder
                 'website' => $data['website'] ?? null,
                 'discord' => $data['discord'] ?? null,
                 'readme' => $data['readme'] ?? null,
-                'is_private' => $data['is_private'] ?? false,
-                'expires_at' => $data['expires_at'] ?? null,
-                'user_id' => Auth::user()->id ?? null,
-                'game_id' => $data['game_id'],
+                'is_private' => $data['private'] ?? false,
+                'expires_at' => $this->calculateExpiration($data['expires'] ?? null),
+                'game_id' => $data['game'],
+                'user_id' => Auth::id(),
             ]);
 
             foreach ($data['files'] as $uploadedFile) {
@@ -52,5 +53,21 @@ final class CreateLoadOrder
 
             return $loadOrder->load(['files', 'author', 'game']);
         });
+    }
+
+    private function calculateExpiration(?string $expires): ?CarbonImmutable
+    {
+        if (! $expires) {
+            return Auth::check() ? null : CarbonImmutable::now()->addHours(24);
+        }
+
+        return match ($expires) {
+            '3h' => CarbonImmutable::now()->addHours(3),
+            '3d' => CarbonImmutable::now()->addDays(3),
+            '1w' => CarbonImmutable::now()->addWeek(),
+            '1m' => CarbonImmutable::now()->addMonth(),
+            'never' => null,
+            default => Auth::check() ? null : now()->addHours(24),
+        };
     }
 }

@@ -53,9 +53,9 @@ final class LoadOrderController extends ApiController
          *     website?: ?string,
          *     discord?: ?string,
          *     readme?: ?string,
-         *     is_private?: bool,
-         *     expires_at?: ?string,
-         *     game_id: int,
+         *     private?: bool,
+         *     expires?: ?string,
+         *     game: int,
          *     files: array<UploadedFile>,
          * } $data
          */
@@ -88,9 +88,9 @@ final class LoadOrderController extends ApiController
          *     website?: ?string,
          *     discord?: ?string,
          *     readme?: ?string,
-         *     is_private?: bool,
-         *     expires_at?: ?string,
-         *     game_id?: int,
+         *     private?: bool,
+         *     expires?: ?string,
+         *     game?: int,
          *     files?: array<UploadedFile>
          * } $data
          */

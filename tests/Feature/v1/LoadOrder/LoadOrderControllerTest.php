@@ -96,7 +96,7 @@ describe('store', function () {
             'name' => 'New Load Order',
             'description' => 'Test description',
             'version' => '1.0.0',
-            'game_id' => $game->id,
+            'game' => $game->id,
             'files' => [
                 UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2\nmod3"),
                 UploadedFile::fake()->createWithContent('plugins.txt', "plugin1.esp\nplugin2.esp"),
@@ -137,7 +137,7 @@ describe('store', function () {
 
         $response = guest()->postJson('/v1/lists', [
             'name' => 'New Load Order',
-            'game_id' => $game->id,
+            'game' => $game->id,
             'files' => [
                 UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2"),
             ],
@@ -175,7 +175,7 @@ describe('store', function () {
         ]);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'game_id', 'files']);
+            ->assertJsonValidationErrors(['name', 'game', 'files']);
     });
 });
 
@@ -353,10 +353,9 @@ describe('update', function () {
             'website' => 'not-a-url',
             'discord' => 'not-a-url',
             'readme' => 'not-a-url',
-            'expires_at' => 'not-a-date',
         ]);
 
         $response->assertUnprocessable()
-            ->assertJsonValidationErrors(['name', 'website', 'discord', 'readme', 'expires_at']);
+            ->assertJsonValidationErrors(['name', 'website', 'discord', 'readme']);
     });
 });

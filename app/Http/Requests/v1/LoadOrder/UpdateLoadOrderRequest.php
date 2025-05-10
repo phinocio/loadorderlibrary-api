@@ -18,7 +18,7 @@ final class UpdateLoadOrderRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<int, mixed>>
+     * @return array<string, array<int, string|ValidMimeType|ValidFilename>>
      */
     public function rules(): array
     {
@@ -29,9 +29,9 @@ final class UpdateLoadOrderRequest extends FormRequest
             'website' => ['sometimes', 'nullable', 'url'],
             'discord' => ['sometimes', 'nullable', 'url'],
             'readme' => ['sometimes', 'nullable', 'url'],
-            'is_private' => ['sometimes', 'boolean'],
-            'expires_at' => ['sometimes', 'nullable', 'date'],
-            'game_id' => ['sometimes', 'exists:games,id'],
+            'private' => ['sometimes', 'boolean'],
+            'expires' => ['sometimes', 'nullable', 'string'],
+            'game' => ['sometimes', 'exists:games,id'],
             'files' => ['sometimes', 'array'],
             'files.*' => ['max:512', new ValidMimeType, new ValidFilename],
         ];

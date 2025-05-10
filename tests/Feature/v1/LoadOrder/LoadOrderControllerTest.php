@@ -271,3 +271,92 @@ describe('destroy', function () {
             ->assertNotFound();
     });
 });
+
+describe('update', function () {
+    it('allows author to update their load order', function () {
+        $loadOrder = LoadOrder::factory()->create([
+            'name' => 'Original Name',
+            'description' => 'Original Description',
+            'user_id' => $this->author->id,
+        ]);
+
+        $response = login($this->author)->patchJson("/v1/lists/{$loadOrder->slug}", [
+            'name' => 'Updated Name',
+            'description' => 'Updated Description',
+            'files' => [
+                UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2\nmod3"),
+            ],
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.name', 'Updated Name')
+            ->assertJsonPath('data.description', 'Updated Description');
+
+        $this->assertDatabaseHas('load_orders', [
+            'id' => $loadOrder->id,
+            'name' => 'Updated Name',
+            'description' => 'Updated Description',
+        ]);
+    });
+
+    it('allows partial updates without files', function () {
+        $loadOrder = LoadOrder::factory()->create([
+            'name' => 'Original Name',
+            'description' => 'Original Description',
+            'user_id' => $this->author->id,
+        ]);
+
+        $response = login($this->author)->patchJson("/v1/lists/{$loadOrder->slug}", [
+            'name' => 'Updated Name',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.name', 'Updated Name')
+            ->assertJsonPath('data.description', 'Original Description');
+
+        $this->assertDatabaseHas('load_orders', [
+            'id' => $loadOrder->id,
+            'name' => 'Updated Name',
+            'description' => 'Original Description',
+        ]);
+    });
+
+    it('prevents non-author user from updating load order', function () {
+        $otherUser = User::factory()->create();
+
+        $response = login($otherUser)->patchJson("/v1/lists/{$this->loadOrder->slug}", [
+            'name' => 'Updated Name',
+        ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('load_orders', [
+            'id' => $this->loadOrder->id,
+            'name' => $this->loadOrder->name,
+        ]);
+    });
+
+    it('prevents guest from updating load order', function () {
+        $response = guest()->patchJson("/v1/lists/{$this->loadOrder->slug}", [
+            'name' => 'Updated Name',
+        ]);
+
+        $response->assertUnauthorized();
+        $this->assertDatabaseHas('load_orders', [
+            'id' => $this->loadOrder->id,
+            'name' => $this->loadOrder->name,
+        ]);
+    });
+
+    it('validates update fields', function () {
+        $response = login($this->author)->patchJson("/v1/lists/{$this->loadOrder->slug}", [
+            'name' => '',
+            'website' => 'not-a-url',
+            'discord' => 'not-a-url',
+            'readme' => 'not-a-url',
+            'expires_at' => 'not-a-date',
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['name', 'website', 'discord', 'readme', 'expires_at']);
+    });
+});

@@ -7,9 +7,11 @@ namespace App\Http\Controllers\v1\LoadOrder;
 use App\Actions\v1\LoadOrder\CreateLoadOrder;
 use App\Actions\v1\LoadOrder\DeleteLoadOrder;
 use App\Actions\v1\LoadOrder\GetLoadOrders;
+use App\Actions\v1\LoadOrder\UpdateLoadOrder;
 use App\Enums\v1\CacheKey;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\v1\LoadOrder\StoreLoadOrderRequest;
+use App\Http\Requests\v1\LoadOrder\UpdateLoadOrderRequest;
 use App\Http\Resources\v1\LoadOrder\LoadOrderResource;
 use App\Models\LoadOrder;
 use App\Policies\v1\LoadOrderPolicy;
@@ -71,6 +73,29 @@ final class LoadOrderController extends ApiController
         );
 
         Gate::authorize('view', $loadOrder);
+
+        return new LoadOrderResource($loadOrder);
+    }
+
+    public function update(UpdateLoadOrderRequest $request, LoadOrder $loadOrder, UpdateLoadOrder $updateLoadOrder): LoadOrderResource
+    {
+        Gate::authorize('update', $loadOrder);
+
+        /** @var array{
+         *     name?: string,
+         *     description?: ?string,
+         *     version?: ?string,
+         *     website?: ?string,
+         *     discord?: ?string,
+         *     readme?: ?string,
+         *     is_private?: bool,
+         *     expires_at?: ?string,
+         *     game_id?: int,
+         *     files?: array<UploadedFile>
+         * } $data
+         */
+        $data = $request->validated();
+        $loadOrder = $updateLoadOrder->execute($loadOrder, $data);
 
         return new LoadOrderResource($loadOrder);
     }

@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('games')->group(function () {
     Route::controller(GameController::class)->group(function () {
         Route::get('/', 'index')->name('games.index');
-        Route::get('/{game:slug}', 'show')->name('games.show');
+        Route::get('/{slug}', 'show')->name('games.show');
     });
 });

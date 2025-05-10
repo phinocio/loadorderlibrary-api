@@ -18,7 +18,7 @@ Route::prefix('users')->group(function () {
     });
 
     Route::controller(UserProfileController::class)->group(function () {
-        Route::get('/{user:name}/profile', 'show')->name('users.profile.show');
+        Route::get('/{name}/profile', 'show')->name('users.profile.show');
 
         Route::middleware('auth')->group(function () {
             Route::patch('/{user:name}/profile', 'update')->name('users.profile.update');

@@ -8,11 +8,11 @@ use App\Models\File;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/files')->group(function () {
-    Route::get('/{file:name}/download', function (File $file, DownloadFile $downloadFile) {
+    Route::get('/{name}/download', function (File $file, DownloadFile $downloadFile) {
         return $downloadFile->execute($file);
     })->name('files.download');
 
     Route::controller(FileController::class)->group(function () {
-        Route::get('/{file:name}', 'show')->name('files.show');
+        Route::get('/{name}', 'show')->name('files.show');
     });
 });

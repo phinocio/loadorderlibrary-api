@@ -12,7 +12,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::prefix('users')->group(function () {
         Route::controller(AdminUserController::class)->group(function () {
             Route::get('/', 'index')->name('admin.users.index');
-            Route::get('/{user:name}', 'show')->name('admin.users.show');
+            Route::get('/{name}', 'show')->name('admin.users.show');
             Route::patch('/{user:name}', 'update')->name('admin.users.update');
             Route::delete('/{user:name}', 'destroy')->name('admin.users.destroy');
         });

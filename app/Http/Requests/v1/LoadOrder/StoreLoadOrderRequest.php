@@ -12,7 +12,7 @@ final class StoreLoadOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Authorization is handled by the policy
+        return true;
     }
 
     /** @return array<string, array<int, string|ValidMimeType|ValidFilename>> */

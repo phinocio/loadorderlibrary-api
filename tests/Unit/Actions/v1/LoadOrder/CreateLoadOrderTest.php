@@ -21,7 +21,9 @@ beforeEach(function () {
 });
 
 test('it creates load order with basic information', function () {
+    Auth::partialMock();
     Auth::shouldReceive('id')->andReturn($this->author->id);
+    Auth::shouldReceive('check')->andReturn(true);
 
     $result = $this->action->execute([
         'name' => 'New Load Order',
@@ -53,6 +55,9 @@ test('it creates load order with basic information', function () {
 });
 
 test('it sets optional fields to null when not provided', function () {
+    Auth::partialMock();
+    Auth::shouldReceive('id')->andReturn($this->author->id);
+    Auth::shouldReceive('check')->andReturn(true);
 
     $result = $this->action->execute([
         'name' => 'New Load Order',
@@ -75,7 +80,9 @@ test('it sets optional fields to null when not provided', function () {
 });
 
 test('it handles multiple files', function () {
+    Auth::partialMock();
     Auth::shouldReceive('id')->andReturn($this->author->id);
+    Auth::shouldReceive('check')->andReturn(true);
 
     $result = $this->action->execute([
         'name' => 'New Load Order',

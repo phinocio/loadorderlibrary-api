@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\v1\Actions\LoadOrder;
+
 use App\Actions\v1\LoadOrder\GetLoadOrders;
 use App\Models\Game;
 use App\Models\LoadOrder;

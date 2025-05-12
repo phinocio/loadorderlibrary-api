@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\v1\Filters;
+
 use App\Filters\FiltersGameName;
 use App\Models\Game;
 use App\Models\LoadOrder;

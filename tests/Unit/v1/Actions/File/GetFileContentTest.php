@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Actions\v1\File;
+namespace Tests\Unit\v1\Actions;
 
 use App\Actions\v1\File\GetFileContent;
 use App\Models\File;

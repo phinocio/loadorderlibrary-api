@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\v1\Actions;
+namespace Tests\Unit\v1\Actions\File;
 
 use App\Actions\v1\File\DeleteFile;
 use App\Models\File;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Actions;
+namespace Tests\Unit\Actions\v1\File;
 
 use App\Actions\v1\File\UploadFile;
 use App\Models\File;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\v1\Filters;
+
 use App\Filters\FiltersAuthorName;
 use App\Models\LoadOrder;
 use App\Models\User;

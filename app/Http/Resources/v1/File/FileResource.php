@@ -44,9 +44,11 @@ final class FileResource extends JsonResource
                 /** @var string|null $fileContent */
                 $fileContent = Storage::disk('uploads')->get($this->name);
 
+                // @codeCoverageIgnoreStart
                 if ($fileContent === null) {
                     throw new RuntimeException("File {$this->name} not found in storage.");
                 }
+                // @codeCoverageIgnoreEnd
 
                 return mb_trim($fileContent);
             }

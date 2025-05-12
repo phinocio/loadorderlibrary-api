@@ -15,9 +15,10 @@ beforeEach(function () {
 });
 
 describe('show', function () {
-    it('returns file with content', function () {
+    it('returns regular file content in original order', function () {
         $response = $this->getJson("/v1/files/{$this->file->name}");
 
+        $expectedContent = explode("\n", $this->content);
         $response->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -28,7 +29,19 @@ describe('show', function () {
                 ],
             ])
             ->assertJsonPath('data.name', $this->file->name)
-            ->assertJsonPath('data.content', explode("\n", $this->content));
+            ->assertJsonPath('data.content', $expectedContent, 'File content should be returned in original order for non-modlist files');
+    });
+
+    it('returns modlist file content in reverse order', function () {
+        $modlistFile = File::factory()->create(['name' => 'modlist.txt', 'clean_name' => 'modlist.txt']);
+        Storage::disk('uploads')->put($modlistFile->name, $this->content);
+
+        $response = $this->getJson("/v1/files/{$modlistFile->name}");
+
+        $expectedContent = array_reverse(explode("\n", $this->content));
+        $response->assertOk()
+            ->assertJsonPath('data.name', $modlistFile->name)
+            ->assertJsonPath('data.content', $expectedContent, 'Modlist.txt content should be returned in reverse order');
     });
 
     it('returns 404 when file does not exist', function () {

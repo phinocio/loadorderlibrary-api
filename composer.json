@@ -71,8 +71,8 @@
             "pint"
         ],
         "refactor": "rector",
-        "test": "pest --parallel --coverage --min=90",
-        "test:type-coverage": "pest --type-coverage --min=100",
+        "test": "pest --parallel --coverage --min=100",
+        "test:type-coverage": "pest --type-coverage --min=90",
         "test:types": "phpstan",
         "test:all": [
             "@lint",

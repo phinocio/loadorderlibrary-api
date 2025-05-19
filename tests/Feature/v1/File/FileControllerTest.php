@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Tests\Feature\v1\File;
 
 use App\Models\File;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     Storage::fake('uploads');
+    // Clear the cache to prevent test interference
+    Cache::flush();
     $this->content = "line1\nline2\nline3";
     $this->file = File::factory()->create(['name' => 'test.txt']);
     Storage::disk('uploads')->put($this->file->name, $this->content);

@@ -8,6 +8,8 @@ use App\Observers\v1\LoadOrderObserver;
 use Carbon\CarbonInterface;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -77,5 +79,16 @@ final class LoadOrder extends Model
                 'source' => 'name',
             ],
         ];
+    }
+
+    /**
+     * Scope a query to only include non-expired load orders.
+     *
+     * @param  Builder<LoadOrder>  $query
+     */
+    #[Scope]
+    protected function expired(Builder $query): void
+    {
+        $query->where('expires_at', '<=', now());
     }
 }

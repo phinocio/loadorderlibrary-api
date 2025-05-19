@@ -31,7 +31,7 @@ test('it creates load order with basic information', function () {
         'version' => '1.0.0',
         'website' => 'https://example.com',
         'discord' => 'https://discord.example.com',
-        'readme' => 'https://readme.example.com',
+        'readme' => 'http://readme.example.com',
         'private' => true,
         'game' => $this->game->id,
         'files' => [
@@ -43,9 +43,9 @@ test('it creates load order with basic information', function () {
         ->name->toBe('New Load Order')
         ->description->toBe('Test Description')
         ->version->toBe('1.0.0')
-        ->website->toBe('https://example.com')
-        ->discord->toBe('https://discord.example.com')
-        ->readme->toBe('https://readme.example.com')
+        ->website->toBe('example.com')
+        ->discord->toBe('discord.example.com')
+        ->readme->toBe('readme.example.com')
         ->is_private->toBeTrue()
         ->game_id->toBe($this->game->id)
         ->user_id->toBe($this->author->id);

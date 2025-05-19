@@ -37,9 +37,9 @@ final class CreateLoadOrder
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'version' => $data['version'] ?? null,
-                'website' => $data['website'] ?? null,
-                'discord' => $data['discord'] ?? null,
-                'readme' => $data['readme'] ?? null,
+                'website' => $this->cleanUrl($data['website'] ?? null),
+                'discord' => $this->cleanUrl($data['discord'] ?? null),
+                'readme' => $this->cleanUrl($data['readme'] ?? null),
                 'is_private' => $data['private'] ?? false,
                 'expires_at' => $this->calculateExpiration($data['expires'] ?? null),
                 'game_id' => $data['game'],
@@ -69,5 +69,14 @@ final class CreateLoadOrder
             'never' => null,
             default => Auth::check() ? null : now()->addHours(24),
         };
+    }
+
+    private function cleanUrl(?string $url): ?string
+    {
+        if (! $url) {
+            return null;
+        }
+
+        return str_replace(['https://', 'http://'], '', $url) ?: null;
     }
 }

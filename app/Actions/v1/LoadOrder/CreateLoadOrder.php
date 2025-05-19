@@ -63,6 +63,7 @@ final class CreateLoadOrder
 
         return match ($expires) {
             '3h' => CarbonImmutable::now()->addHours(3),
+            '24h' => CarbonImmutable::now()->addHours(24),
             '3d' => CarbonImmutable::now()->addDays(3),
             '1w' => CarbonImmutable::now()->addWeek(),
             '1m' => CarbonImmutable::now()->addMonth(),

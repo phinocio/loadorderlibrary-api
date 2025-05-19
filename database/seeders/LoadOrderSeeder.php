@@ -30,9 +30,9 @@ final class LoadOrderSeeder extends Seeder
                 'description' => fake()->boolean(75) ? fake()->paragraph(rand(1, 3)) : null,
                 'version' => fake()->optional(0.1)->semver(),
                 'is_private' => fake()->boolean(33),
-                'discord' => fake()->optional(0.4)->url(),
-                'website' => fake()->optional(0.4)->url(),
-                'readme' => fake()->optional(0.6)->url(),
+                'discord' => $this->cleanUrl(fake()->optional(0.4)->url()),
+                'website' => $this->cleanUrl(fake()->optional(0.4)->url()),
+                'readme' => $this->cleanUrl(fake()->optional(0.6)->url()),
                 'expires_at' => fake()->optional(0.1)->dateTimeBetween('now', '+1 year'),
                 'user_id' => fake()->boolean(33) ? null : $users->random()->id,
                 'game_id' => $games->random()->id,
@@ -65,5 +65,14 @@ final class LoadOrderSeeder extends Seeder
         foreach (array_chunk($pivotData, 500) as $chunk) {
             DB::table('file_load_order')->insert($chunk);
         }
+    }
+
+    private function cleanUrl(?string $url): ?string
+    {
+        if (! $url) {
+            return null;
+        }
+
+        return str($url)->trim()->replace('https://', '')->replace('http://', '')->value;
     }
 }

@@ -104,6 +104,7 @@ test('it handles all expiration options for authenticated users', function () {
 
     $testCases = [
         '3h' => now()->addHours(3),
+        '24h' => now()->addHours(24),
         '3d' => now()->addDays(3),
         '1w' => now()->addWeek(),
         '1m' => now()->addMonth(),

@@ -34,7 +34,7 @@ describe('show', function () {
             ->getJson("/v1/admin/users/{$this->user->name}")
             ->assertOk()
             ->assertJsonStructure([
-                'data' => getUserWithProfileJsonStructure(),
+                'data' => getUserWithProfileJsonStructure(false),
             ]);
     });
 

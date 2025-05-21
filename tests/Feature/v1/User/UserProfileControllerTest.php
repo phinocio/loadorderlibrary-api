@@ -15,17 +15,17 @@ describe('show', function () {
         // Unauthenticated user can view profile
         guest()->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure(true)]);
 
         // Admin can view profile
         login($this->admin)->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure(true)]);
 
         // Other user can view profile
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
-            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure()]);
+            ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure(true)]);
     });
 });
 

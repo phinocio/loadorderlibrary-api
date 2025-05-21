@@ -37,7 +37,7 @@ it('returns empty collection when no games match the name', function () {
     expect($query->get())->toHaveCount(0);
 });
 
-it('is case sensitive when matching game names', function () {
+it('is case insensitive when matching game names', function () {
     $filterGameName = new FiltersGameName;
     $game = Game::factory()->create(['name' => 'Skyrim']);
     LoadOrder::factory()->count(2)->for($game, 'game')->create();
@@ -46,5 +46,5 @@ it('is case sensitive when matching game names', function () {
 
     $filterGameName($query, 'skyrim', 'game');
 
-    expect($query->get())->toHaveCount(0);
+    expect($query->get())->toHaveCount(2);
 });

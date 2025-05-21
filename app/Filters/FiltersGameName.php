@@ -14,7 +14,7 @@ final class FiltersGameName implements Filter
     public function __invoke(Builder $query, mixed $value, string $property): void
     {
         $query->whereHas('game', function (Builder $query) use ($value) {
-            $query->where('name', $value);
+            $query->where('name', $value)->orWhere('slug', $value);
         });
     }
 }

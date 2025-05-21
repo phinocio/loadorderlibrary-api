@@ -23,7 +23,7 @@ final class UserProfileController extends ApiController
     {
         $user = Cache::rememberForever(
             CacheKey::USER->with($name),
-            fn () => User::query()->where('name', $name)->with('profile')->firstOrFail()
+            fn () => User::query()->where('name', $name)->with(['profile', 'lists.game', 'lists.author'])->firstOrFail()
         );
 
         Gate::authorize('view', $user);

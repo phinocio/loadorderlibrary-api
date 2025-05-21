@@ -18,7 +18,7 @@ final class GameFactory extends Factory
     {
         // Slug is generated automatically based on the name
         return [
-            'name' => $this->faker->word(),
+            'name' => $this->faker->unique()->word(),
         ];
     }
 }

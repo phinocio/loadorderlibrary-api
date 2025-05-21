@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\v1\User;
 
+use App\Http\Resources\v1\LoadOrder\LoadOrderResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +25,7 @@ final class UserResource extends JsonResource
             'verified' => $this->is_verified,
             'admin' => $this->when($isAdminRoute, fn () => $this->isAdmin()),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
+            'lists' => $this->whenLoaded('lists', fn () => LoadOrderResource::collection($this->lists)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

@@ -16,7 +16,7 @@ final class GameController
     {
         $games = Cache::rememberForever(
             CacheKey::GAMES->value,
-            fn () => Game::query()->orderBy('name')->get()
+            fn () => Game::query()->withCount('lists')->orderBy('name')->get()
         );
 
         return GameResource::collection($games);
@@ -26,7 +26,7 @@ final class GameController
     {
         $game = Cache::rememberForever(
             CacheKey::GAME->with($game),
-            fn () => Game::query()->where('slug', $game)->orWhere('name', $game)->firstOrFail()
+            fn () => Game::query()->withCount('lists')->where('slug', $game)->orWhere('name', $game)->firstOrFail()
         );
 
         return new GameResource($game);

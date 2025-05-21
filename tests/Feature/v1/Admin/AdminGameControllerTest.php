@@ -21,7 +21,7 @@ describe('store', function () {
                     'id' => 1,
                     'name' => 'New Game',
                     'slug' => 'new-game',
-                    'lists_count' => 0,
+                    'lists_count' => null,
                 ],
             ]);
 

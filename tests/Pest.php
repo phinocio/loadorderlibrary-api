@@ -74,15 +74,36 @@ function getUserJsonStructure(): array
 /**
  * @return array<string, mixed>
  */
-function getUserWithProfileJsonStructure(): array
+function getUserWithProfileJsonStructure(bool $includeLists = false): array
 {
-    return [
+    $structure = [
         'name',
         'verified',
         'profile' => getUserProfileJsonStructure(),
         'created',
         'updated',
     ];
+
+    if ($includeLists) {
+        $structure['lists'] = [
+            '*' => [
+                'name',
+                'version',
+                'slug',
+                'url',
+                'description',
+                'website',
+                'discord',
+                'readme',
+                'private',
+                'expires_at',
+                'created',
+                'updated',
+            ],
+        ];
+    }
+
+    return $structure;
 }
 
 /**

@@ -18,11 +18,16 @@ final class GameResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'lists_count' => 0,
         ];
+
+        if ($request->routeIs('games.*', 'admin.games.*')) {
+            $data['lists_count'] = $this->lists_count;
+        }
+
+        return $data;
     }
 }

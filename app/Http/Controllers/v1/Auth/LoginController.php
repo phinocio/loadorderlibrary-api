@@ -20,7 +20,10 @@ final class LoginController
         ], (bool) ($data['remember'] ?? false))) {
             session()->regenerate();
 
-            return new CurrentUserResource(Auth::user()?->load('profile'));
+            return new CurrentUserResource(Auth::user()?->load([
+                'profile',
+                'lists',
+            ]));
         }
 
         return response()->json(['message' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);

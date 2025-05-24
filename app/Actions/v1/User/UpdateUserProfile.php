@@ -20,6 +20,9 @@ final class UpdateUserProfile
     {
         $user->profile()->updateOrCreate(['user_id' => $user->id], $data);
 
-        return $user->load('profile');
+        return $user->load([
+            'profile',
+            'lists',
+        ]);
     }
 }

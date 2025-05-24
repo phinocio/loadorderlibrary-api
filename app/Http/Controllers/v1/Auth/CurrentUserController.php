@@ -11,6 +11,9 @@ final class CurrentUserController
 {
     public function __invoke(): CurrentUserResource
     {
-        return new CurrentUserResource(Auth::user()?->load('profile'));
+        return new CurrentUserResource(Auth::user()?->load([
+            'profile',
+            'lists',
+        ]));
     }
 }

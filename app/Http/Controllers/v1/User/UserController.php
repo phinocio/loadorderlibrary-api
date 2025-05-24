@@ -26,7 +26,10 @@ final class UserController extends ApiController
         $data = $request->validated();
         $user = $updateUser->execute($user, $data);
 
-        return new CurrentUserResource($user->load('profile'));
+        return new CurrentUserResource($user->load([
+            'profile',
+            'lists',
+        ]));
     }
 
     public function destroy(User $user, DeleteUser $deleteUser): JsonResponse

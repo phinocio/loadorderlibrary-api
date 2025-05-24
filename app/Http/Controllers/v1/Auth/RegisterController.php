@@ -21,6 +21,9 @@ final class RegisterController
 
         session()->regenerate();
 
-        return new CurrentUserResource($user->load('profile'));
+        return new CurrentUserResource($user->load([
+            'profile',
+            'lists',
+        ]));
     }
 }

@@ -117,6 +117,22 @@ function getCurrentUserJsonStructure(): array
         'verified',
         'admin',
         'profile' => getUserProfileJsonStructure(),
+        'lists' => [
+            '*' => [
+                'name',
+                'version',
+                'slug',
+                'url',
+                'description',
+                'website',
+                'discord',
+                'readme',
+                'private',
+                'expires_at',
+                'created',
+                'updated',
+            ],
+        ],
         'created',
         'updated',
     ];

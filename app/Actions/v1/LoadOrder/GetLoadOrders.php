@@ -34,8 +34,7 @@ final class GetLoadOrders
                         ->orWhereRelation('author', 'name', 'LIKE', '%'.$request->query('query').'%')
                         ->orWhereRelation('game', 'name', 'LIKE', '%'.$request->query('query').'%');
                 });
-            })
-            ->with(['game', 'author']);
+            });
 
         $queryParams = $request->query();
         $pageParams = isset($queryParams['page']) && is_array($queryParams['page'])

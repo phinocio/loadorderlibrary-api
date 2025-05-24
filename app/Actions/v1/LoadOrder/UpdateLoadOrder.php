@@ -61,7 +61,7 @@ final class UpdateLoadOrder
 
             $loadOrder->update($data);
 
-            return $loadOrder->load(['files', 'author', 'game']);
+            return $loadOrder->load(['files']);
         });
     }
 

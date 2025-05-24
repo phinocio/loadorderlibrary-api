@@ -53,6 +53,8 @@ final class LoadOrder extends Model
         'game_id',
     ];
 
+    protected $with = ['author', 'game'];
+
     /** @return BelongsTo<User, $this> */
     public function author(): BelongsTo
     {

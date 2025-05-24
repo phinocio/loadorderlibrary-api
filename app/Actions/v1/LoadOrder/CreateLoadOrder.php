@@ -51,7 +51,7 @@ final class CreateLoadOrder
                 $loadOrder->files()->attach($file);
             }
 
-            return $loadOrder->load(['files', 'author', 'game']);
+            return $loadOrder->load(['files']);
         });
     }
 

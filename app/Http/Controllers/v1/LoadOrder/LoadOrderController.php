@@ -69,7 +69,7 @@ final class LoadOrderController extends ApiController
     {
         $loadOrder = Cache::rememberForever(
             CacheKey::LOAD_ORDER->with($slug),
-            fn () => LoadOrder::query()->where('slug', $slug)->with(['game', 'author', 'files'])->firstOrFail()
+            fn () => LoadOrder::query()->where('slug', $slug)->with(['files'])->firstOrFail()
         );
 
         Gate::authorize('view', $loadOrder);

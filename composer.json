@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
         "resend/resend-laravel": "^0.19",
-        "spatie/laravel-query-builder": "^6.3.2"
+        "spatie/laravel-query-builder": "^6.3.2",
+        "stechstudio/laravel-zipstream": "^5.5"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",

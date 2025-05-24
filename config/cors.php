@@ -19,7 +19,7 @@ return [
 
     'paths' => ['v1/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
 
     'allowed_origins' => [env('FRONTEND_URL', '')],
 
@@ -27,7 +27,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['Content-Disposition', 'Content-Type', 'Content-Length'],
 
     'max_age' => 0,
 

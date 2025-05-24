@@ -13,7 +13,7 @@ beforeEach(function () {
     // Clear the cache to prevent test interference
     Cache::flush();
     $this->content = "line1\nline2\nline3";
-    $this->file = File::factory()->create(['name' => 'test.txt']);
+    $this->file = File::factory()->create(['name' => 'test.txt', 'clean_name' => 'test.txt']);
     Storage::disk('uploads')->put($this->file->name, $this->content);
 });
 

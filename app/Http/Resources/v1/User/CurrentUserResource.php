@@ -31,7 +31,7 @@ final class CurrentUserResource extends JsonResource
             'verified' => $this->is_verified,
             'admin' => $this->isAdmin(),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
-            'lists' => $this->whenLoaded('lists', fn () => LoadOrderResource::collection($this->lists)),
+            'lists' => LoadOrderResource::collection($this->lists),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

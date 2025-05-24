@@ -14,7 +14,6 @@ final class GameController
 {
     public function index(): AnonymousResourceCollection
     {
-        Cache::flush();
         $games = Cache::rememberForever(
             CacheKey::GAMES->value,
             fn () => Game::query()->withCount('lists')->orderBy('name')->get()

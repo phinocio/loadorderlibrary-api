@@ -11,6 +11,7 @@ use App\Models\File;
 use App\Models\LoadOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use STS\ZipStream\Builder;
 
 final class FileDownloadController
@@ -23,15 +24,23 @@ final class FileDownloadController
             fn (): File => File::query()->where('name', $name)->firstOrFail()
         );
 
-        if (! $file->exists) {
+        // Check if file exists in storage
+        if (! Storage::disk('uploads')->exists($file->name)) {
             abort(404);
         }
 
         return $downloadFile->execute($file);
     }
 
-    public function downloadAllFiles(LoadOrder $loadOrder, DownloadAllFiles $downloadAllFiles): ?Builder
+    public function downloadAllFiles(LoadOrder $loadOrder, DownloadAllFiles $downloadAllFiles): Builder
     {
+        // Ensure the files relationship is loaded
+        $loadOrder->load('files');
+
+        if (! count($loadOrder->files)) {
+            abort(404);
+        }
+
         return $downloadAllFiles->execute($loadOrder);
     }
 }

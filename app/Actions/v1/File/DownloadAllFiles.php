@@ -14,7 +14,7 @@ final class DownloadAllFiles
     private const TEMP_URL_EXPIRATION = 5;
 
     /** Create a zip file containing all files from a load order. */
-    public function execute(LoadOrder $loadOrder): ?Builder
+    public function execute(LoadOrder $loadOrder): Builder
     {
         $listFiles = [];
 
@@ -23,10 +23,6 @@ final class DownloadAllFiles
                 'name' => $file->name,
                 'clean_name' => $file->clean_name,
             ];
-        }
-
-        if (empty($listFiles)) {
-            return null;
         }
 
         $zip = Zip::create($loadOrder->name.'.zip');

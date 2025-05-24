@@ -10,5 +10,5 @@ Route::controller(FileDownloadController::class)->group(function () {
     Route::get('/files/{name}/download', 'download')->name('files.download');
 
     // Download all files from a load order as zip
-    Route::get('/lists/{slug}/download', 'downloadAllFiles')->name('lists.download');
+    Route::get('/lists/{load_order:slug}/download', 'downloadAllFiles')->name('lists.download');
 });

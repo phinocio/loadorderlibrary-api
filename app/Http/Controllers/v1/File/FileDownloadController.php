@@ -9,13 +9,13 @@ use App\Actions\v1\File\DownloadFile;
 use App\Enums\v1\CacheKey;
 use App\Models\File;
 use App\Models\LoadOrder;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use STS\ZipStream\Builder;
 
 final class FileDownloadController
 {
-    public function download(string $name, DownloadFile $downloadFile): Response
+    public function download(string $name, DownloadFile $downloadFile): RedirectResponse
     {
         /** @var File $file */
         $file = Cache::rememberForever(

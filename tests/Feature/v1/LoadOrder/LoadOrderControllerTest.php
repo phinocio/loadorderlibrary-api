@@ -347,6 +347,54 @@ describe('update', function () {
         ]);
     });
 
+    it('allows author to update load order expires date', function () {
+        $loadOrder = LoadOrder::factory()->create([
+            'name' => 'Test Load Order',
+            'expires_at' => now()->addDays(7),
+            'user_id' => $this->author->id,
+        ]);
+
+        $response = login($this->author)->patchJson("/v1/lists/{$loadOrder->slug}", [
+            'expires' => '1w',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.name', 'Test Load Order');
+
+        // Check that the expires date was updated in the database
+        $this->assertDatabaseHas('load_orders', [
+            'id' => $loadOrder->id,
+            'name' => 'Test Load Order',
+        ]);
+
+        // Refresh the model and check the expires_at field
+        $loadOrder->refresh();
+
+        // Check that it's approximately one week from now (allowing 2 minutes tolerance for test execution time)
+        $expectedDate = now()->addWeek();
+        expect($loadOrder->expires_at)->not->toBeNull()
+            ->and($loadOrder->expires_at->diffInMinutes($expectedDate))->toBeLessThan(2);
+    });
+
+    it('allows author to set load order to never expire', function () {
+        $loadOrder = LoadOrder::factory()->create([
+            'name' => 'Test Load Order',
+            'expires_at' => now()->addDays(7),
+            'user_id' => $this->author->id,
+        ]);
+
+        $response = login($this->author)->patchJson("/v1/lists/{$loadOrder->slug}", [
+            'expires' => 'never',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.name', 'Test Load Order');
+
+        // Refresh the model and check the expires_at field is null
+        $loadOrder->refresh();
+        expect($loadOrder->expires_at)->toBeNull();
+    });
+
     it('validates update fields', function () {
         $response = login($this->author)->patchJson("/v1/lists/{$this->loadOrder->slug}", [
             'name' => '',

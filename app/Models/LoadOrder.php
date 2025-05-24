@@ -81,6 +81,15 @@ final class LoadOrder extends Model
         ];
     }
 
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'expires_at' => 'datetime',
+            'is_private' => 'boolean',
+        ];
+    }
+
     /**
      * Scope a query to only include non-expired load orders.
      *

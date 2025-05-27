@@ -60,6 +60,7 @@ final class UpdateLoadOrder
             }
 
             $loadOrder->update($data);
+            $loadOrder->touch();
 
             return $loadOrder->load(['files']);
         });

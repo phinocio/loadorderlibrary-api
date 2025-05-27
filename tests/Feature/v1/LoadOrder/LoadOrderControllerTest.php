@@ -297,6 +297,15 @@ describe('update', function () {
             'name' => 'Updated Name',
             'description' => 'Updated Description',
         ]);
+
+        $this->assertDatabaseHas('files', [
+            'clean_name' => 'modlist.txt',
+        ]);
+
+        $this->assertDatabaseHas('file_load_order', [
+            'load_order_id' => $loadOrder->id,
+            'file_id' => 1,
+        ]);
     });
 
     it('allows partial updates without files', function () {

@@ -15,6 +15,7 @@ final class LoadOrderObserver
     {
         // Only need to flush the index since this is a new item
         Cache::tags([CacheKey::LOAD_ORDERS->value])->flush();
+        Cache::forget(CacheKey::GAMES->value);
     }
 
     /** Handle the LoadOrder "updated" event. */

@@ -2,12 +2,32 @@
 
 declare(strict_types=1);
 
+use App\Models\Game;
+use App\Models\LoadOrder;
 use App\Models\User;
 
 beforeEach(function () {
     $this->admin = User::factory()->create(['is_admin' => true]);
     $this->user = User::factory()->create()->fresh();
     $this->otherUser = User::factory()->create()->fresh();
+
+    // Set up test data for private list visibility tests
+    $this->game = Game::factory()->create();
+
+    // Create public and private lists for the user
+    $this->publicList = LoadOrder::factory()->create([
+        'name' => 'Public List',
+        'user_id' => $this->user->id,
+        'game_id' => $this->game->id,
+        'is_private' => false,
+    ]);
+
+    $this->privateList = LoadOrder::factory()->create([
+        'name' => 'Private List',
+        'user_id' => $this->user->id,
+        'game_id' => $this->game->id,
+        'is_private' => true,
+    ]);
 });
 
 describe('show', function () {
@@ -26,6 +46,30 @@ describe('show', function () {
         login($this->otherUser)->getJson("/v1/users/{$this->user->name}/profile")
             ->assertOk()
             ->assertExactJsonStructure(['data' => getUserWithProfileJsonStructure(true)]);
+    });
+
+    it('shows only public lists when viewing another user profile', function () {
+        $response = login($this->otherUser)->getJson("/v1/users/{$this->user->name}/profile");
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data.lists')
+            ->assertJsonPath('data.lists.0.name', 'Public List');
+    });
+
+    it('shows only public lists to unauthenticated users viewing a profile', function () {
+        $response = guest()->getJson("/v1/users/{$this->user->name}/profile");
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data.lists')
+            ->assertJsonPath('data.lists.0.name', 'Public List');
+    });
+
+    it('shows only public lists to admin users viewing a profile', function () {
+        $response = login($this->admin)->getJson("/v1/users/{$this->user->name}/profile");
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data.lists')
+            ->assertJsonPath('data.lists.0.name', 'Public List');
     });
 });
 

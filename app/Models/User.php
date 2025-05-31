@@ -66,6 +66,12 @@ final class User extends Authenticatable
         return $this->hasMany(LoadOrder::class);
     }
 
+    /** @return HasMany<LoadOrder, $this> */
+    public function publicLists(): HasMany
+    {
+        return $this->hasMany(LoadOrder::class)->where('is_private', false);
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {

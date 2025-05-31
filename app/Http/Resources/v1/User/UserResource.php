@@ -25,7 +25,7 @@ final class UserResource extends JsonResource
             'verified' => $this->is_verified,
             'admin' => $this->when($isAdminRoute, fn () => $this->isAdmin()),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
-            'lists' => $this->whenLoaded('lists', fn () => LoadOrderResource::collection($this->lists)),
+            'lists' => $this->whenLoaded('publicLists', fn () => LoadOrderResource::collection($this->publicLists)),
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

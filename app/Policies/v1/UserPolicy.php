@@ -10,11 +10,11 @@ final class UserPolicy
 {
     public function update(User $user, User $model): bool
     {
-        return $user->tokenCan('update') && $user->is($model);
+        return $user->is($model);
     }
 
     public function delete(User $user, User $model): bool
     {
-        return $user->tokenCan('delete') && $user->is($model);
+        return $user->is($model);
     }
 }

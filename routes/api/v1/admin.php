@@ -30,6 +30,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::prefix('lists')->group(function () {
         Route::controller(AdminLoadOrderController::class)->group(function () {
+            Route::get('/', 'index')->name('admin.lists.index');
             Route::delete('/{slug}', 'destroy')->name('admin.lists.destroy');
         });
     });

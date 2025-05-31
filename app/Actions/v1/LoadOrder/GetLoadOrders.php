@@ -14,7 +14,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 final class GetLoadOrders
 {
-    public function execute(Request $request): mixed
+    public function execute(Request $request, bool $includePrivate = false): mixed
     {
         $lists = QueryBuilder::for(LoadOrder::class)
             ->allowedFilters([
@@ -26,7 +26,7 @@ final class GetLoadOrders
                 AllowedSort::field('created', 'created_at'),
                 AllowedSort::field('updated', 'updated_at'),
             ])
-            ->where('is_private', '=', false)
+            ->when(! $includePrivate, fn ($query) => $query->where('is_private', '=', false))
             ->when($request->query('query'), function ($query) use ($request) {
                 return $query->where(function ($q) use ($request) {
                     $q->orWhere('name', 'LIKE', '%'.$request->query('query').'%')

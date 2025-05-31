@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\v1\CacheKey;
 use App\Models\Game;
 use App\Models\LoadOrder;
 use App\Models\User;
@@ -17,6 +18,66 @@ beforeEach(function () {
         'user_id' => $this->author->id,
         'is_private' => false,
     ])->fresh();
+    $this->loadOrder2 = LoadOrder::factory()->create([
+        'name' => 'Another Load Order',
+        'slug' => 'another-load-order',
+        'game_id' => $this->game->id,
+        'user_id' => $this->author->id,
+        'is_private' => true,
+    ])->fresh();
+});
+
+describe('index', function () {
+    it('allows admin to view all load orders', function () {
+        login($this->admin)
+            ->getJson('/v1/admin/lists')
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.slug', $this->loadOrder->slug)
+            ->assertJsonPath('data.1.private', true);
+
+    });
+
+    it('prevents non-admin from viewing load orders', function () {
+        login($this->author)
+            ->getJson('/v1/admin/lists')
+            ->assertForbidden();
+    });
+
+    it('prevents guest from viewing load orders', function () {
+        guest()
+            ->getJson('/v1/admin/lists')
+            ->assertUnauthorized();
+    });
+
+    it('uses different cache keys for different queries', function () {
+        $cacheKey1 = null;
+        $cacheKey2 = null;
+
+        Cache::shouldReceive('tags')
+            ->with([CacheKey::LOAD_ORDERS->value])
+            ->twice()
+            ->andReturnSelf();
+
+        Cache::shouldReceive('rememberForever')
+            ->twice()
+            ->withArgs(function ($key) use (&$cacheKey1, &$cacheKey2) {
+                if (! $cacheKey1) {
+                    $cacheKey1 = $key;
+                } else {
+                    $cacheKey2 = $key;
+                }
+
+                return true;
+            })
+            ->andReturn(collect([]));
+
+        login($this->admin)->getJson('/v1/admin/lists')->assertOk();
+        login($this->admin)->getJson('/v1/admin/lists?query=test')->assertOk();
+
+        expect($cacheKey1)->toBe(CacheKey::LOAD_ORDERS->value)
+            ->and($cacheKey2)->toBe(CacheKey::LOAD_ORDERS->with(md5('query=test'), 'with-private'));
+    });
 });
 
 describe('destroy', function () {

@@ -143,14 +143,16 @@ test('it handles all expiration options for authenticated users', function () {
 test('it handles all expiration options for guests', function () {
     Auth::shouldReceive('check')->andReturn(false);
 
+    $now = now();
+
     $testCases = [
-        '3h' => now()->addHours(3),
-        '3d' => now()->addDays(3),
-        '1w' => now()->addWeek(),
-        '1m' => now()->addMonth(),
+        '3h' => $now->addHours(3),
+        '3d' => $now->addDays(3),
+        '1w' => $now->addWeek(),
+        '1m' => $now->addMonth(),
         'never' => null,
-        null => now()->addHours(24),
-        'invalid' => now()->addHours(24),
+        null => $now->addHours(24),
+        'invalid' => $now->addHours(24),
     ];
 
     foreach ($testCases as $expires => $expected) {

@@ -9,7 +9,7 @@ beforeEach(function () {
 
     // Create API tokens with different abilities
     $this->readToken = $this->user->createToken('Read Token', ['read'])->plainTextToken;
-    $this->writeToken = $this->user->createToken('Write Token', ['write'])->plainTextToken;
+    $this->createToken = $this->user->createToken('Create Token', ['create'])->plainTextToken;
 });
 
 describe('GET routes', function () {

@@ -10,38 +10,47 @@ beforeEach(function () {
 
     // Create API tokens with different abilities
     $this->readToken = $this->user->createToken('Read Token', ['read'])->plainTextToken;
-    $this->writeToken = $this->user->createToken('Write Token', ['write'])->plainTextToken;
-    $this->adminToken = $this->admin->createToken('Admin Token', ['admin'])->plainTextToken;
+    $this->createToken = $this->user->createToken('Create Token', ['create'])->plainTextToken;
+    $this->updateToken = $this->user->createToken('Update Token', ['update'])->plainTextToken;
+    $this->deleteToken = $this->user->createToken('Delete Token', ['delete'])->plainTextToken;
+
+    // Create admin user token for testing different users
+    $this->adminToken = $this->admin->createToken('Admin Read Token', ['read'])->plainTextToken;
 });
 
 describe('/v1/me (auth:sanctum)', function () {
-    it('accepts API tokens with any ability', function () {
+    it('only accepts tokens with read ability', function () {
         // Test with read token
         $this->withHeader('Authorization', 'Bearer '.$this->readToken)
             ->getJson('/v1/me')
             ->assertOk();
 
-        // Test with write token
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        // Test with create token
+        $this->withHeader('Authorization', 'Bearer '.$this->createToken)
             ->getJson('/v1/me')
-            ->assertOk();
+            ->assertForbidden();
 
-        // Test with admin token
-        $this->withHeader('Authorization', 'Bearer '.$this->adminToken)
+        // Test with update token
+        $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->getJson('/v1/me')
-            ->assertOk();
+            ->assertForbidden();
+
+        // Test with delete token
+        $this->withHeader('Authorization', 'Bearer '.$this->deleteToken)
+            ->getJson('/v1/me')
+            ->assertForbidden();
     });
 
     it('authenticates with tokens from different users', function () {
         $this->withHeader('Authorization', 'Bearer '.$this->readToken)
             ->getJson('/v1/me')
             ->assertOk()
-            ->assertJsonPath('data.id', $this->user->id);
+            ->assertJsonPath('data.name', $this->user->name);
 
         $this->withHeader('Authorization', 'Bearer '.$this->adminToken)
             ->getJson('/v1/me')
             ->assertOk()
-            ->assertJsonPath('data.id', $this->admin->id);
+            ->assertJsonPath('data.name', $this->admin->name);
     });
 
     it('rejects invalid API tokens', function () {
@@ -90,7 +99,7 @@ describe('/v1/api-tokens (auth)', function () {
     });
 
     it('rejects API tokens on POST', function () {
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $this->withHeader('Authorization', 'Bearer '.$this->createToken)
             ->postJson('/v1/api-tokens', [
                 'token_name' => 'Test Token',
                 'abilities' => ['read'],

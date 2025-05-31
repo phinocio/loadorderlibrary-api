@@ -12,7 +12,7 @@ beforeEach(function () {
 
     // Create API tokens with different abilities
     $this->readToken = $this->user->createToken('Read Token', ['read'])->plainTextToken;
-    $this->writeToken = $this->user->createToken('Write Token', ['write'])->plainTextToken;
+    $this->updateToken = $this->user->createToken('Update Token', ['update'])->plainTextToken;
 });
 
 describe('GET routes', function () {
@@ -36,7 +36,7 @@ describe('GET routes', function () {
 
 describe('PATCH routes', function () {
     it('rejects API tokens for PATCH /v1/users/{name} (auth middleware)', function () {
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->patchJson("/v1/users/{$this->user->name}", [
                 'email' => 'newemail@example.com',
             ])
@@ -59,7 +59,7 @@ describe('PATCH routes', function () {
     });
 
     it('rejects API tokens for PATCH /v1/users/{name}/password', function () {
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->patchJson("/v1/users/{$this->user->name}/password", [
                 'current_password' => $this->password,
                 'password' => 'newpassword',
@@ -79,7 +79,7 @@ describe('PATCH routes', function () {
     });
 
     it('rejects API tokens for PATCH /v1/users/{name}/profile', function () {
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->patchJson("/v1/users/{$this->user->name}/profile", [
                 'bio' => 'Updated bio',
             ])
@@ -97,7 +97,7 @@ describe('PATCH routes', function () {
 
 describe('DELETE routes', function () {
     it('rejects API tokens for DELETE /v1/users/{name}', function () {
-        $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->deleteJson("/v1/users/{$this->user->name}")
             ->assertUnauthorized();
     });

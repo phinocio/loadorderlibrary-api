@@ -11,7 +11,9 @@ beforeEach(function () {
 
     // Create API tokens with different abilities
     $this->readToken = $this->user->createToken('Read Token', ['read'])->plainTextToken;
-    $this->writeToken = $this->user->createToken('Write Token', ['write'])->plainTextToken;
+    $this->createToken = $this->user->createToken('Create Token', ['create'])->plainTextToken;
+    $this->updateToken = $this->user->createToken('Update Token', ['update'])->plainTextToken;
+    $this->deleteToken = $this->user->createToken('Delete Token', ['delete'])->plainTextToken;
 });
 
 describe('GET routes', function () {
@@ -55,7 +57,7 @@ describe('POST routes', function () {
     it('allows API tokens for POST /v1/lists (public route)', function () {
         $game = Game::factory()->create();
 
-        $response = $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->createToken)
             ->postJson('/v1/lists', [
                 'name' => 'Test List',
                 'description' => 'Test Description',
@@ -96,7 +98,7 @@ describe('POST routes', function () {
 
 describe('PATCH routes', function () {
     it('allows API tokens for PATCH /v1/lists/{slug} (auth:sanctum middleware)', function () {
-        $response = $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->updateToken)
             ->patchJson('/v1/lists/test-slug', [
                 'name' => 'Updated List',
             ]);
@@ -122,7 +124,7 @@ describe('PATCH routes', function () {
 
 describe('DELETE routes', function () {
     it('allows API tokens for DELETE /v1/lists/{slug} (auth:sanctum middleware)', function () {
-        $response = $this->withHeader('Authorization', 'Bearer '.$this->writeToken)
+        $response = $this->withHeader('Authorization', 'Bearer '.$this->deleteToken)
             ->deleteJson('/v1/lists/test-slug');
         // Should not return 401 (might return 404 if list doesn't exist)
         expect($response->status())->not->toBe(401);

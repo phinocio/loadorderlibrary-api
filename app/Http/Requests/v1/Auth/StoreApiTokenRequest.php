@@ -25,6 +25,7 @@ final class StoreApiTokenRequest extends FormRequest
         return [
             'token_name' => ['required', 'string', 'max:255'],
             'abilities' => ['required', 'array'],
+            'abilities.*' => ['required', 'string', 'in:create,read,update,delete'],
             'expires' => ['nullable', 'string'],
         ];
     }

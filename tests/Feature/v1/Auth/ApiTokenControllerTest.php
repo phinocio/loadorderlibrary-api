@@ -13,7 +13,7 @@ beforeEach(function () {
 describe('index', function () {
     it('allows authenticated user to view their own tokens', function () {
         $this->user->createToken('Test Token 1', ['read']);
-        $this->user->createToken('Test Token 2', ['write']);
+        $this->user->createToken('Test Token 2', ['create']);
         $this->otherUser->createToken('Other User Token', ['read']);
 
         $response = login($this->user)->getJson('/v1/api-tokens');
@@ -57,7 +57,7 @@ describe('store', function () {
     it('allows authenticated user to create a new token', function () {
         $response = login($this->user)->postJson('/v1/api-tokens', [
             'token_name' => 'My API Token',
-            'abilities' => ['read', 'write'],
+            'abilities' => ['read', 'create'],
         ]);
 
         $response->assertOk()
@@ -71,7 +71,7 @@ describe('store', function () {
             'tokenable_id' => $this->user->id,
             'tokenable_type' => User::class,
             'name' => 'My API Token',
-            'abilities' => json_encode(['read', 'write']),
+            'abilities' => json_encode(['read', 'create']),
         ]);
     });
 
@@ -94,7 +94,7 @@ describe('store', function () {
     it('creates token with multiple abilities', function () {
         $response = login($this->user)->postJson('/v1/api-tokens', [
             'token_name' => 'Full Access Token',
-            'abilities' => ['read', 'write', 'delete', 'admin'],
+            'abilities' => ['read', 'create', 'update', 'delete'],
         ]);
 
         $response->assertOk()
@@ -103,7 +103,7 @@ describe('store', function () {
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $this->user->id,
             'name' => 'Full Access Token',
-            'abilities' => json_encode(['read', 'write', 'delete', 'admin']),
+            'abilities' => json_encode(['read', 'create', 'update', 'delete']),
         ]);
     });
 
@@ -156,6 +156,57 @@ describe('store', function () {
             'abilities' => ['read'],
         ])->assertUnprocessable()
             ->assertJsonValidationErrors(['token_name']);
+    });
+
+    it('validates abilities contain only allowed values', function () {
+        login($this->user)->postJson('/v1/api-tokens', [
+            'token_name' => 'Invalid Abilities Token',
+            'abilities' => ['read', 'invalid'],
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['abilities.1']);
+    });
+
+    it('rejects old ability names', function () {
+        login($this->user)->postJson('/v1/api-tokens', [
+            'token_name' => 'Old Abilities Token',
+            'abilities' => ['write'],
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['abilities.0']);
+
+        login($this->user)->postJson('/v1/api-tokens', [
+            'token_name' => 'Admin Ability Token',
+            'abilities' => ['admin'],
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['abilities.0']);
+    });
+
+    it('accepts all valid ability combinations', function () {
+        $validAbilities = [
+            ['read'],
+            ['create'],
+            ['update'],
+            ['delete'],
+            ['read', 'create'],
+            ['read', 'update'],
+            ['read', 'delete'],
+            ['create', 'update'],
+            ['create', 'delete'],
+            ['update', 'delete'],
+            ['read', 'create', 'update'],
+            ['read', 'create', 'delete'],
+            ['read', 'update', 'delete'],
+            ['create', 'update', 'delete'],
+            ['read', 'create', 'update', 'delete'],
+        ];
+
+        foreach ($validAbilities as $index => $abilities) {
+            $response = login($this->user)->postJson('/v1/api-tokens', [
+                'token_name' => "Valid Token {$index}",
+                'abilities' => $abilities,
+            ]);
+
+            $response->assertOk('Failed for abilities: '.implode(', ', $abilities));
+        }
     });
 });
 
@@ -270,7 +321,7 @@ describe('real world scenarios', function () {
 
         login($this->user)->postJson('/v1/api-tokens', [
             'token_name' => 'API Token',
-            'abilities' => ['write'],
+            'abilities' => ['create'],
         ])->assertOk();
 
         $response = login($this->user)->getJson('/v1/api-tokens');
@@ -480,7 +531,7 @@ describe('token expiration', function () {
     it('creates token with complex abilities and expiration', function () {
         $response = login($this->user)->postJson('/v1/api-tokens', [
             'token_name' => 'Complex Token',
-            'abilities' => ['read', 'write', 'delete', 'admin'],
+            'abilities' => ['read', 'create', 'update', 'delete'],
             'expires' => '1w',
         ]);
 
@@ -489,7 +540,7 @@ describe('token expiration', function () {
         $token = $this->user->tokens()->where('name', 'Complex Token')->first();
         $expectedExpiry = now()->addWeek();
 
-        expect($token->abilities)->toBe(['read', 'write', 'delete', 'admin'])
+        expect($token->abilities)->toBe(['read', 'create', 'update', 'delete'])
             ->and($token->expires_at)->not->toBeNull()
             ->and($token->expires_at->diffInMinutes($expectedExpiry))->toBeLessThan(2);
     });

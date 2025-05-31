@@ -61,8 +61,8 @@ describe('store', function () {
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['token'])
-            ->assertJsonPath('token', function ($token) {
+            ->assertJsonStructure(['data' => ['token']])
+            ->assertJsonPath('data.token', function ($token) {
                 return is_string($token) && mb_strlen($token) > 0;
             });
 
@@ -82,7 +82,7 @@ describe('store', function () {
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['token']);
+            ->assertJsonStructure(['data' => ['token']]);
 
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $this->user->id,
@@ -98,7 +98,7 @@ describe('store', function () {
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['token']);
+            ->assertJsonStructure(['data' => ['token']]);
 
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $this->user->id,

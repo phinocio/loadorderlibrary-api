@@ -17,6 +17,7 @@ beforeEach(function () {
         'game_id' => $this->game->id,
         'user_id' => $this->author->id,
         'is_private' => false,
+        'created_at' => now(),
     ])->fresh();
     $this->loadOrder2 = LoadOrder::factory()->create([
         'name' => 'Another Load Order',
@@ -24,6 +25,7 @@ beforeEach(function () {
         'game_id' => $this->game->id,
         'user_id' => $this->author->id,
         'is_private' => true,
+        'created_at' => now()->addSeconds(1),
     ])->fresh();
 });
 
@@ -33,8 +35,8 @@ describe('index', function () {
             ->getJson('/v1/admin/lists')
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.slug', $this->loadOrder->slug)
-            ->assertJsonPath('data.1.private', true);
+            ->assertJsonPath('data.0.slug', $this->loadOrder2->slug)
+            ->assertJsonPath('data.1.private', false);
 
     });
 

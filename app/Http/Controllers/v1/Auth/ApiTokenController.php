@@ -46,7 +46,9 @@ final class ApiTokenController extends ApiController
         $token = $user?->createToken($data['token_name'], $data['abilities'], $expiresAt)->plainTextToken;
 
         return response()->json([
-            'token' => $token,
+            'data' => [
+                'token' => $token,
+            ],
         ]);
     }
 

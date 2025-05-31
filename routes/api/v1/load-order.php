@@ -12,8 +12,8 @@ Route::prefix('lists')->group(function () {
         Route::get('/{slug}', 'show')->name('lists.show');
 
         Route::middleware('auth:sanctum')->group(function () {
-            Route::patch('/{load_order:slug}', 'update')->name('lists.update');
-            Route::delete('/{slug}', 'destroy')->name('lists.destroy');
+            Route::patch('/{load_order:slug}', 'update')->middleware('abilities:update')->name('lists.update');
+            Route::delete('/{slug}', 'destroy')->middleware('abilities:delete')->name('lists.destroy');
         });
     });
 });

@@ -18,6 +18,7 @@ Route::prefix('users')->group(function () {
     });
 
     Route::controller(UserProfileController::class)->group(function () {
+        // PUBLIC user profile
         Route::get('/{name}/profile', 'show')->name('users.profile.show');
 
         Route::middleware('auth')->group(function () {

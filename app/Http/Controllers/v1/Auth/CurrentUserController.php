@@ -12,13 +12,13 @@ final class CurrentUserController
 {
     public function __invoke(): CurrentUserResource
     {
-        Auth::user()?->load([
+        $user = Auth::user()?->load([
             'profile',
             'lists' => function (HasMany $query) {
                 $query->orderBy('created_at', 'desc');
             },
         ]);
 
-        return new CurrentUserResource(Auth::user());
+        return new CurrentUserResource($user);
     }
 }

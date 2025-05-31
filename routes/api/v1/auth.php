@@ -28,6 +28,6 @@ Route::middleware(['web'])->group(function () {
     });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', CurrentUserController::class)->name('auth.me');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/me', CurrentUserController::class)->middleware('abilities:read')->name('auth.me');
 });

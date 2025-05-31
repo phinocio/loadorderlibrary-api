@@ -26,13 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
-        ]);
-        $middleware->statefulApi();
-
-        $middleware->alias([
             'deny.authenticated' => DenyAuthenticated::class,
             'admin' => EnsureUserIsAdmin::class,
         ]);
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (NotFoundHttpException $e, $request) {

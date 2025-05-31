@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\v1\Auth\ApiTokenController;
 use App\Http\Controllers\v1\Auth\CurrentUserController;
 use App\Http\Controllers\v1\Auth\ForgotPasswordController;
 use App\Http\Controllers\v1\Auth\LoginController;
@@ -20,6 +21,10 @@ Route::middleware(['web'])->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::post('/logout', LogoutController::class)->name('auth.logout');
+
+        Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('auth.api-tokens.index');
+        Route::post('/api-tokens', [ApiTokenController::class, 'store'])->name('auth.api-tokens.store');
+        Route::delete('/api-tokens/{token}', [ApiTokenController::class, 'destroy'])->name('auth.api-tokens.destroy');
     });
 });
 

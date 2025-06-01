@@ -1,14 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schedule;
-use Illuminate\Support\Facades\Log;
+declare(strict_types=1);
 
-Schedule::command('delete:orphaned')->daily()->onSuccess(function () {
-    Log::info('✅ Delete Orphaned Files');
-})->onFailure(function () {
-    Log::error('❌ Delete Orphaned Files');
-});
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
 
-Schedule::command('delete:expired')->everyMinute()->onFailure(function () {
-    Log::error('❌ Delete Expired Lists');
-});
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})->purpose('Display an inspiring quote');

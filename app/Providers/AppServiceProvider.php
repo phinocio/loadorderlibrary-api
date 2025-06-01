@@ -1,50 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Models\Game;
-use App\Models\LoadOrder;
-use App\Observers\GameObserver;
-use App\Observers\LoadOrderObserver;
-use Illuminate\Http\Request;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Cache\RateLimiting\Limit;
+use App\Models\User;
+use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\RateLimiter;
-use Symfony\Component\HttpFoundation\IpUtils;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+    /** Register any application services. */
     public function register(): void
     {
-        if ($this->app->environment('local')) {
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            // @codeCoverageIgnoreStart
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
+            // @codeCoverageIgnoreEnd
         }
     }
 
-    /**
-     * Bootstrap any application services.
-     */
+    /** Bootstrap any application services. */
     public function boot(): void
     {
-        Model::shouldBeStrict(! app()->isProduction());
+        $this->configureCommands();
+        $this->configureModels();
+        $this->configureDates();
+        $this->configureUrls();
+    }
 
-        // Register observers
-        Game::observe(GameObserver::class);
-        LoadOrder::observe(LoadOrderObserver::class);
+    /** Configure the application's commands. */
+    private function configureCommands(): void
+    {
+        DB::prohibitDestructiveCommands(
+            (bool) $this->app->environment('production')
+        );
+    }
 
-        RateLimiter::for('api', function (Request $request) {
-            // Hopefully means no limit for requests from frontend server itself.
-            $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? ''; //If key isn't set, for example in tests, just use empty string.
-            if (IpUtils::checkIp($remoteAddr, '178.128.235.79')) {
-                return Limit::none();
+    /** Configure the application's dates. */
+    private function configureDates(): void
+    {
+        Date::use(CarbonImmutable::class);
+    }
+
+    /** Configure the application's models. */
+    private function configureModels(): void
+    {
+        Model::shouldBeStrict();
+    }
+
+    /** Configure the application's URLs. */
+    private function configureUrls(): void
+    {
+        URL::forceScheme('https');
+
+        ResetPassword::createUrlUsing(
+            function (mixed $user, string $token): string {
+                /**
+                 * @var User $user
+                 * @var string $frontendUrl
+                 */
+                $frontendUrl = config('app.frontend_url');
+
+                return "{$frontendUrl}/reset-password?token={$token}&email={$user->getEmailForPasswordReset()}";
             }
-
-            return Limit::perMinute(200)->by($request->user()?->id ?: $request->ip());
-        });
+        );
     }
 }

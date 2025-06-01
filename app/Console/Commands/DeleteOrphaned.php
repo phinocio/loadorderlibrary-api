@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-class DeleteOrphaned extends Command
+final class DeleteOrphaned extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'delete:orphaned';
+    protected $signature = 'lists:delete-orphaned';
 
     /**
      * The console command description.
@@ -22,9 +24,7 @@ class DeleteOrphaned extends Command
      */
     protected $description = 'Delete orphaned files';
 
-    /**
-     * Execute the console command.
-     */
+    /** Execute the console command. */
     public function handle(): void
     {
         $orphaned = File::doesntHave('lists')->get();

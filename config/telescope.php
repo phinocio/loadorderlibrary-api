@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Laravel\Telescope\Http\Middleware\Authorize;
 use Laravel\Telescope\Watchers;
 
@@ -78,6 +80,7 @@ return [
     'queue' => [
         'connection' => env('TELESCOPE_QUEUE_CONNECTION', null),
         'queue' => env('TELESCOPE_QUEUE', null),
+        'delay' => env('TELESCOPE_QUEUE_DELAY', 10),
     ],
 
     /*

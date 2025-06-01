@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
+use App\Models\Game;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Game>
  */
-class GameFactory extends Factory
+final class GameFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Game::class;
+
     public function definition(): array
     {
+        // Slug is generated automatically based on the name
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->unique()->word(),
         ];
     }
 }

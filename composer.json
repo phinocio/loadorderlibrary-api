@@ -1,33 +1,37 @@
 {
-    "name": "phinocio/loadorderlibrary-api",
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "laravel/laravel",
     "type": "project",
-    "description": "Load Order Library API",
-    "keywords": ["skyrim", "Load Order Library", "Bethesda"],
+    "description": "The skeleton application for the Laravel framework.",
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "cviebrock/eloquent-sluggable": "^12.0",
-        "laravel/fortify": "^1.25.4",
-        "laravel/framework": "^12.2",
-        "laravel/sanctum": "^4.0.8",
+        "laravel/framework": "^12.16.0",
+        "laravel/sanctum": "^4.1.1",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "sebastian/diff": "^6.0.2",
-        "spatie/laravel-json-api-paginate": "^1.16.3",
-        "spatie/laravel-query-builder": "^6.3.1",
-        "stechstudio/laravel-zipstream": "*"
+        "resend/resend-laravel": "^0.19",
+        "spatie/laravel-query-builder": "^6.3.2",
+        "stechstudio/laravel-zipstream": "^5.5"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5.5",
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "^3.2",
-        "laravel/pint": "^1.21.2",
-        "laravel/sail": "^1.41.0",
-        "laravel/telescope": "^5.5.1",
+        "larastan/larastan": "^3.4.0",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.22.1",
+        "laravel/sail": "^1.43.1",
+        "laravel/telescope": "^5.8",
         "mockery/mockery": "^1.6.12",
-        "nunomaduro/collision": "^8.7.0",
-        "phpstan/phpstan": "^2.1.8",
-        "phpunit/phpunit": "^11.5.12"
+        "nunomaduro/collision": "^8.8",
+        "pestphp/pest": "^3.8.2",
+        "pestphp/pest-plugin-type-coverage": "^3.5.1",
+        "pestphp/pest-plugin-watch": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -56,11 +60,32 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "lint": [
+            "pint --test"
+        ],
+        "lint:fix": [
+            "pint"
+        ],
+        "refactor": "rector",
+        "test": "pest --parallel --coverage --min=100",
+        "test:type-coverage": "pest --type-coverage --min=90",
+        "test:types": "phpstan",
+        "test:all": [
+            "@lint",
+            "@test",
+            "@test:type-coverage"
         ]
     },
     "extra": {
         "laravel": {
-            "dont-discover": ["laravel/telescope"]
+            "dont-discover": [
+                "laravel/telescope"
+            ]
         }
     },
     "config": {

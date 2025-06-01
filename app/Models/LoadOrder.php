@@ -1,85 +1,79 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Observers\v1\LoadOrderObserver;
+use Carbon\CarbonInterface;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- *
- *
- * @property int $id
- * @property int|null $user_id
- * @property int $game_id
- * @property string $slug
- * @property string $name
- * @property string|null $description
- * @property string|null $version
- * @property string|null $website
- * @property string|null $readme
- * @property string|null $discord
- * @property bool $is_private
- * @property \Illuminate\Support\Carbon|null $expires_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\User|null $author
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\File> $files
- * @property-read int|null $files_count
- * @property-read \App\Models\Game $game
- * @method static \Database\Factories\LoadOrderFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder findSimilarSlugs(string $attribute, array $config, string $slug)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereDiscord($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereExpiresAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereGameId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereIsPrivate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereReadme($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereVersion($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder whereWebsite($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|LoadOrder withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
- * @mixin \Eloquent
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string $slug
+ * @property-read string|null $description
+ * @property-read string|null $version
+ * @property-read string|null $website
+ * @property-read string|null $discord
+ * @property-read string|null $readme
+ * @property-read bool $is_private
+ * @property-read CarbonInterface|null $expires_at
+ * @property-read CarbonInterface $created_at
+ * @property-read CarbonInterface $updated_at
+ * @property-read User $author
+ * @property-read Game $game
+ * @property-read File[] $files
  */
-class LoadOrder extends Model
+#[ObservedBy(LoadOrderObserver::class)]
+final class LoadOrder extends Model
 {
-    use HasFactory;
-    use Sluggable;
+    /** @use HasFactory<\Database\Factories\LoadOrderFactory> */
+    use HasFactory, Sluggable;
 
-    protected $hidden = ['id'];
-
-    protected $casts = [
-        'expires_at' => 'datetime',
+    /** @var list<string> */
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'version',
+        'website',
+        'discord',
+        'readme',
+        'is_private',
+        'expires_at',
+        'user_id',
+        'game_id',
     ];
 
-    public function game(): BelongsTo
-    {
-        return $this->belongsTo(Game::class);
-    }
+    protected $with = ['author', 'game'];
 
+    /** @return BelongsTo<User, $this> */
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @return BelongsTo<Game, $this> */
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    /** @return BelongsToMany<File, $this> */
     public function files(): BelongsToMany
     {
         return $this->belongsToMany(File::class)->withTimestamps();
     }
 
-    /**
-     * Return the sluggable configuration array for this model.
-     */
+    /** @return array<string, array<string, string>> */
     public function sluggable(): array
     {
         return [
@@ -87,5 +81,25 @@ class LoadOrder extends Model
                 'source' => 'name',
             ],
         ];
+    }
+
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'expires_at' => 'datetime',
+            'is_private' => 'boolean',
+        ];
+    }
+
+    /**
+     * Scope a query to only include non-expired load orders.
+     *
+     * @param  Builder<LoadOrder>  $query
+     */
+    #[Scope]
+    protected function expired(Builder $query): void
+    {
+        $query->where('expires_at', '<=', now());
     }
 }

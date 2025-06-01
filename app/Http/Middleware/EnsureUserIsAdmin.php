@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsAdmin
+final class EnsureUserIsAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,10 +18,8 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! auth()->user()->isAdmin()) {
-            return response()->json([
-                'message' => 'Only admins can access this route.',
-            ], Response::HTTP_FORBIDDEN);
+        if (! $request->user()?->is_admin) {
+            throw new AuthorizationException('Unauthorized');
         }
 
         return $next($request);

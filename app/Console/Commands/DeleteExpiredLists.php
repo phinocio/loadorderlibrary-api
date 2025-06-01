@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\LoadOrder;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class DeleteExpiredLists extends Command
+final class DeleteExpiredLists extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'delete:expired';
+    protected $signature = 'lists:delete-expired';
 
     /**
      * The console command description.
@@ -22,17 +23,15 @@ class DeleteExpiredLists extends Command
      */
     protected $description = 'Delete expired lists';
 
-    /**
-     * Execute the console command.
-     */
+    /** Execute the console command. */
     public function handle(): void
     {
-        $expired = LoadOrder::where('expires_at', '<', Carbon::now())->get();
+        $lists = LoadOrder::query()->expired()->get();
 
-        foreach ($expired as $list) {
+        foreach ($lists as $list) {
             $list->delete();
         }
 
-        $this->info(count($expired).' expired lists deleted.');
+        $this->info('Expired lists deleted successfully.');
     }
 }

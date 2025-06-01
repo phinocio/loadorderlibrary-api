@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
@@ -42,8 +43,23 @@ final class LoadOrderController extends ApiController
         );
     }
 
-    public function store(StoreLoadOrderRequest $request, CreateLoadOrder $createLoadOrder): LoadOrderResource
+    public function store(StoreLoadOrderRequest $request, CreateLoadOrder $createLoadOrder): LoadOrderResource|JsonResponse
     {
+        // TODO: Surely there's a better solution to allow guest uploads than this?
+        // Return with a 401 (or maybe 422?) if there is no user associated with a token so a list is
+        // not accidentally uploaded anonymously if the token was typo'd.
+        if (request()->bearerToken() && $user = Auth::guard('sanctum')->user()) {
+            Auth::setUser($user);
+            if (! $user->tokenCan('create')) {
+                return response()->json(
+                    ['message' => "This action is forbidden. (Token doesn't have permission for this action.)"],
+                    403
+                );
+            }
+        } elseif (request()->bearerToken() && ! Auth::guard('sanctum')->check()) {
+            return response()->json(['message' => 'Unauthenticated. (Make sure the token is correct.)'], 401);
+        }
+
         Gate::authorize('create', LoadOrder::class);
 
         /**  @var array{

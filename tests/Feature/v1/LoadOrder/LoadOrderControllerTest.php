@@ -177,6 +177,69 @@ describe('store', function () {
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['name', 'game', 'files']);
     });
+
+    it('rejects token without create permission', function () {
+        $user = User::factory()->create();
+        $game = Game::factory()->create();
+        $token = $user->createToken('Read Only Token', ['read'])->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer {$token}")
+            ->postJson('/v1/lists', [
+                'name' => 'New Load Order',
+                'game' => $game->id,
+                'files' => [
+                    UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2"),
+                ],
+            ]);
+
+        $response->assertForbidden()
+            ->assertJson([
+                'message' => "This action is forbidden. (Token doesn't have permission for this action.)",
+            ]);
+    });
+
+    it('rejects invalid bearer token', function () {
+        $game = Game::factory()->create();
+
+        $response = $this->withHeader('Authorization', 'Bearer invalid-token-123')
+            ->postJson('/v1/lists', [
+                'name' => 'New Load Order',
+                'game' => $game->id,
+                'files' => [
+                    UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2"),
+                ],
+            ]);
+
+        $response->assertUnauthorized()
+            ->assertJson([
+                'message' => 'Unauthenticated. (Make sure the token is correct.)',
+            ]);
+    });
+
+    it('allows valid token with create permission', function () {
+        $user = User::factory()->create();
+        $game = Game::factory()->create();
+        $token = $user->createToken('Full Access Token', ['create'])->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer {$token}")
+            ->postJson('/v1/lists', [
+                'name' => 'New Load Order',
+                'game' => $game->id,
+                'files' => [
+                    UploadedFile::fake()->createWithContent('modlist.txt', "mod1\nmod2"),
+                ],
+            ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('data.name', 'New Load Order')
+            ->assertJsonPath('data.author.name', $user->name);
+
+        $this->assertDatabaseHas('load_orders', [
+            'name' => 'New Load Order',
+            'user_id' => $user->id,
+            'game_id' => $game->id,
+        ]);
+    });
 });
 
 describe('show', function () {

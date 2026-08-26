@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
-/** @mixin File */
+/**
+ * @mixin File
+ */
 final class FileResource extends JsonResource
 {
     /**

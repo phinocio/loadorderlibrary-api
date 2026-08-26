@@ -8,7 +8,9 @@ use App\Models\LoadOrder;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Filters\Filter;
 
-/** @implements Filter<LoadOrder> */
+/**
+ * @implements Filter<LoadOrder>
+ */
 final class FiltersAuthorName implements Filter
 {
     public function __invoke(Builder $query, mixed $value, string $property): void

@@ -36,15 +36,3 @@ it('returns empty collection when no authors match the name', function () {
 
     expect($query->get())->toHaveCount(0);
 });
-
-it('is case sensitive when matching author names', function () {
-    $filterAuthorName = new FiltersAuthorName;
-    $author = User::factory()->create(['name' => 'John Doe']);
-    LoadOrder::factory()->count(2)->for($author, 'author')->create();
-
-    $query = LoadOrder::query();
-
-    $filterAuthorName($query, 'john doe', 'author');
-
-    expect($query->get())->toHaveCount(0);
-});

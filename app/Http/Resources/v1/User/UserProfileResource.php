@@ -7,7 +7,9 @@ namespace App\Http\Resources\v1\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\UserProfile */
+/**
+ * @mixin \App\Models\UserProfile
+ */
 final class UserProfileResource extends JsonResource
 {
     /**

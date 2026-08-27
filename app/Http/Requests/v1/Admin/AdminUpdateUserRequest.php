@@ -8,7 +8,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/** @mixin \App\Models\User */
+/**
+ * @mixin \App\Models\User
+ */
 final class AdminUpdateUserRequest extends FormRequest
 {
     /** Determine if the user is authorized to make this request. */

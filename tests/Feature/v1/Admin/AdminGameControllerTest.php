@@ -11,21 +11,25 @@ beforeEach(function () {
 
 describe('store', function () {
     it('allows admin to create a new game', function () {
-        login($this->admin)
+        $game = login($this->admin)
             ->postJson('/v1/admin/games', [
                 'name' => 'New Game',
             ])
-            ->assertCreated()
-            ->assertExactJson([
-                'data' => [
-                    'id' => 1,
-                    'name' => 'New Game',
-                    'slug' => 'new-game',
-                    'lists_count' => null,
-                ],
-            ]);
+            ->assertCreated();
+
+        $id = $game->json('data.id');
+
+        $game->assertExactJson([
+            'data' => [
+                'id' => $id,
+                'name' => 'New Game',
+                'slug' => 'new-game',
+                'lists_count' => null,
+            ],
+        ]);
 
         $this->assertDatabaseHas('games', [
+            'id' => $id,
             'name' => 'New Game',
             'slug' => 'new-game',
         ]);

@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-/** @mixin \App\Models\User */
+/**
+ * @mixin \App\Models\User
+ */
 final class CurrentUserResource extends JsonResource
 {
     /**

@@ -7,7 +7,9 @@ namespace App\Http\Requests\v1\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-/** @mixin \App\Models\User */
+/**
+ * @mixin \App\Models\User
+ */
 final class UpdateUserProfileRequest extends FormRequest
 {
     public function authorize(): bool

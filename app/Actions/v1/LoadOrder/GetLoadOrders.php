@@ -17,15 +17,15 @@ final class GetLoadOrders
     public function execute(Request $request, bool $includePrivate = false): mixed
     {
         $lists = QueryBuilder::for(LoadOrder::class)
-            ->allowedFilters([
+            ->allowedFilters(
                 AllowedFilter::custom('author', new FiltersAuthorName),
                 AllowedFilter::custom('game', new FiltersGameName),
-            ])
+            )
             ->defaultSort('-created_at')
-            ->allowedSorts([
+            ->allowedSorts(
                 AllowedSort::field('created', 'created_at'),
                 AllowedSort::field('updated', 'updated_at'),
-            ])
+            )
             ->when(! $includePrivate, fn ($query) => $query->where('is_private', '=', false))
             ->when($request->query('query'), function ($query) use ($request) {
                 return $query->where(function ($q) use ($request) {

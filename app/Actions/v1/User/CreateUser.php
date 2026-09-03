@@ -14,11 +14,11 @@ final class CreateUser
      * password: string
      * }  $data
      */
-    public function execute(array $data): User
+    public function execute(array $data, bool $withPassword = true): User
     {
         $user = User::query()->create([
             'name' => $data['name'],
-            'password' => Hash::make($data['password']),
+            'password' => $withPassword ? Hash::make($data['password']) : null,
         ]);
 
         $user->profile()->create([

@@ -12,4 +12,5 @@ Route::prefix('v1')->group(function () {
     require __DIR__.'/v1/file.php';
     require __DIR__.'/v1/load-order.php';
     require __DIR__.'/v1/download.php';
+    require __DIR__.'/v1/oauth.php';
 });

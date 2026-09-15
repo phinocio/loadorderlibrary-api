@@ -20,6 +20,7 @@ final class UserProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'avatar' => $this->user->avatar,
             'bio' => $this->bio ?? '',
             'discord' => $this->discord ?? '',
             'kofi' => $this->kofi ?? '',

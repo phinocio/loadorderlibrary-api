@@ -69,7 +69,7 @@ final class NexusModsOAuthController
             }
 
             if (! $user) {
-                $user = $createUser->execute($userData, false);
+                $user = $createUser->execute($userData, false, ['avatar' => $resourceOwner->getAvatar()]);
             }
 
             if (! Auth::loginUsingId($user->id, true)) {

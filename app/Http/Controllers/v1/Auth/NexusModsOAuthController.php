@@ -46,7 +46,9 @@ final class NexusModsOAuthController
         if (empty($code) || empty($state)
             || ! hash_equals((string) session(self::NEXUS_STATE_NAME, ''), $state)) {
             session()->forget(self::NEXUS_STATE_NAME);
-            abort(401, 'Invalid state');
+            report(new RuntimeException('Invalid OAuth State'));
+
+            $this->redirectError('invalid_state');
         }
 
         session()->forget(self::NEXUS_STATE_NAME);
@@ -61,7 +63,9 @@ final class NexusModsOAuthController
             $user = User::whereName($userData['name'])->first();
 
             if ($user && $user->password !== null) {
-                throw new RuntimeException('User already exists. Log in and merge accounts to sign in with Nexus.');
+                report(new RuntimeException('User already exists. Log in and merge accounts to sign in with Nexus.'));
+
+                return $this->redirectError('account_exists');
             }
 
             if (! $user) {
@@ -69,7 +73,8 @@ final class NexusModsOAuthController
             }
 
             if (! Auth::loginUsingId($user->id, true)) {
-                throw new RuntimeException('AUTH FAILED');
+                report(new RuntimeException('AUTH FAILED'));
+                $this->redirectError('auth_failed');
             }
 
             session()->regenerate();
@@ -77,7 +82,15 @@ final class NexusModsOAuthController
             return redirect()->away(config('app.frontend_url').'/nexus-oauth-complete');
         } catch (Exception $e) {
             report($e);
-            abort(500, 'OAuth login failed');
+
+            return $this->redirectError('oauth_failed');
         }
+    }
+
+    private function redirectError(string $message): RedirectResponse
+    {
+        $url = config('app.frontend_url').'/nexus-oauth-complete?'.http_build_query(['error' => $message]);
+
+        return redirect()->away($url);
     }
 }

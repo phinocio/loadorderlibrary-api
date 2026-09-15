@@ -34,6 +34,7 @@ final class CurrentUserResource extends JsonResource
             'admin' => $this->isAdmin(),
             'profile' => $this->whenLoaded('profile', fn () => new UserProfileResource($this->profile)),
             'lists' => LoadOrderResource::collection($this->lists),
+            'oauth_user' => $this->password === null,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
         ];

@@ -32,6 +32,7 @@ final class UserProfile extends Model
     /** @var list<string> */
     protected $fillable = [
         'user_id',
+        'avatar',
         'bio',
         'discord',
         'kofi',
